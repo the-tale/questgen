@@ -36,5 +36,4 @@ class FactsTests(unittest.TestCase):
 
 
     def test_uid_not_setupped(self):
-        fact = Fact()
-        self.assertRaises(exceptions.UIDDidNotSetupped, fact.update_uid)
+        self.assertRaises(exceptions.UIDDidNotSetupped, Fact)

@@ -30,7 +30,7 @@ class ActivateEventsTests(TransformatorsTestsBase):
     def test_no_events(self):
         facts = [ Start(),
                   Finish(uid='st_finish'),
-                  Jump(Start.UID, 'st_finish') ]
+                  Jump(state_from=Start.UID, state_to='st_finish') ]
         self.kb += facts
         activate_events(self.kb)
         self.check_in_knowledge_base(self.kb, facts)
@@ -38,7 +38,7 @@ class ActivateEventsTests(TransformatorsTestsBase):
     def test_no_tag(self):
         facts = [ Start(),
                   Finish(uid='st_finish'),
-                  Jump(Start.UID, 'st_finish'),
+                  Jump(state_from=Start.UID, state_to='st_finish'),
                   Event(tag='event_tag') ]
         self.kb += facts
         self.assertRaises(exceptions.NoTaggedEventMembersError, activate_events, self.kb)
@@ -47,7 +47,7 @@ class ActivateEventsTests(TransformatorsTestsBase):
     def test_simple_tagged_jump(self):
         facts = [ Start(),
                   Finish(uid='st_finish'),
-                  Jump(Start.UID, 'st_finish', tags=('event_tag', )),
+                  Jump(state_from=Start.UID, state_to='st_finish', tags=('event_tag', )),
                   Event(tag='event_tag') ]
         self.kb += facts
         activate_events(self.kb)
@@ -60,8 +60,8 @@ class ActivateEventsTests(TransformatorsTestsBase):
                   Event(tag='event_tag') ]
         self.kb += facts
 
-        jump_1 = Jump(Start.UID, 'st_finish_1', tags=('event_tag', ))
-        jump_2 = Jump(Start.UID, 'st_finish_2', tags=('event_tag', ))
+        jump_1 = Jump(state_from=Start.UID, state_to='st_finish_1', tags=('event_tag', ))
+        jump_2 = Jump(state_from=Start.UID, state_to='st_finish_2', tags=('event_tag', ))
 
         self.kb += (jump_1, jump_2)
 
@@ -79,8 +79,8 @@ class ActivateEventsTests(TransformatorsTestsBase):
                   Event(tag='event_2_tag')]
         self.kb += facts
 
-        jump_1 = Jump(Start.UID, 'st_finish_1', tags=('event_tag', 'event_2_tag'))
-        jump_2 = Jump(Start.UID, 'st_finish_2', tags=('event_tag',))
+        jump_1 = Jump(state_from=Start.UID, state_to='st_finish_1', tags=('event_tag', 'event_2_tag'))
+        jump_2 = Jump(state_from=Start.UID, state_to='st_finish_2', tags=('event_tag',))
 
         self.kb += (jump_1, jump_2)
 
@@ -97,10 +97,10 @@ class ActivateEventsTests(TransformatorsTestsBase):
 
         self.kb += facts
 
-        jump_1 = Jump(Start.UID, 'st_finish_1', tags=('event_tag',))
-        jump_2 = Jump(Start.UID, 'st_finish_2', tags=('event_tag',))
-        jump_3 = Jump(Start.UID, 'st_finish_3', tags=('event_2_tag',))
-        jump_4 = Jump(Start.UID, 'st_finish_4', tags=('event_2_tag',))
+        jump_1 = Jump(state_from=Start.UID, state_to='st_finish_1', tags=('event_tag',))
+        jump_2 = Jump(state_from=Start.UID, state_to='st_finish_2', tags=('event_tag',))
+        jump_3 = Jump(state_from=Start.UID, state_to='st_finish_3', tags=('event_2_tag',))
+        jump_4 = Jump(state_from=Start.UID, state_to='st_finish_4', tags=('event_2_tag',))
 
         self.kb += (jump_1, jump_2, jump_3, jump_4)
 
@@ -115,7 +115,7 @@ class ActivateEventsTests(TransformatorsTestsBase):
     def test_tagged_not_jump(self):
         facts = [ Start(),
                   Finish(uid='st_finish', tags=('event_tag', )),
-                  Jump(Start.UID, 'st_finish', tags=('event_tag', )),
+                  Jump(state_from=Start.UID, state_to='st_finish', tags=('event_tag', )),
                   Event(tag='event_tag') ]
         self.kb += facts
         self.assertRaises(exceptions.NotJumpFactInEventGroupError, activate_events, self.kb)
@@ -131,7 +131,7 @@ class RemoveBrokenStatesTests(TransformatorsTestsBase):
     def test_no_broken_states(self):
         facts = [ Start(),
                   Finish(uid='st_finish'),
-                  Jump(Start.UID, 'st_finish') ]
+                  Jump(state_from=Start.UID, state_to='st_finish') ]
         self.kb += facts
         activate_events(self.kb)
         self.check_in_knowledge_base(self.kb, facts)
@@ -139,7 +139,7 @@ class RemoveBrokenStatesTests(TransformatorsTestsBase):
     def test_single_broken_state(self):
         facts = [ Start(),
                   Finish(uid='st_finish'),
-                  Jump(Start.UID, 'st_finish') ]
+                  Jump(state_from=Start.UID, state_to='st_finish') ]
         self.kb += facts
 
         broken_state = State(uid='st_broken')
@@ -152,11 +152,11 @@ class RemoveBrokenStatesTests(TransformatorsTestsBase):
     def test_broken_jumps(self):
         facts = [ Start(),
                   Finish(uid='st_finish'),
-                  Jump(Start.UID, 'st_finish') ]
+                  Jump(state_from=Start.UID, state_to='st_finish') ]
         self.kb += facts
 
-        broken_jump_from = Jump('st_broken_state', 'st_finish')
-        broken_jump_to = Jump(Start.UID, 'st_broken_state')
+        broken_jump_from = Jump(state_from='st_broken_state', state_to='st_finish')
+        broken_jump_to = Jump(state_from=Start.UID, state_to='st_broken_state')
 
         self.kb += (broken_jump_from, broken_jump_to)
 
@@ -169,7 +169,7 @@ class RemoveBrokenStatesTests(TransformatorsTestsBase):
     def test_broken_path(self):
         facts = [ Start(),
                   Finish(uid='st_finish'),
-                  Jump(Start.UID, 'st_finish') ]
+                  Jump(state_from=Start.UID, state_to='st_finish') ]
         self.kb += facts
 
         broken_path = [State(uid='st_broken_1'),
@@ -187,7 +187,7 @@ class RemoveBrokenStatesTests(TransformatorsTestsBase):
     def test_finish_at_not_finish_state(self):
         facts = [ Start(),
                   Finish(uid='st_finish'),
-                  Jump(Start.UID, 'st_finish') ]
+                  Jump(state_from=Start.UID, state_to='st_finish') ]
         self.kb += facts
 
         broken_path = [State(uid='st_broken_1'),

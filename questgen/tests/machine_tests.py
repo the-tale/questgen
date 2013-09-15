@@ -24,7 +24,7 @@ class MachineTests(unittest.TestCase):
 
     def test_get_pointer(self):
         self.assertEqual(list(self.kb.filter(Pointer)), [])
-        pointer = self.machine.get_pointer()
+        pointer = self.machine.pointer
         self.assertEqual(list(self.kb.filter(Pointer)), [pointer])
 
     def test_get_available_jumps__no_jumps(self):
@@ -63,7 +63,7 @@ class MachineTests(unittest.TestCase):
         jump_3 = Jump(state_from=self.start.uid, state_to=state_3.uid)
         self.kb += [ state_3, jump_3]
 
-        pointer = self.machine.get_pointer()
+        pointer = self.machine.pointer
         self.kb -= pointer
         self.kb += pointer.change(state=self.start.uid, jump=jump_3.uid)
 
@@ -74,7 +74,7 @@ class MachineTests(unittest.TestCase):
         jump_3 = Jump(state_from=self.start.uid, state_to=state_3.uid)
         self.kb += [ state_3, jump_3]
 
-        pointer = self.machine.get_pointer()
+        pointer = self.machine.pointer
         self.kb -= pointer
         self.kb += pointer.change(state=self.start.uid, jump=jump_3.uid)
 
@@ -89,7 +89,7 @@ class MachineTests(unittest.TestCase):
         self.assertEqual(list(self.kb.filter(Pointer)), [])
         self.machine.step()
         self.assertEqual(len(list(self.kb.filter(Pointer))), 1)
-        pointer = self.machine.get_pointer()
+        pointer = self.machine.pointer
         self.assertEqual(pointer.state, self.start.uid)
         self.assertTrue(pointer.jump in [jump_1.uid, jump_2.uid])
 
@@ -101,10 +101,17 @@ class MachineTests(unittest.TestCase):
         self.machine.step()
         self.machine.step()
 
-        pointer = self.machine.get_pointer()
+        pointer = self.machine.pointer
         self.assertEqual(pointer.state, self.finish_1.uid)
         self.assertEqual(pointer.jump, None)
 
+    def test_do_step__step_after_finish(self):
+        jump_1 = Jump(state_from=self.start.uid, state_to=self.finish_1.uid)
+        self.kb += jump_1
+
+        self.machine.step()
+        self.machine.step()
+        self.assertRaises(exceptions.NoJumpsFromLastStateError, self.machine.step)
 
     def test_do_step__next_state(self):
         jump_1 = Jump(state_from=self.start.uid, state_to=self.state_1.uid)
@@ -114,6 +121,6 @@ class MachineTests(unittest.TestCase):
         self.machine.step()
         self.machine.step()
 
-        pointer = self.machine.get_pointer()
+        pointer = self.machine.pointer
         self.assertEqual(pointer.state, self.state_1.uid)
         self.assertEqual(pointer.jump, jump_2.uid)

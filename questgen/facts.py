@@ -4,20 +4,36 @@ import copy
 
 from questgen import exceptions
 
-# Fact MUST be fully immutable (including deep relations)
-
 ######################
 # Base class
 ######################
 
 class Fact(object):
     _references = ()
+    _attributes = {'uid': None,
+                   'tags': (),
+                   'label': None,
+                   'description': None,
+                   'exceptions': None,
+                   'externals': None}
+    _required = ()
 
-    def __init__(self, uid=None, tags=(), label=None, description=None):
-        self.uid = uid
-        self.tags = tags
-        self.label = label
-        self.description = description
+    def __init__(self, **kwargs):
+        for name in self._required:
+            if name not in kwargs:
+                raise exceptions.RequiredAttributeError(fact=self.__class__,  attribute=name)
+        for name, default in self._attributes.iteritems():
+            setattr(self, name, kwargs.get(name, default))
+        for name in kwargs.iterkeys():
+            if name not in self._attributes:
+                raise exceptions.WrongAttributeError(fact=self.__class__, attribute=name)
+        self.update_uid()
+
+    def serialize(self):
+        return {'class': self.__class__.__name__,
+                'attributes': {attribute: getattr(self, attribute)
+                               for attribute, default in self._attributes.iteritems()
+                               if getattr(self, attribute) != default}}
 
     def change(self, **kwargs):
         changed_fact = copy.deepcopy(self)
@@ -40,104 +56,58 @@ class Fact(object):
             raise exceptions.UIDDidNotSetupped(fact=self)
 
     def __eq__(self, other):
-        return self.__class__ == other.__class__ and self.uid == other.uid
+        return self.__class__ == other.__class__ and all(getattr(self, attribute) == getattr(other, attribute) for attribute in self._attributes.iterkeys())
 
     def __ne__(self, other):
         return not (self == other)
 
+    @classmethod
+    def type(cls): return cls.__name__
+
     def __repr__(self):
-        return u'%s(uid="%s", tags="%s")' % (self.__class__.__name__, self.uid, self.tags)
+        return u'%s(%s)' % (self.type(),
+                            u', '.join(u'%s=%r' % (attribute, getattr(self, attribute))
+                                       for attribute, default in self._attributes.iteritems()
+                                       if getattr(self, attribute) != default))
 
 ######################
 # Base classes for different knowlege aspects
 ######################
 
-class Actor(Fact):
+class Action(Fact): pass
 
-    def __init__(self, label='', **kwargs):
-        super(Actor, self).__init__(**kwargs)
-        self.label = label
 
-    def __eq__(self, other):
-        return super(Actor, self).__eq__(other)# and self.label == other.label
-
+class Actor(Fact): pass
 
 class State(Fact):
-
-    def __init__(self, require=[], **kwargs):
-        super(State, self).__init__(**kwargs)
-        self.require = require
-
-    def __eq__(self, other):
-        return super(State, self).__eq__(other) and self.require == other.require
-
-    def __repr__(self):
-        return u'%s(uid="%s", require=%r, tags="%s")' % (self.__class__.__name__,
-                                                         self.uid,
-                                                         self.require,
-                                                         self.tags)
+    _attributes = dict(require=(), actions=(), **Fact._attributes)
 
 
 class Jump(Fact):
     _references = ('state_from', 'state_to')
-
-    def __init__(self, state_from, state_to, **kwargs):
-        super(Jump, self).__init__(**kwargs)
-        self.state_from = state_from
-        self.state_to = state_to
-        self.update_uid()
+    _attributes = dict(state_from=None, state_to=None, **Fact._attributes)
+    _required = tuple(['state_from', 'state_to'] + list(Fact._required))
 
     def update_uid(self):
         self.uid='#jump<%s, %s>' % (self.state_from, self.state_to)
 
-    def __eq__(self, other):
-        return (super(Jump, self).__eq__(other) and
-                self.state_from == other.state_from and
-                self.state_to == other.state_to)
 
-    def __repr__(self):
-        return (u'Jump(state_from="%s", state_to="%s", tags="%s")' %
-                (self.state_from, self.state_to, self.tags) )
+class Condition(Fact): pass
 
-class Condition(Fact):
-
-    def __eq__(self, other):
-        return super(Condition, self).__eq__(other)
 
 class Pointer(Fact):
     UID = '#pointer'
     _references = ('state', 'jump')
-
-    def __init__(self, state=None,  jump=None):
-        super(Pointer, self).__init__(uid=self.UID)
-        self.state = state
-        self.jump = jump
-
-    def __eq__(self, other):
-        return (super(Pointer, self).__eq__(other) and
-                self.state == other.state and
-                self.jump == other.jump)
-
-    def __repr__(self):
-        return u'Pointer(state="%s", jump="%s", tags="%s")' % (self.state, self.jump, self.tags)
+    _attributes = dict(state=None, jump=None, **{attribute:(default if attribute != 'uid' else '#pointer')
+                                                 for attribute, default in State._attributes.iteritems()})
 
 
 class Event(Fact):
-
-    def __init__(self, tag, **kwargs):
-        super(Event, self).__init__(**kwargs)
-        self.tag = tag
-        self.update_uid()
+    _attributes = dict(tag=None, **Fact._attributes)
+    _required = tuple(['tag'] + list(Fact._required))
 
     def update_uid(self):
         self.uid = '#event_%s' % self.tag
-
-    def __eq__(self, other):
-         return (super(Event, self).__eq__(other) and
-                self.tag == other.tag)
-
-    def __repr__(self):
-        return u'Event(tag="%s", tags="%s")' % (self.tag, self.tags)
 
 
 ######################
@@ -146,47 +116,33 @@ class Event(Fact):
 
 
 class Hero(Actor): pass
-class Place(Actor): pass
-class Person(Actor): pass
 
+class Place(Actor):
+    _attributes = dict(terrains=None, **Actor._attributes)
+
+class Person(Actor):
+    _attributes = dict(profession=None, **Actor._attributes)
+
+class Mob(Actor):
+    _attributes = dict(terrains=None, **Actor._attributes)
 
 class Start(State):
     UID = '#start'
+    _attributes = {attribute:(default if attribute != 'uid' else '#start')
+                   for attribute, default in State._attributes.iteritems()}
 
-    def __init__(self, **kwargs):
-        super(Start, self).__init__(uid=self.UID, **kwargs)
-
-    def __repr__(self):
-        return u'Start()'
 
 
 class Finish(State): pass
 class Choice(State): pass
 
-class Option(Jump):
-
-    def __init__(self, **kwargs):
-        super(Option, self).__init__(**kwargs)
-
-    def __eq__(self, other):
-        return super(Option, self).__eq__(other)
-
-    def __repr__(self):
-        return (u'Option(state_from="%s", state_to="%s", tags="%s")' %
-                (self.state_from, self.state_to, self.tags) )
+class Option(Jump): pass
 
 
 class LocatedIn(Condition):
     _references = ('object', 'place')
-    def __init__(self, object, place, **kwargs):
-        super(LocatedIn, self).__init__(**kwargs)
-        self.object = object
-        self.place = place
-        self.update_uid()
-
-    def update_uid(self):
-        self.uid = '#located_in<%s, %s>' % (self.object, self.place)
-
+    _attributes = dict(object=None, place=None, **Condition._attributes)
+    _required = tuple(['object', 'place'] + list(Condition._required))
 
     @classmethod
     def relocate(cls, knowlege_base, object, new_place):
@@ -194,11 +150,86 @@ class LocatedIn(Condition):
                           knowlege_base.filter(cls))[0]
         location.change_in_knowlege_base(knowlege_base, place=new_place)
 
-    def __eq__(self, other):
-        return (super(LocatedIn, self).__eq__(other) and
-                self.object == other.object and
-                self.place == other.place)
+    def update_uid(self):
+        self.uid = '#located_in<%s, %s>' % (self.object, self.place)
 
-    def __repr__(self):
-        return (u'LocatedIn(object="%s", place="%s", tags="%s")' %
-                (self.object, self.place, self.tags) )
+
+class LocatedNear(Condition):
+    _references = ('object', 'place')
+    _attributes = dict(object=None, place=None, **Condition._attributes)
+    _required = tuple(['object', 'place'] + list(Condition._required))
+
+    def update_uid(self):
+        self.uid = '#located_near<%s, %s>' % (self.object, self.place)
+
+
+class Preference(Condition):
+    _references = ('object',)
+
+    def update_uid(self):
+        self.uid = '#preference_%s<%s, %s>' % (self.preference, self.object, self.value)
+
+
+class PreferenceMob(Preference):
+    _references = ('object', 'mob')
+    _attributes = dict(object=None, mob=None, **Preference._attributes)
+    _required = tuple(['object', 'mob'] + list(Preference._required))
+
+    def update_uid(self):
+        self.uid = '#preference_mob<%s, %s>' % (self.object, self.mob)
+
+
+class PreferenceHometown(Preference):
+    _references = ('object', 'place')
+    _attributes = dict(object=None, place=None, **Preference._attributes)
+    _required = tuple(['object', 'place'] + list(Preference._required))
+
+    def update_uid(self):
+        self.uid = '#preference_place<%s, %s>' % (self.object, self.mob)
+
+
+
+class PreferenceFriend(Preference):
+    _references = ('object', 'person')
+    _attributes = dict(object=None, person=None, **Preference._attributes)
+    _required = tuple(['object', 'person'] + list(Preference._required))
+
+    def update_uid(self):
+        self.uid = '#preference_friend<%s, %s>' % (self.object, self.person)
+
+
+class PreferenceEnemy(Preference):
+    _references = ('object', 'person')
+    _attributes = dict(object=None, person=None, **Preference._attributes)
+    _required = tuple(['object', 'person'] + list(Preference._required))
+
+    def update_uid(self):
+        self.uid = '#preference_enemy<%s, %s>' % (self.object, self.person)
+
+
+
+class PreferenceEquipmentSlot(Preference):
+    _references = ('object',)
+    _attributes = dict(object=None, equipment_slot=None, **Preference._attributes)
+    _required = tuple(['object', 'equipment_slot'] + list(Preference._required))
+
+    def update_uid(self):
+        self.uid = '#preference_equipment_slot<%s, %s>' % (self.object, self.equipment_slot)
+
+
+######################
+# Actions classes
+######################
+
+
+class Message(Action):
+    _attributes = dict(id=None, **Action._attributes)
+    _required = tuple(['id'] + list(Action._required))
+
+    def update_uid(self):
+        self.uid = '#message<%s>' % self.id
+
+
+FACTS = {fact_class.type(): fact_class
+         for fact_class in globals()
+         if isinstance(fact_class, Fact) and issubclass(fact_class, Fact) and fact_class != Fact}

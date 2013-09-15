@@ -11,37 +11,40 @@ class Machine(object):
     def __init__(self, knowledge_base):
         self.knowledge_base = knowledge_base
 
-    def get_pointer(self):
+    @property
+    def pointer(self):
         if Pointer.UID not in self.knowledge_base:
             self.knowledge_base += Pointer()
         return self.knowledge_base[Pointer.UID]
 
+    @property
+    def is_processed(self): # TODO: tests
+        return self.pointer.state in self.knowledge_base and isinstance(self.knowledge_base[self.pointer.state], Finish)
+
+    @property
+    def next_state(self):
+        if self.pointer.jump is None:
+            if self.pointer.state is None:
+                return self.knowledge_base.filter(Start).next()
+            else:
+                return None
+
+        return self.knowledge_base[self.knowledge_base[self.pointer.jump].state_to]
+
     def step(self):
-        pointer = self.get_pointer()
 
-        if pointer.jump is not None:
-            next_state = self.knowledge_base[self.knowledge_base[pointer.jump].state_to]
-        else:
-            next_state = self.knowledge_base.filter(Start).next()
+        if self.next_state is None:
+            raise exceptions.NoJumpsFromLastStateError(state=self.pointer.state)
+        new_pointer = self.pointer.change(state=self.next_state.uid, jump=None)
 
-        new_pointer = pointer.change(state=next_state.uid, jump=None)
+        if not isinstance(self.next_state, Finish):
+            new_pointer = new_pointer.change(jump=self.get_next_jump(self.next_state).uid)
 
-        if not isinstance(next_state, Finish):
-            new_pointer = new_pointer.change(jump=self.get_next_jump(next_state).uid)
-
-        self.knowledge_base -= pointer
+        self.knowledge_base -= self.pointer
         self.knowledge_base += new_pointer
 
     def can_do_step(self):
-        pointer = self.get_pointer()
-
-        if pointer.jump is None:
-            next_state = self.knowledge_base.filter(Start).next()
-        else:
-            next_state = self.knowledge_base[self.knowledge_base[pointer.jump].state_to]
-
-        return all(requirement.check(self.knowledge_base)
-                  for requirement in next_state.require)
+        return self.next_state is not None and all(requirement.check(self.knowledge_base) for requirement in self.next_state.require)
 
     def step_until_can(self):
         while self.can_do_step():

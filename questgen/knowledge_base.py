@@ -13,6 +13,20 @@ class KnowledgeBase(object):
         self._facts = {}
         self.restrictions = []
 
+    def serialize(self):
+        return {'facts': [fact.serialize() for fact in self._facts.values()],
+                'restrictions': [restriction.serialize() for restriction in self.restrictions.values()]}
+
+    @classmethod
+    def deserialize(cls, data, restrictions, fact_classes):
+        kb = cls()
+
+        for fact_data in data['facts']:
+            kb += fact_classes[fact_data['type']].deserialize(fact_data)
+
+        kb += restrictions
+
+
     def __iadd__(self, fact, expected_fact=False):
         if isinstance(fact, Iterable) and not expected_fact:
             map(lambda element: self.__iadd__(element, expected_fact=True), fact)

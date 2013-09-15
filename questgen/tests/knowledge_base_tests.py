@@ -52,11 +52,11 @@ class KnowledgeBaseTests(unittest.TestCase):
 
     def test_add_fact__wrong_type_for_nested_lists(self):
         self.assertRaises(exceptions.WrongFactTypeError,
-                          self.kb.__iadd__, [[Fact('some fact')]])
+                          self.kb.__iadd__, [[Fact(uid='some fact')]])
 
     def test_remove_fact__no_fact(self):
         self.assertRaises(exceptions.NoFactError,
-                          self.kb.__isub__, Fact('some fact'))
+                          self.kb.__isub__, Fact(uid='some fact'))
 
     def test_remove_fact__wrong_type(self):
         self.assertRaises(exceptions.WrongFactTypeError,
