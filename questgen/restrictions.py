@@ -1,54 +1,54 @@
 # coding: utf-8
+import itertools
 
-from questgen.facts import Start, LocatedIn, Jump, State, Finish
-
-from questgen.exceptions import QuestgenError
+from questgen import facts
+from questgen import exceptions
 
 class Restriction(object):
 
-    def __init__(self, knowledge_base=None):
-        self.knowledge_base = knowledge_base
+    def validate(self, knowledge_base):
+        raise NotImplementedError
 
 
 class AlwaysSuccess(Restriction):
-    def validate(self): pass
+    def validate(self, knowledge_base): pass
 
 class AlwaysError(Restriction):
 
-    class Error(QuestgenError):
+    class Error(exceptions.RollBackError):
         MSG = u'Always error'
 
-    def validate(self):
+    def validate(self, knowledge_base):
         raise self.Error()
 
 
 class SingleStartState(Restriction):
 
-    class Error(QuestgenError):
+    class Error(exceptions.RollBackError):
         MSG = u'MUST be only one Start statement'
 
-    def validate(self):
-        if len(list(self.knowledge_base.filter(Start))) != 1:
+    def validate(self, knowledge_base):
+        if len(list(knowledge_base.filter(facts.Start))) != 1:
             raise self.Error()
 
 class NoJumpsFromFinish(Restriction):
 
-    class Error(QuestgenError):
+    class Error(exceptions.RollBackError):
         MSG = u'MUST be no jumps from finish "%(state)s" states'
 
-    def validate(self):
-        for jump in self.knowledge_base.filter(Jump):
-            if isinstance(self.knowledge_base[jump.state_from], Finish):
-                raise self.Error(state=self.knowledge_base[jump.state_from])
+    def validate(self, knowledge_base):
+        for jump in knowledge_base.filter(facts.Jump):
+            if isinstance(knowledge_base[jump.state_from], facts.Finish):
+                raise self.Error(state=knowledge_base[jump.state_from])
 
 
 class SingleLocationForObject(Restriction):
-    class Error(QuestgenError):
+    class Error(exceptions.RollBackError):
         MSG = u'every person MUST be located in single place. Problem in %(location_1)r and %(location_2)s'
 
-    def validate(self):
+    def validate(self, knowledge_base):
         objects_to_locations = {}
-        for location in self.knowledge_base.filter(LocatedIn):
+        for location in itertools.chain(knowledge_base.filter(facts.LocatedIn), knowledge_base.filter(facts.LocatedNear)):
             if location.object in objects_to_locations:
                 raise self.Error(location_1=location,
                                  location_2=objects_to_locations[location.object])
@@ -56,25 +56,25 @@ class SingleLocationForObject(Restriction):
 
 
 class ReferencesIntegrity(Restriction):
-    class Error(QuestgenError):
+    class Error(exceptions.RollBackError):
         MSG = u'bad reference in fact "%(fact)s" in "%(attribute)s": "%(uid)s"'
 
-    def validate(self):
-        for fact in self.knowledge_base.facts():
+    def validate(self, knowledge_base):
+        for fact in knowledge_base.facts():
             for reference in fact._references:
 
                 uid = getattr(fact, reference)
-                if uid is not None and uid not in self.knowledge_base:
+                if uid is not None and uid not in knowledge_base:
                     raise self.Error(fact=fact,
                                      attribute=reference,
                                      uid=uid)
 
 class ConnectedStateJumpGraph(Restriction):
-    class Error(QuestgenError):
+    class Error(exceptions.RollBackError):
         MSG = u'States not reached from Start: %(states)r'
 
-    def validate(self):
-        start_uid = self.knowledge_base.filter(Start).next().uid
+    def validate(self, knowledge_base):
+        start_uid = knowledge_base.filter(facts.Start).next().uid
 
         riched_states = set()
         query = [start_uid]
@@ -86,18 +86,18 @@ class ConnectedStateJumpGraph(Restriction):
 
             riched_states.add(state_uid)
 
-            for jump in self.knowledge_base.filter(Jump):
+            for jump in knowledge_base.filter(facts.Jump):
                 if jump.state_from != state_uid: continue
                 query.append(jump.state_to)
 
-        all_states = set(state.uid for state in self.knowledge_base.filter(State))
+        all_states = set(state.uid for state in knowledge_base.filter(facts.State))
 
         if riched_states != all_states:
             raise self.Error(states=all_states-riched_states)
 
 
 class NoCirclesInStateJumpGraph(Restriction):
-    class Error(QuestgenError):
+    class Error(exceptions.RollBackError):
         MSG = u'Jumps in circle: %(jumps)r'
 
     def _bruteforce(self, path, table):
@@ -115,12 +115,33 @@ class NoCirclesInStateJumpGraph(Restriction):
             path.pop()
 
 
-    def validate(self):
-        start_uid = self.knowledge_base.filter(Start).next().uid
+    def validate(self, knowledge_base):
+        start_uid = knowledge_base.filter(facts.Start).next().uid
 
         table = {}
-        for jump in self.knowledge_base.filter(Jump):
+        for jump in knowledge_base.filter(facts.Jump):
             if jump.state_from not in table:
                 table[jump.state_from] = []
             table[jump.state_from].append(jump.state_to)
         self._bruteforce([start_uid], table)
+
+
+class MultipleJumpsFromNormalState(Restriction):
+    class Error(exceptions.RollBackError):
+        MSG = u'States with multiple jumps: %(states)r'
+
+    def validate(self, knowledge_base):
+
+        wrong_states = []
+
+        for state in knowledge_base.filter(facts.State):
+            if isinstance(state, facts.Choice):
+               continue
+
+            jumps = list(jump for jump in knowledge_base.filter(facts.Jump) if jump.state_from == state.uid)
+
+            if len(jumps) > 1:
+                wrong_states.append(state.uid)
+
+        if wrong_states:
+            raise self.Error(states=wrong_states)

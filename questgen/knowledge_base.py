@@ -3,7 +3,6 @@
 from collections import Iterable
 
 from questgen.facts import Fact
-from questgen.restrictions import Restriction
 
 from questgen import exceptions
 
@@ -12,19 +11,27 @@ class KnowledgeBase(object):
     def __init__(self):
         self._facts = {}
         self.restrictions = []
+        self.ns_number = 0
 
     def serialize(self):
         return {'facts': [fact.serialize() for fact in self._facts.values()],
-                'restrictions': [restriction.serialize() for restriction in self.restrictions.values()]}
+                'ns_number': self.ns_number}
 
     @classmethod
-    def deserialize(cls, data, restrictions, fact_classes):
+    def deserialize(cls, data, fact_classes):
         kb = cls()
 
         for fact_data in data['facts']:
-            kb += fact_classes[fact_data['type']].deserialize(fact_data)
+            kb += fact_classes[fact_data['type']].deserialize(fact_data, fact_classes)
 
-        kb += restrictions
+        kb.ns_number = data['ns_number']
+
+        return kb
+
+    def get_next_ns(self):
+        ns = '[ns-%d]' % self.ns_number
+        self.ns_number += 1
+        return ns
 
 
     def __iadd__(self, fact, expected_fact=False):
@@ -34,9 +41,6 @@ class KnowledgeBase(object):
             if fact.uid in self:
                 raise exceptions.DuplicatedFactError(fact=fact)
             self._facts[fact.uid] = fact
-        elif isinstance(fact, Restriction):
-            fact.knowledge_base = self
-            self.restrictions.append(fact)
         else:
             raise exceptions.WrongFactTypeError(fact=fact)
 
@@ -68,9 +72,9 @@ class KnowledgeBase(object):
         if fact_uid in self._facts: return self._facts[fact_uid]
         return default
 
-    def validate_consistency(self):
-        for restriction in self.restrictions:
-            restriction.validate()
+    def validate_consistency(self, restrictions):
+        for restriction in restrictions:
+            restriction.validate(self)
 
     def uids(self):
         return set(self._facts.keys())
@@ -80,3 +84,6 @@ class KnowledgeBase(object):
 
     def filter(self, fact_type):
         return (fact for fact in self.facts() if isinstance(fact, fact_type))
+
+    def tagged(self, tag):
+        return (fact for fact in self.facts() if tag in fact.tags)

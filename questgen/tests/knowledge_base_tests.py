@@ -67,15 +67,11 @@ class KnowledgeBaseTests(unittest.TestCase):
                           self.kb.__isub__, [[self.fact]])
 
     def test_validate_consistency__success(self):
-        self.kb.validate_consistency()
-        self.kb += restrictions.AlwaysSuccess(knowledge_base=self.kb)
-        self.kb.validate_consistency()
-        self.kb += restrictions.AlwaysSuccess(knowledge_base=self.kb)
-        self.kb.validate_consistency()
+        self.kb.validate_consistency([])
+        self.kb.validate_consistency([restrictions.AlwaysSuccess()])
 
     def test_validate_consistency__error(self):
-        self.kb += restrictions.AlwaysError(knowledge_base=self.kb)
-        self.assertRaises(restrictions.AlwaysError.Error, self.kb.validate_consistency)
+        self.assertRaises(restrictions.AlwaysError.Error, self.kb.validate_consistency, [restrictions.AlwaysError()])
 
     def test_uids(self):
         self.assertEqual(self.kb.uids(),

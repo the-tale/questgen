@@ -26,7 +26,9 @@ class SimpleQuestTests(unittest.TestCase):
                      LocatedIn(object='person_to', place='place_to')]
 
         # quest
-        self.kb += [ Start(require=(LocatedIn(object='person_from', place='place_from'),
+        self.kb += [ Start(uid='start',
+                           quest_type='simple_test',
+                           require=(LocatedIn(object='person_from', place='place_from'),
                                     LocatedIn(object='person_to', place='place_to'),
                                     LocatedIn(object='hero', place='place_from'))),
 
@@ -36,20 +38,17 @@ class SimpleQuestTests(unittest.TestCase):
                      Finish(uid='st_finish',
                             require=(LocatedIn(object='hero', place='place_to'),)),
 
-                     Jump(state_from=Start.UID, state_to='st_throught_place'),
+                     Jump(state_from='start', state_to='st_throught_place'),
                      Jump(state_from='st_throught_place', state_to='st_finish') ]
-
-        # current quest
-        self.kb += [ restrictions.SingleStartState(),
-                     restrictions.NoJumpsFromFinish(),
-                     restrictions.SingleLocationForObject(),
-                     restrictions.ReferencesIntegrity(),
-                     restrictions.ConnectedStateJumpGraph(),
-                     restrictions.NoCirclesInStateJumpGraph() ]
 
         self.kb += [ Hero(uid='hero') ]
 
-        self.kb.validate_consistency()
+        self.kb.validate_consistency([ restrictions.SingleStartState(),
+                                       restrictions.NoJumpsFromFinish(),
+                                       restrictions.SingleLocationForObject(),
+                                       restrictions.ReferencesIntegrity(),
+                                       restrictions.ConnectedStateJumpGraph(),
+                                       restrictions.NoCirclesInStateJumpGraph() ])
 
         self.machine = machine.Machine(knowledge_base=self.kb)
 
@@ -59,7 +58,7 @@ class SimpleQuestTests(unittest.TestCase):
     def test_full_story_forced(self):
         self.machine.step()
         self.assertEqual(self.machine.pointer,
-                         Pointer(state=Start.UID, jump=Jump(state_from=Start.UID, state_to='st_throught_place').uid))
+                         Pointer(state='start', jump=Jump(state_from='start', state_to='st_throught_place').uid))
         self.machine.step()
         self.assertEqual(self.machine.pointer,
                          Pointer(state='st_throught_place',
@@ -79,12 +78,12 @@ class SimpleQuestTests(unittest.TestCase):
 
         self.machine.step_until_can()
         self.assertEqual(self.machine.pointer,
-                         Pointer(state=Start.UID, jump=Jump(state_from=Start.UID, state_to='st_throught_place').uid))
+                         Pointer(state='start', jump=Jump(state_from='start', state_to='st_throught_place').uid))
 
         # no move, since hero not in right place
         self.machine.step_until_can()
         self.assertEqual(self.machine.pointer,
-                         Pointer(state=Start.UID, jump=Jump(state_from=Start.UID, state_to='st_throught_place').uid))
+                         Pointer(state='start', jump=Jump(state_from='start', state_to='st_throught_place').uid))
 
         LocatedIn.relocate(self.kb, 'hero', 'place_thought')
         self.machine.step_until_can()

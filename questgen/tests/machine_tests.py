@@ -13,7 +13,7 @@ class MachineTests(unittest.TestCase):
     def setUp(self):
         self.kb = KnowledgeBase()
 
-        self.start = Start()
+        self.start = Start(uid='start', quest_type='test')
         self.state_1 = State(uid='state_1')
         self.state_2 = State(uid='state_2')
         self.finish_1 = Finish(uid='finish_1')
@@ -50,9 +50,21 @@ class MachineTests(unittest.TestCase):
         jumps = set()
 
         for i in xrange(100):
-            jumps.add(self.machine.get_next_jump(self.start).uid)
+            jumps.add(self.machine.get_next_jump(self.start, single=False).uid)
 
         self.assertEqual(jumps, set([jump_1.uid, jump_2.uid]))
+
+    def test_get_next_jump__require_one_jump__exception(self):
+        jump_1 = Jump(state_from=self.start.uid, state_to=self.state_1.uid)
+        jump_2 = Jump(state_from=self.start.uid, state_to=self.state_2.uid)
+        self.kb += [jump_1, jump_2]
+
+        self.assertRaises(exceptions.MoreThenOneJumpsAvailableError, self.machine.get_next_jump, self.start, single=True)
+
+    def test_get_next_jump__require_one_jump(self):
+        jump = Jump(state_from=self.start.uid, state_to=self.state_1.uid)
+        self.kb += jump
+        self.assertEqual(self.machine.get_next_jump(self.start, single=True).uid, jump.uid)
 
     def test_can_do_step__no_pointer(self):
         self.assertEqual(list(self.kb.filter(Pointer)), [])
@@ -70,7 +82,7 @@ class MachineTests(unittest.TestCase):
         self.assertFalse(self.machine.can_do_step())
 
     def test_can_do_step__success(self):
-        state_3 = State(uid='state_3', require=[Start()])
+        state_3 = State(uid='state_3', require=[Start(uid='start', quest_type='test')])
         jump_3 = Jump(state_from=self.start.uid, state_to=state_3.uid)
         self.kb += [ state_3, jump_3]
 
@@ -83,7 +95,7 @@ class MachineTests(unittest.TestCase):
 
     def test_do_step__no_pointer(self):
         jump_1 = Jump(state_from=self.start.uid, state_to=self.state_1.uid)
-        jump_2 = Jump(state_from=self.start.uid, state_to=self.state_2.uid)
+        jump_2 = Jump(state_from=self.state_1.uid, state_to=self.state_2.uid)
         self.kb += [jump_1, jump_2]
 
         self.assertEqual(list(self.kb.filter(Pointer)), [])

@@ -47,20 +47,20 @@ class UIDDidNotSetupped(FactsError):
 ####################################################################
 class MachineError(QuestgenError): pass
 
-class NoJumpsAvailableError(KnowledgeBaseError):
+class NoJumpsAvailableError(MachineError):
     MSG = u'no jumps available for state %(state)r'
 
-class NoJumpsFromLastStateError(KnowledgeBaseError):
+class NoJumpsFromLastStateError(MachineError):
     MSG = u'no jumps available for last state %(state)r'
+
+class MoreThenOneJumpsAvailableError(MachineError):
+    MSG = u'more then oneo jumps available for state %(state)r'
 
 
 ####################################################################
 # transformators
 ####################################################################
 class TransformatorsError(QuestgenError): pass
-
-class NotJumpFactInEventGroupError(TransformatorsError):
-    MSG = u'event group (%(event)s) MUST contain only jump facts, not "%(fact)r" fact'
 
 class NoTaggedEventMembersError(TransformatorsError):
     MSG = u'no tagged event members for event "%(event)r"'

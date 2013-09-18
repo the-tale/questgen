@@ -25,6 +25,8 @@ class HEAD_COLORS(object):
     SUBGRAPH = '#ffffdd'
     EVENT = '#eeeecc'
 
+    LINK = '#ffaaaa'
+
 
 class Drawer(object):
 
@@ -33,6 +35,8 @@ class Drawer(object):
         self.graph = gv.strictdigraph('quest')
         self.tags = defaultdict(set)
         self.nodes = {}
+
+        self.linked_edges = set()
 
     def add_node(self, fact):
         node = gv.node(self.graph, fact.uid)
@@ -47,10 +51,57 @@ class Drawer(object):
 
         return node
 
+    def _add_linked_edge(self, jump):
+        node = gv.node(self.graph, jump.uid)
+        gv.setv(node, 'shape', 'point')
+        gv.setv(node, 'label', '')
+
+        edge_1 = gv.edge(self.nodes[jump.state_from], node)
+        edge_2 = gv.edge(node, self.nodes[jump.state_to])
+        gv.setv(edge_1, 'dir', 'none')
+        gv.setv(edge_2, 'headport', jump.state_to)
+        gv.setv(edge_1, 'tailport', jump.state_from)
+
+        if isinstance(jump, facts.Option):
+            gv.setv(edge_1, 'style', 'dotted')
+            gv.setv(edge_2, 'style', 'dotted')
+
+    def _add_edge(self, jump):
+        edge = gv.edge(self.nodes[jump.state_from], self.nodes[jump.state_to])
+        gv.setv(edge, 'headport', jump.state_to)
+        gv.setv(edge, 'tailport', jump.state_from)
+
+        if isinstance(jump, facts.Option):
+            gv.setv(edge, 'style', 'dotted')
+
+    def add_edge(self, jump):
+        if jump.uid in self.linked_edges:
+            self._add_linked_edge(jump)
+        else:
+            self._add_edge(jump)
+
+    def add_link(self, link):
+        node = gv.node(self.graph, link.uid)
+        gv.setv(node, 'shape', 'circle')
+        gv.setv(node, 'label', 'link')
+        gv.setv(node, 'fontsize', '10')
+        gv.setv(node, 'style', 'filled')
+        gv.setv(node, 'fillcolor', HEAD_COLORS.LINK)
+        gv.setv(node, 'fixedsize', 'true')
+        gv.setv(node, 'width', '0.33')
+
+        for option_uid in link.options:
+            self.linked_edges.add(option_uid)
+            edge = gv.edge(node, option_uid)
+            gv.setv(edge, 'dir', 'none')
+            gv.setv(edge, 'color', HEAD_COLORS.LINK)
+            gv.setv(edge, 'minlen', '0')
+
     def draw(self, path):
 
         gv.setv(self.graph, 'rankdir', 'LR')
         gv.setv(self.graph, 'splines', 'ortho')
+        # gv.setv(self.graph, 'concentrate', 'true') # merge edges
 
         for state in self.kb.filter(facts.State):
             self.add_node(state)
@@ -58,13 +109,11 @@ class Drawer(object):
         for event in self.kb.filter(facts.Event):
             self.add_node(event)
 
-        for jump in self.kb.filter(facts.Jump):
-            edge = gv.edge(self.nodes[jump.state_from], self.nodes[jump.state_to])
-            gv.setv(edge, 'tailport', jump.state_from)
-            gv.setv(edge, 'headport', jump.state_to)
+        for link in self.kb.filter(facts.OptionsLink):
+            self.add_link(link)
 
-            if isinstance(jump, facts.Option):
-                gv.setv(edge, 'style', 'dotted')
+        for jump in self.kb.filter(facts.Jump):
+            self.add_edge(jump)
 
         for tag, elements in self.tags.items():
             subgraph_uid = 'cluster_' + tag
@@ -82,7 +131,7 @@ class Drawer(object):
             gv.setv(subgraph, 'bgcolor', HEAD_COLORS.SUBGRAPH)
 
             for event in self.kb.filter(facts.Event):
-                if event.tag == tag:
+                if event.uid == tag:
                     gv.node(subgraph, event.uid)
 
         gv.layout(self.graph, 'dot');
@@ -138,6 +187,8 @@ class Drawer(object):
         for action in state.actions:
             if isinstance(action, facts.Message):
                 trs.append(self.create_tr_for_message(action, bgcolor=actions_bgcolor))
+            elif isinstance(action, facts.GivePower):
+                trs.append(self.create_tr_for_give_power(action, bgcolor=actions_bgcolor))
             elif isinstance(action, facts.LocatedNear):
                 trs.append(self.create_tr_for_located_near(action, bgcolor=actions_bgcolor))
 
@@ -156,13 +207,16 @@ class Drawer(object):
                      port=event.uid)
 
     def create_tr_for_located_in(self, requirement, bgcolor):
-        return tr(td(u'%s <b>находится в </b> %s' % (requirement.object, requirement.place), bgcolor=bgcolor))
+        return tr(td(u'%s <b>находится в</b>&nbsp;%s' % (requirement.object, requirement.place), bgcolor=bgcolor))
 
     def create_tr_for_located_near(self, requirement, bgcolor):
-        return tr(td(u'%s <b>находится около </b> %s' % (requirement.object, requirement.place), bgcolor=bgcolor))
+        return tr(td(u'%s <b>находится около</b>&nbsp;%s' % (requirement.object, requirement.place), bgcolor=bgcolor))
 
     def create_tr_for_message(self, message, bgcolor):
-        return tr(td(u'<b>сообщение: </b> %s' % message.id, bgcolor=bgcolor))
+        return tr(td(u'<b>сообщение:</b>&nbsp;%s' % message.id, bgcolor=bgcolor))
+
+    def create_tr_for_give_power(self, give_power, bgcolor):
+        return tr(td(u'<b>увеличть влияние</b>&nbsp; %s <b>на</b> %.2f' % (give_power.person, give_power.power), bgcolor=bgcolor))
 
 
 def b(data): return u'<b>%s</b>' % data

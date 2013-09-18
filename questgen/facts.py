@@ -17,6 +17,7 @@ class Fact(object):
                    'exceptions': None,
                    'externals': None}
     _required = ()
+    _serializable = ()
 
     def __init__(self, **kwargs):
         for name in self._required:
@@ -30,10 +31,28 @@ class Fact(object):
         self.update_uid()
 
     def serialize(self):
-        return {'class': self.__class__.__name__,
+        data = {'class': self.__class__.__name__,
                 'attributes': {attribute: getattr(self, attribute)
                                for attribute, default in self._attributes.iteritems()
                                if getattr(self, attribute) != default}}
+        for attribute in self._serializable:
+            if attribute not in data['attributes']:
+                continue
+            data['attributes'][attribute] = [fact.serialize() for fact in data['attributes'][attribute]]
+
+        return data
+
+    @classmethod
+    def deserialize(cls, data, fact_classes):
+        obj = cls(**data['attributes'])
+        for attribute in cls._serializable:
+            if attribute not in data['attributes']:
+                continue
+            setattr(obj,
+                    attribute,
+                    [fact_classes[fact_data['class']].deserialize(fact_data, fact_classes)
+                     for fact_data in data['attributes'][attribute]])
+        return obj
 
     def change(self, **kwargs):
         changed_fact = copy.deepcopy(self)
@@ -76,11 +95,13 @@ class Fact(object):
 
 class Action(Fact): pass
 
+class Restriction(Fact): pass
 
 class Actor(Fact): pass
 
 class State(Fact):
     _attributes = dict(require=(), actions=(), **Fact._attributes)
+    _serializable = ('require', 'actions')
 
 
 class Jump(Fact):
@@ -102,13 +123,7 @@ class Pointer(Fact):
                                                  for attribute, default in State._attributes.iteritems()})
 
 
-class Event(Fact):
-    _attributes = dict(tag=None, **Fact._attributes)
-    _required = tuple(['tag'] + list(Fact._required))
-
-    def update_uid(self):
-        self.uid = '#event_%s' % self.tag
-
+class Event(Fact): pass
 
 ######################
 # Concrete classes
@@ -127,16 +142,32 @@ class Mob(Actor):
     _attributes = dict(terrains=None, **Actor._attributes)
 
 class Start(State):
-    UID = '#start'
-    _attributes = {attribute:(default if attribute != 'uid' else '#start')
-                   for attribute, default in State._attributes.iteritems()}
-
-
+    _attributes = dict(quest_type=None, **State._attributes)
+    _required = tuple(['quest_type'] + list(State._required))
 
 class Finish(State): pass
+
 class Choice(State): pass
 
-class Option(Jump): pass
+class Option(Jump):
+    def update_uid(self):
+        self.uid='#option<%s, %s>' % (self.state_from, self.state_to)
+
+class OptionsLink(Fact):
+    _attributes = dict(options=(), **Condition._attributes)
+    _required = tuple(['options'] + list(Condition._required))
+
+    def update_uid(self):
+        self.uid='#options_link<%s>' % ','.join(self.options)
+
+
+class ChoicePath(Fact):
+    _references = ('choice', 'option')
+    _attributes = dict(choice=None, option=None, default=None, **Condition._attributes)
+    _required = tuple(['choice', 'option', 'default'] + list(Condition._required))
+
+    def update_uid(self):
+        self.uid = '#choice_path<%s, %s, %s>' % (self.choice, self.option, self.default)
 
 
 class LocatedIn(Condition):
@@ -229,7 +260,36 @@ class Message(Action):
     def update_uid(self):
         self.uid = '#message<%s>' % self.id
 
+class GivePower(Action):
+    _references = ('person',)
+    _attributes = dict(person=None, power=None, **Action._attributes)
+    _required = tuple(['person', 'power'] + list(Action._required))
+
+    def update_uid(self):
+        self.uid = '#give_power<%s, %f>' % (self.person, self.power)
+
 
 FACTS = {fact_class.type(): fact_class
          for fact_class in globals()
          if isinstance(fact_class, Fact) and issubclass(fact_class, Fact) and fact_class != Fact}
+
+
+######################
+# Restrictions classes
+######################
+
+class OnlyGoodBranches(Restriction):
+    _references = ('person',)
+    _attributes = dict(person=None, **Action._attributes)
+    _required = tuple(['person'] + list(Action._required))
+
+    def update_uid(self):
+        self.uid = '#only_good_branches<%s>' % self.person
+
+class OnlyBadBranches(Restriction):
+    _references = ('person',)
+    _attributes = dict(person=None, **Action._attributes)
+    _required = tuple(['person'] + list(Action._required))
+
+    def update_uid(self):
+        self.uid = '#only_bad_branches<%s>' % self.person
