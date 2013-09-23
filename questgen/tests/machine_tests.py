@@ -5,7 +5,7 @@ import unittest
 from questgen.knowledge_base import KnowledgeBase
 from questgen.machine import Machine
 from questgen import exceptions
-from questgen.facts import Place, Pointer, Start, Finish, State, Jump
+from questgen.facts import Place, Pointer, Start, Finish, State, Jump, Choice, Option, ChoicePath
 
 
 class MachineTests(unittest.TestCase):
@@ -13,7 +13,7 @@ class MachineTests(unittest.TestCase):
     def setUp(self):
         self.kb = KnowledgeBase()
 
-        self.start = Start(uid='start', quest_type='test')
+        self.start = Start(uid='start', type='test')
         self.state_1 = State(uid='state_1')
         self.state_2 = State(uid='state_2')
         self.finish_1 = Finish(uid='finish_1')
@@ -37,6 +37,16 @@ class MachineTests(unittest.TestCase):
 
         self.assertEqual(set(jump.uid for jump in self.machine.get_available_jumps(self.start)),
                          set([jump_1.uid, jump_2.uid]))
+
+    def test_get_available_jumps__for_choice_state(self):
+        choice = Choice(uid='choice')
+        option_1 = Option(state_from=choice.uid, state_to=self.state_1.uid, type='opt_1')
+        option_2 = Option(state_from=choice.uid, state_to=self.state_2.uid, type='opt_2')
+        path = ChoicePath(choice=choice.uid, option=option_2.uid, default=True)
+        self.kb += (choice, option_1, option_2, path)
+
+        for i in xrange(100):
+            self.assertEqual(self.machine.get_available_jumps(choice), [option_2])
 
     def test_get_next_jump__no_jumps(self):
         self.assertRaises(exceptions.NoJumpsAvailableError,
@@ -82,7 +92,7 @@ class MachineTests(unittest.TestCase):
         self.assertFalse(self.machine.can_do_step())
 
     def test_can_do_step__success(self):
-        state_3 = State(uid='state_3', require=[Start(uid='start', quest_type='test')])
+        state_3 = State(uid='state_3', require=[Start(uid='start', type='test')])
         jump_3 = Jump(state_from=self.start.uid, state_to=state_3.uid)
         self.kb += [ state_3, jump_3]
 
@@ -136,3 +146,17 @@ class MachineTests(unittest.TestCase):
         pointer = self.machine.pointer
         self.assertEqual(pointer.state, self.state_1.uid)
         self.assertEqual(pointer.jump, jump_2.uid)
+
+    def test_sync_pointer(self):
+        choice = Choice(uid='choice')
+        option_1 = Option(state_from=choice.uid, state_to=self.state_1.uid, type='opt_1')
+        option_2 = Option(state_from=choice.uid, state_to=self.state_2.uid, type='opt_2')
+        path = ChoicePath(choice=choice.uid, option=option_2.uid, default=True)
+        pointer = Pointer(state=choice.uid, jump=option_1.uid)
+
+        self.kb += (choice, option_1, option_2, path, pointer)
+
+        self.machine.sync_pointer()
+
+        self.assertEqual(self.machine.pointer.jump, option_2.uid)
+        self.assertEqual(self.machine.pointer.state, choice.uid)

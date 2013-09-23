@@ -14,15 +14,15 @@ class KnowledgeBase(object):
         self.ns_number = 0
 
     def serialize(self):
-        return {'facts': [fact.serialize() for fact in self._facts.values()],
+        return {'facts': {fact.uid: fact.serialize() for fact in self._facts.values()},
                 'ns_number': self.ns_number}
 
     @classmethod
     def deserialize(cls, data, fact_classes):
         kb = cls()
 
-        for fact_data in data['facts']:
-            kb += fact_classes[fact_data['type']].deserialize(fact_data, fact_classes)
+        for fact_data in data['facts'].values():
+            kb += fact_classes[fact_data['class']].deserialize(fact_data, fact_classes)
 
         kb.ns_number = data['ns_number']
 

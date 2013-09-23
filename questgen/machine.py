@@ -40,7 +40,6 @@ class Machine(object):
         return self.knowledge_base[self.knowledge_base[self.pointer.jump].state_to]
 
     def step(self):
-
         if self.next_state is None:
             raise exceptions.NoJumpsFromLastStateError(state=self.pointer.state)
         new_pointer = self.pointer.change(state=self.next_state.uid, jump=None)
@@ -57,6 +56,15 @@ class Machine(object):
     def step_until_can(self):
         while self.can_do_step():
             self.step()
+
+    def sync_pointer(self):
+        if self.pointer.state is None:
+            return
+
+        new_pointer = self.pointer.change(jump=self.get_next_jump(self.knowledge_base[self.pointer.state]).uid)
+
+        self.knowledge_base -= self.pointer
+        self.knowledge_base += new_pointer
 
     def get_next_jump(self, state, single=True):
         jumps = self.get_available_jumps(state)
@@ -76,7 +84,7 @@ class Machine(object):
                 if jump.state_from == state.uid]
 
     def get_nearest_choice(self):
-        current_state = self.pointer.state
+        current_state = self.current_state
 
         if current_state is None:
             current_state = self.get_start_state()

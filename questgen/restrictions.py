@@ -145,3 +145,28 @@ class MultipleJumpsFromNormalState(Restriction):
 
         if wrong_states:
             raise self.Error(states=wrong_states)
+
+
+class ChoicesConsistency(Restriction):
+    class OptionLikeJumpError(exceptions.RollBackError):
+        MSG = u'Option not connected to choice state: %(option)r'
+
+    class JumpLikeOptionError(exceptions.RollBackError):
+        MSG = u'Jump connected to choice state: %(jump)r'
+
+    def validate(self, knowledge_base):
+
+        for option in knowledge_base.filter(facts.Option):
+            if isinstance(knowledge_base[option.state_from], facts.Choice):
+               continue
+
+            raise self.OptionLikeJumpError(option=option)
+
+        for jump in knowledge_base.filter(facts.Jump):
+            if not isinstance(knowledge_base[jump.state_from], facts.Choice):
+               continue
+
+            if isinstance(jump, facts.Option):
+               continue
+
+            raise self.JumpLikeOptionError(jump=jump)

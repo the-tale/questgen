@@ -68,6 +68,12 @@ class NoTaggedEventMembersError(TransformatorsError):
 class MoreThenOneEventTagError(TransformatorsError):
     MSG = u'fact "%(fact)r" marked more then one event tags'
 
+class OptionWithTwoLinksError(TransformatorsError):
+    MSG = u'option "%(option)r" has more then one link'
+
+class LinkedOptionWithProcessedChoiceError(TransformatorsError):
+    MSG = u'choice of option "%(option)r" has already had default option. Probably you have mess with linked options'
+
 
 ####################################################################
 # quests

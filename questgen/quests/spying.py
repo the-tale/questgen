@@ -14,7 +14,8 @@ from questgen.facts import ( Start,
                              Option,
                              Message,
                              GivePower,
-                             OptionsLink)
+                             OptionsLink,
+                             QuestParticipant)
 
 
 class Spying(BaseQuest):
@@ -60,12 +61,17 @@ class Spying(BaseQuest):
         open_up_variants = Event(uid=ns+'open_up_variants', label=u'Варианты окончания раскрытия')
 
         start = Start(uid=ns+'start',
-                      quest_type=cls.TYPE,
+                      type=cls.TYPE,
                       label=u'Начало',
                       description=u'Задание на шпионаж',
                       require=[LocatedIn(object=hero_uid, place=initiator_position),
                                LocatedIn(object=receiver, place=receiver_position)],
                       actions=[Message(id='intro')])
+
+        participants = [QuestParticipant(start=start.uid, participant=initiator, role='initiator'),
+                        QuestParticipant(start=start.uid, participant=initiator_position, role='initiator_position'),
+                        QuestParticipant(start=start.uid, participant=receiver, role='receiver'),
+                        QuestParticipant(start=start.uid, participant=receiver_position, role='receiver_position') ]
 
         start_spying = Choice(uid=ns+'start_spying',
                               label=u'Прибытие в город цели',
@@ -119,11 +125,11 @@ class Spying(BaseQuest):
                                         GivePower(person=initiator, power=-1),
                                         GivePower(person=receiver, power=1)])
 
-        start_spying__spying_middle = Option(state_from=start_spying.uid, state_to=spying_middle.uid)
-        start_spying__open_up = Option(state_from=start_spying.uid, state_to=open_up.uid)
+        start_spying__spying_middle = Option(state_from=start_spying.uid, state_to=spying_middle.uid, type='spy')
+        start_spying__open_up = Option(state_from=start_spying.uid, state_to=open_up.uid, type='open_up')
 
-        spying_middle__continue_spying = Option(state_from=spying_middle.uid, state_to=continue_spying.uid)
-        spying_middle__open_up = Option(state_from=spying_middle.uid, state_to=open_up.uid)
+        spying_middle__continue_spying = Option(state_from=spying_middle.uid, state_to=continue_spying.uid, type='spy')
+        spying_middle__open_up = Option(state_from=spying_middle.uid, state_to=open_up.uid, type='open_up')
 
 
         facts = [ start,
@@ -153,5 +159,7 @@ class Spying(BaseQuest):
 
                   open_up_variants
                 ]
+
+        facts.extend(participants)
 
         return facts

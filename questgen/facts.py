@@ -81,10 +81,10 @@ class Fact(object):
         return not (self == other)
 
     @classmethod
-    def type(cls): return cls.__name__
+    def fact_class(cls): return cls.__name__
 
     def __repr__(self):
-        return u'%s(%s)' % (self.type(),
+        return u'%s(%s)' % (self.fact_class(),
                             u', '.join(u'%s=%r' % (attribute, getattr(self, attribute))
                                        for attribute, default in self._attributes.iteritems()
                                        if getattr(self, attribute) != default))
@@ -141,15 +141,18 @@ class Person(Actor):
 class Mob(Actor):
     _attributes = dict(terrains=None, **Actor._attributes)
 
+
 class Start(State):
-    _attributes = dict(quest_type=None, **State._attributes)
-    _required = tuple(['quest_type'] + list(State._required))
+    _attributes = dict(type=None, **State._attributes)
+    _required = tuple(['type'] + list(State._required))
 
 class Finish(State): pass
 
 class Choice(State): pass
 
 class Option(Jump):
+    _attributes = dict(type=None, **Jump._attributes)
+    _required = tuple(['type'] + list(Jump._required))
     def update_uid(self):
         self.uid='#option<%s, %s>' % (self.state_from, self.state_to)
 
@@ -248,6 +251,15 @@ class PreferenceEquipmentSlot(Preference):
         self.uid = '#preference_equipment_slot<%s, %s>' % (self.object, self.equipment_slot)
 
 
+class QuestParticipant(Fact):
+    _references = ('start', 'participant',)
+    _attributes = dict(start=None, participant=None, role=None, **Fact._attributes)
+    _required = tuple(['start', 'participant', 'role'] + list(Fact._required))
+
+    def update_uid(self):
+        self.uid = '#quest_participant<%s, %s, %s>' % (self.start, self.participant, self.role)
+
+
 ######################
 # Actions classes
 ######################
@@ -269,11 +281,6 @@ class GivePower(Action):
         self.uid = '#give_power<%s, %f>' % (self.person, self.power)
 
 
-FACTS = {fact_class.type(): fact_class
-         for fact_class in globals()
-         if isinstance(fact_class, Fact) and issubclass(fact_class, Fact) and fact_class != Fact}
-
-
 ######################
 # Restrictions classes
 ######################
@@ -293,3 +300,9 @@ class OnlyBadBranches(Restriction):
 
     def update_uid(self):
         self.uid = '#only_bad_branches<%s>' % self.person
+
+
+
+FACTS = {fact_class.fact_class(): fact_class
+         for fact_class in globals().values()
+         if isinstance(fact_class, type) and issubclass(fact_class, Fact) and fact_class != Fact}

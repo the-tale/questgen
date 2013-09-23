@@ -27,7 +27,7 @@ class SimpleQuestTests(unittest.TestCase):
 
         # quest
         self.kb += [ Start(uid='start',
-                           quest_type='simple_test',
+                           type='simple_test',
                            require=(LocatedIn(object='person_from', place='place_from'),
                                     LocatedIn(object='person_to', place='place_to'),
                                     LocatedIn(object='hero', place='place_from'))),

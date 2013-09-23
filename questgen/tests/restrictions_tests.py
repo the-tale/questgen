@@ -25,7 +25,7 @@ class SingleStartStateTests(RestrictionsTestsBase):
 
     def setUp(self):
         super(SingleStartStateTests, self).setUp()
-        self.start = Start(uid='start', quest_type='test')
+        self.start = Start(uid='start', type='test')
         self.restriction = restrictions.SingleStartState()
 
     def test_success(self):
@@ -37,14 +37,14 @@ class SingleStartStateTests(RestrictionsTestsBase):
 
     def test_more_then_one_start(self):
         self.kb += self.start,
-        self.assertRaises(Exception, self.kb.__iadd__, Start(uid='start', quest_type='test'))
+        self.assertRaises(Exception, self.kb.__iadd__, Start(uid='start', type='test'))
 
 
 class NoJumpsFromFinishTests(RestrictionsTestsBase):
 
     def setUp(self):
         super(NoJumpsFromFinishTests, self).setUp()
-        self.kb += [Start(uid='start', quest_type='test'),
+        self.kb += [Start(uid='start', type='test'),
                     Finish(uid='finish_1'),
                     Jump(state_from='start', state_to='finish_1')]
         self.restriction = restrictions.NoJumpsFromFinish()
@@ -116,7 +116,7 @@ class ConnectedStateJumpGraphTests(RestrictionsTestsBase):
         super(ConnectedStateJumpGraphTests, self).setUp()
         self.restriction = restrictions.ConnectedStateJumpGraph()
 
-        self.kb += [Start(uid='start', quest_type='test'),
+        self.kb += [Start(uid='start', type='test'),
                     State(uid='state_1'),
                     State(uid='state_2'),
                     Finish(uid='finish_1'),
@@ -142,7 +142,7 @@ class NoCirclesInStateJumpGraphTests(RestrictionsTestsBase):
         super(NoCirclesInStateJumpGraphTests, self).setUp()
         self.restriction = restrictions.NoCirclesInStateJumpGraph()
 
-        self.kb += [Start(uid='start', quest_type='test'),
+        self.kb += [Start(uid='start', type='test'),
                     State(uid='state_1'),
                     State(uid='state_2'),
                     State(uid='state_3'),
@@ -166,14 +166,14 @@ class MultipleJumpsFromNormalStateTests(RestrictionsTestsBase):
         super(MultipleJumpsFromNormalStateTests, self).setUp()
         self.restriction = restrictions.MultipleJumpsFromNormalState()
 
-        self.kb += [Start(uid='start', quest_type='test'),
+        self.kb += [Start(uid='start', type='test'),
                     Choice(uid='state_1'),
                     State(uid='state_2'),
                     Finish(uid='finish_1'),
                     Finish(uid='finish_2'),
                     Jump(state_from='start', state_to='state_1'),
-                    Option(state_from='state_1', state_to='state_2'),
-                    Option(state_from='state_1', state_to='finish_1'),
+                    Option(state_from='state_1', state_to='state_2', type='opt_1'),
+                    Option(state_from='state_1', state_to='finish_1', type='opt_2'),
                     Jump(state_from='state_2', state_to='finish_2')]
 
     def test_success(self):
@@ -182,3 +182,31 @@ class MultipleJumpsFromNormalStateTests(RestrictionsTestsBase):
     def test_state_not_reached(self):
         self.kb += Jump(state_from='state_2', state_to='finish_1')
         self.assertRaises(self.restriction.Error, self.restriction.validate, self.kb)
+
+
+class ChoicesConsistencyTests(RestrictionsTestsBase):
+
+    def setUp(self):
+        super(ChoicesConsistencyTests, self).setUp()
+        self.restriction = restrictions.ChoicesConsistency()
+
+        self.kb += [Start(uid='start', type='test'),
+                    Choice(uid='state_1'),
+                    State(uid='state_2'),
+                    Finish(uid='finish_1'),
+                    Finish(uid='finish_2'),
+                    Jump(state_from='start', state_to='state_1'),
+                    Option(state_from='state_1', state_to='state_2', type='opt_1'),
+                    Option(state_from='state_1', state_to='finish_1', type='opt_2'),
+                    Jump(state_from='state_2', state_to='finish_2')]
+
+    def test_success(self):
+        self.restriction.validate(self.kb)
+
+    def test_option_like_jump(self):
+        self.kb += Option(state_from='state_2', state_to='finish_1', type='opt_3')
+        self.assertRaises(self.restriction.OptionLikeJumpError, self.restriction.validate, self.kb)
+
+    def test_jump_like_option(self):
+        self.kb += Jump(state_from='state_1', state_to='finish_1')
+        self.assertRaises(self.restriction.JumpLikeOptionError, self.restriction.validate, self.kb)
