@@ -110,7 +110,7 @@ class Jump(Fact):
     _required = tuple(['state_from', 'state_to'] + list(Fact._required))
 
     def update_uid(self):
-        self.uid='#jump<%s, %s>' % (self.state_from, self.state_to)
+        self.uid='#jump(%s, %s)' % (self.state_from, self.state_to)
 
 
 class Condition(Fact): pass
@@ -154,14 +154,14 @@ class Option(Jump):
     _attributes = dict(type=None, **Jump._attributes)
     _required = tuple(['type'] + list(Jump._required))
     def update_uid(self):
-        self.uid='#option<%s, %s>' % (self.state_from, self.state_to)
+        self.uid='#option(%s, %s)' % (self.state_from, self.state_to)
 
 class OptionsLink(Fact):
     _attributes = dict(options=(), **Condition._attributes)
     _required = tuple(['options'] + list(Condition._required))
 
     def update_uid(self):
-        self.uid='#options_link<%s>' % ','.join(self.options)
+        self.uid='#options_link(%s)' % ','.join(self.options)
 
 
 class ChoicePath(Fact):
@@ -170,7 +170,7 @@ class ChoicePath(Fact):
     _required = tuple(['choice', 'option', 'default'] + list(Condition._required))
 
     def update_uid(self):
-        self.uid = '#choice_path<%s, %s, %s>' % (self.choice, self.option, self.default)
+        self.uid = '#choice_path(%s, %s, %s)' % (self.choice, self.option, self.default)
 
 
 class LocatedIn(Condition):
@@ -185,7 +185,7 @@ class LocatedIn(Condition):
         location.change_in_knowlege_base(knowlege_base, place=new_place)
 
     def update_uid(self):
-        self.uid = '#located_in<%s, %s>' % (self.object, self.place)
+        self.uid = '#located_in(%s, %s)' % (self.object, self.place)
 
 
 class LocatedNear(Condition):
@@ -194,14 +194,14 @@ class LocatedNear(Condition):
     _required = tuple(['object', 'place'] + list(Condition._required))
 
     def update_uid(self):
-        self.uid = '#located_near<%s, %s>' % (self.object, self.place)
+        self.uid = '#located_near(%s, %s)' % (self.object, self.place)
 
 
 class Preference(Condition):
     _references = ('object',)
 
     def update_uid(self):
-        self.uid = '#preference_%s<%s, %s>' % (self.preference, self.object, self.value)
+        self.uid = '#preference_%s(%s, %s)' % (self.preference, self.object, self.value)
 
 
 class PreferenceMob(Preference):
@@ -210,7 +210,7 @@ class PreferenceMob(Preference):
     _required = tuple(['object', 'mob'] + list(Preference._required))
 
     def update_uid(self):
-        self.uid = '#preference_mob<%s, %s>' % (self.object, self.mob)
+        self.uid = '#preference_mob(%s, %s)' % (self.object, self.mob)
 
 
 class PreferenceHometown(Preference):
@@ -219,7 +219,7 @@ class PreferenceHometown(Preference):
     _required = tuple(['object', 'place'] + list(Preference._required))
 
     def update_uid(self):
-        self.uid = '#preference_place<%s, %s>' % (self.object, self.mob)
+        self.uid = '#preference_place(%s, %s)' % (self.object, self.place)
 
 
 
@@ -229,7 +229,7 @@ class PreferenceFriend(Preference):
     _required = tuple(['object', 'person'] + list(Preference._required))
 
     def update_uid(self):
-        self.uid = '#preference_friend<%s, %s>' % (self.object, self.person)
+        self.uid = '#preference_friend(%s, %s)' % (self.object, self.person)
 
 
 class PreferenceEnemy(Preference):
@@ -238,7 +238,7 @@ class PreferenceEnemy(Preference):
     _required = tuple(['object', 'person'] + list(Preference._required))
 
     def update_uid(self):
-        self.uid = '#preference_enemy<%s, %s>' % (self.object, self.person)
+        self.uid = '#preference_enemy(%s, %s)' % (self.object, self.person)
 
 
 
@@ -248,7 +248,7 @@ class PreferenceEquipmentSlot(Preference):
     _required = tuple(['object', 'equipment_slot'] + list(Preference._required))
 
     def update_uid(self):
-        self.uid = '#preference_equipment_slot<%s, %s>' % (self.object, self.equipment_slot)
+        self.uid = '#preference_equipment_slot(%s, %s)' % (self.object, self.equipment_slot)
 
 
 class QuestParticipant(Fact):
@@ -257,7 +257,7 @@ class QuestParticipant(Fact):
     _required = tuple(['start', 'participant', 'role'] + list(Fact._required))
 
     def update_uid(self):
-        self.uid = '#quest_participant<%s, %s, %s>' % (self.start, self.participant, self.role)
+        self.uid = '#quest_participant(%s, %s, %s)' % (self.start, self.participant, self.role)
 
 
 ######################
@@ -270,7 +270,7 @@ class Message(Action):
     _required = tuple(['id'] + list(Action._required))
 
     def update_uid(self):
-        self.uid = '#message<%s>' % self.id
+        self.uid = '#message(%s)' % self.id
 
 class GivePower(Action):
     _references = ('person',)
@@ -278,7 +278,7 @@ class GivePower(Action):
     _required = tuple(['person', 'power'] + list(Action._required))
 
     def update_uid(self):
-        self.uid = '#give_power<%s, %f>' % (self.person, self.power)
+        self.uid = '#give_power(%s, %f)' % (self.person, self.power)
 
 
 ######################
@@ -291,7 +291,7 @@ class OnlyGoodBranches(Restriction):
     _required = tuple(['person'] + list(Action._required))
 
     def update_uid(self):
-        self.uid = '#only_good_branches<%s>' % self.person
+        self.uid = '#only_good_branches(%s)' % self.person
 
 class OnlyBadBranches(Restriction):
     _references = ('person',)
@@ -299,7 +299,7 @@ class OnlyBadBranches(Restriction):
     _required = tuple(['person'] + list(Action._required))
 
     def update_uid(self):
-        self.uid = '#only_bad_branches<%s>' % self.person
+        self.uid = '#only_bad_branches(%s)' % self.person
 
 
 

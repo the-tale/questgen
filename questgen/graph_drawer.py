@@ -51,32 +51,42 @@ class Drawer(object):
 
         return node
 
-    def _add_linked_edge(self, jump):
+    def _add_option_edge(self, jump):
         node = gv.node(self.graph, jump.uid)
-        gv.setv(node, 'shape', 'point')
-        gv.setv(node, 'label', '')
+
+        gv.setv(node, 'shape', 'plaintext')
+        gv.setv(node, 'label', table(tr(td(jump.type)), port=jump.uid).encode('utf-8'))
+        gv.setv(node, 'fontsize', '10')
+
+        self.nodes[jump.uid] = node
 
         edge_1 = gv.edge(self.nodes[jump.state_from], node)
         edge_2 = gv.edge(node, self.nodes[jump.state_to])
-        gv.setv(edge_1, 'dir', 'none')
-        gv.setv(edge_2, 'headport', jump.state_to)
-        gv.setv(edge_1, 'tailport', jump.state_from)
 
-        if isinstance(jump, facts.Option):
-            gv.setv(edge_1, 'style', 'dotted')
-            gv.setv(edge_2, 'style', 'dotted')
+        gv.setv(edge_1, 'dir', 'none')
+        gv.setv(edge_1, 'tailport', jump.state_from)
+        gv.setv(edge_1, 'headport', jump.uid)
+        gv.setv(edge_1, 'style', 'dotted')
+        gv.setv(edge_1, 'weight', '40')
+        gv.setv(edge_1, 'minlen', '1')
+
+        gv.setv(edge_2, 'tailport', jump.uid)
+        gv.setv(edge_2, 'headport', jump.state_to)
+        gv.setv(edge_2, 'style', 'dotted')
+        gv.setv(edge_2, 'weight', '40')
+        gv.setv(edge_2, 'minlen', '1')
 
     def _add_edge(self, jump):
         edge = gv.edge(self.nodes[jump.state_from], self.nodes[jump.state_to])
         gv.setv(edge, 'headport', jump.state_to)
         gv.setv(edge, 'tailport', jump.state_from)
+        gv.setv(edge, 'weight', '20')
+        gv.setv(edge, 'minlen', '1')
 
-        if isinstance(jump, facts.Option):
-            gv.setv(edge, 'style', 'dotted')
 
     def add_edge(self, jump):
-        if jump.uid in self.linked_edges:
-            self._add_linked_edge(jump)
+        if isinstance(jump, facts.Option):
+            self._add_option_edge(jump)
         else:
             self._add_edge(jump)
 
@@ -95,7 +105,9 @@ class Drawer(object):
             edge = gv.edge(node, option_uid)
             gv.setv(edge, 'dir', 'none')
             gv.setv(edge, 'color', HEAD_COLORS.LINK)
-            gv.setv(edge, 'minlen', '0')
+            gv.setv(edge, 'minlen', '1')
+            gv.setv(edge, 'headport', option_uid)
+            gv.setv(edge, 'weight', '10')
 
     def draw(self, path):
 
@@ -109,11 +121,11 @@ class Drawer(object):
         for event in self.kb.filter(facts.Event):
             self.add_node(event)
 
-        for link in self.kb.filter(facts.OptionsLink):
-            self.add_link(link)
-
         for jump in self.kb.filter(facts.Jump):
             self.add_edge(jump)
+
+        for link in self.kb.filter(facts.OptionsLink):
+            self.add_link(link)
 
         for tag, elements in self.tags.items():
             subgraph_uid = 'cluster_' + tag
@@ -180,20 +192,26 @@ class Drawer(object):
 
         for requirement in state.require:
             if isinstance(requirement, facts.LocatedIn):
-                trs.append(self.create_tr_for_located_in(requirement, bgcolor=requirements_bgcolor))
+                trs.append(tr(td(self.create_label_for_located_in(requirement), bgcolor=requirements_bgcolor, colspan=2)))
             elif isinstance(requirement, facts.LocatedNear):
-                trs.append(self.create_tr_for_located_near(requirement, bgcolor=requirements_bgcolor))
+                trs.append(tr(td(self.create_label_for_located_near(requirement), bgcolor=requirements_bgcolor, colspan=2)))
 
         for action in state.actions:
             if isinstance(action, facts.Message):
-                trs.append(self.create_tr_for_message(action, bgcolor=actions_bgcolor))
+                trs.append(tr(td(self.create_label_for_message(action), bgcolor=actions_bgcolor, colspan=2)))
             elif isinstance(action, facts.GivePower):
-                trs.append(self.create_tr_for_give_power(action, bgcolor=actions_bgcolor))
+                trs.append(tr(td(self.create_label_for_give_power(action), bgcolor=actions_bgcolor, colspan=2)))
             elif isinstance(action, facts.LocatedNear):
-                trs.append(self.create_tr_for_located_near(action, bgcolor=actions_bgcolor))
+                trs.append(tr(td(self.create_label_for_located_near(action), bgcolor=actions_bgcolor, colspan=2)))
 
-        return table(tr(td(i(state.uid))),
-                     tr(td(b(state.label))),
+
+        if hasattr(state, 'type'):
+            head = tr(td(i(state.uid)), td(b(state.type), align='right'))
+        else:
+            head = tr(td(i(state.uid)))
+
+        return table(head,
+                     tr(td(b(state.label), colspan=2)),
                      tr(td(state.description, colspan=2)),
                      *trs,
                      bgcolor=bgcolor,
@@ -206,17 +224,17 @@ class Drawer(object):
                      bgcolor=HEAD_COLORS.EVENT,
                      port=event.uid)
 
-    def create_tr_for_located_in(self, requirement, bgcolor):
-        return tr(td(u'%s <b>находится в</b>&nbsp;%s' % (requirement.object, requirement.place), bgcolor=bgcolor))
+    def create_label_for_located_in(self, requirement):
+        return u'%s <b>находится в</b>&nbsp;%s' % (requirement.object, requirement.place)
 
-    def create_tr_for_located_near(self, requirement, bgcolor):
-        return tr(td(u'%s <b>находится около</b>&nbsp;%s' % (requirement.object, requirement.place), bgcolor=bgcolor))
+    def create_label_for_located_near(self, requirement):
+        return u'%s <b>находится около</b>&nbsp;%s' % (requirement.object, requirement.place)
 
-    def create_tr_for_message(self, message, bgcolor):
-        return tr(td(u'<b>сообщение:</b>&nbsp;%s' % message.id, bgcolor=bgcolor))
+    def create_label_for_message(self, message):
+        return u'<b>сообщение:</b>&nbsp;%s' % message.id
 
-    def create_tr_for_give_power(self, give_power, bgcolor):
-        return tr(td(u'<b>увеличть влияние</b>&nbsp; %s <b>на</b> %.2f' % (give_power.person, give_power.power), bgcolor=bgcolor))
+    def create_label_for_give_power(self, give_power):
+        return u'<b>увеличть влияние</b>&nbsp; %s <b>на</b> %.2f' % (give_power.person, give_power.power)
 
 
 def b(data): return u'<b>%s</b>' % data
