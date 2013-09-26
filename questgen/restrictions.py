@@ -31,6 +31,15 @@ class SingleStartState(Restriction):
         if len(list(knowledge_base.filter(facts.Start))) != 1:
             raise self.Error()
 
+class FinishStateExists(Restriction):
+
+    class Error(exceptions.RollBackError):
+        MSG = u'al least one Finish state MUST exists'
+
+    def validate(self, knowledge_base):
+        if len(list(knowledge_base.filter(facts.Finish))) == 0:
+            raise self.Error()
+
 class NoJumpsFromFinish(Restriction):
 
     class Error(exceptions.RollBackError):
@@ -106,11 +115,12 @@ class NoCirclesInStateJumpGraph(Restriction):
         if not table.get(current_state):
             return
 
-        if table[current_state][0] in path:
-            raise self.Error(jumps=path+[table[current_state][0]])
-
         for next_state in table[current_state]:
-            path.append(table[current_state][0])
+
+            if next_state in path:
+                raise self.Error(jumps=path+[next_state])
+
+            path.append(next_state)
             self._bruteforce(path, table)
             path.pop()
 

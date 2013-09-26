@@ -13,6 +13,8 @@ class QuestsBase(object):
     def __init__(self):
         self._quests = {}
 
+    def quests(self): return self._quests.itervalues()
+
     def __iadd__(self, quest, expected_quest=False):
         if isinstance(quest, Iterable) and not expected_quest:
             map(lambda element: self.__iadd__(element, expected_quest=True), quest)

@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from questgen.quests.base_quest import BaseQuest
+from questgen.quests.base_quest import BaseQuest, ROLES
 from questgen.facts import ( Start,
                              State,
                              Jump,
@@ -68,10 +68,8 @@ class Spying(BaseQuest):
                                LocatedIn(object=receiver, place=receiver_position)],
                       actions=[Message(id='intro')])
 
-        participants = [QuestParticipant(start=start.uid, participant=initiator, role='initiator'),
-                        QuestParticipant(start=start.uid, participant=initiator_position, role='initiator_position'),
-                        QuestParticipant(start=start.uid, participant=receiver, role='receiver'),
-                        QuestParticipant(start=start.uid, participant=receiver_position, role='receiver_position') ]
+        participants = [QuestParticipant(start=start.uid, participant=initiator, role=ROLES.INITIATOR),
+                        QuestParticipant(start=start.uid, participant=receiver, role=ROLES.RECEIVER) ]
 
         start_spying = Choice(uid=ns+'start_spying',
                               label=u'Прибытие в город цели',

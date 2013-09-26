@@ -409,8 +409,8 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
             except exceptions.LinkedOptionWithProcessedChoiceError:
                 is_raised = True
                 self.assertEqual(len(list(kb.filter(ChoicePath))), 1)
-                self.assertEqual([path.choice for path in kb.filter(ChoicePath)], [choice_1.uid])
-                self.assertEqual([path.option for path in kb.filter(ChoicePath)], [option_1.uid])
+                self.assertEqual([path.choice for path in kb.filter(ChoicePath)], [choice_2.uid])
+                self.assertEqual([path.option for path in kb.filter(ChoicePath)], [option_2_1.uid])
                 break
 
         self.assertTrue(is_raised)

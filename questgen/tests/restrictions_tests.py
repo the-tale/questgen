@@ -36,8 +36,28 @@ class SingleStartStateTests(RestrictionsTestsBase):
         self.assertRaises(self.restriction.Error, self.restriction.validate, self.kb)
 
     def test_more_then_one_start(self):
-        self.kb += self.start,
+        self.kb += self.start
         self.assertRaises(Exception, self.kb.__iadd__, Start(uid='start', type='test'))
+
+
+class FinishStateExistsTests(RestrictionsTestsBase):
+
+    def setUp(self):
+        super(FinishStateExistsTests, self).setUp()
+        self.finish = Finish(uid='finish')
+        self.restriction = restrictions.FinishStateExists()
+
+    def test_success(self):
+        self.kb += self.finish
+        self.restriction.validate(self.kb)
+
+    def test_no_finish(self):
+        self.assertRaises(self.restriction.Error, self.restriction.validate, self.kb)
+
+    def test_more_then_one_finish(self):
+        self.kb += self.finish
+        self.kb += Finish(uid='finish_2')
+        self.restriction.validate(self.kb)
 
 
 class NoJumpsFromFinishTests(RestrictionsTestsBase):
