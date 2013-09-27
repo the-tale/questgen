@@ -455,7 +455,7 @@ class ChangeChoiceTests(TransformatorsTestsBase):
 
         self.kb += choices
 
-        transformators.change_choice(self.kb, choice_1.uid, option_1.uid, default=False)
+        transformators.change_choice(self.kb, option_1.uid, default=False)
 
         self.check_in_knowledge_base(self.kb, facts)
         self.check_not_in_knowledge_base(self.kb, choices)
@@ -502,7 +502,7 @@ class ChangeChoiceTests(TransformatorsTestsBase):
 
         self.kb += choices
 
-        transformators.change_choice(self.kb, choice_1.uid, option_1.uid, default=False)
+        transformators.change_choice(self.kb, option_1.uid, default=False)
 
         self.check_in_knowledge_base(self.kb, facts)
         self.check_not_in_knowledge_base(self.kb, choices)

@@ -4,11 +4,15 @@ import random
 from questgen import facts
 from questgen import exceptions
 
+EMPTY_LAMBDA = lambda *argv, **kwargs: None
 
 class Machine(object):
 
-    def __init__(self, knowledge_base):
+    def __init__(self, knowledge_base, on_state=EMPTY_LAMBDA, on_jump_start=EMPTY_LAMBDA, on_jump_end=EMPTY_LAMBDA):
         self.knowledge_base = knowledge_base
+        self.on_state = on_state
+        self.on_jump_start = on_jump_start
+        self.on_jump_end = on_jump_end
 
     @property
     def pointer(self):
@@ -40,15 +44,30 @@ class Machine(object):
         return self.knowledge_base[self.knowledge_base[self.pointer.jump].state_to]
 
     def step(self):
-        if self.next_state is None:
-            raise exceptions.NoJumpsFromLastStateError(state=self.pointer.state)
-        new_pointer = self.pointer.change(state=self.next_state.uid, jump=None)
+        next_state = self.next_state
+        next_jump = None
 
-        if not isinstance(self.next_state, facts.Finish):
-            new_pointer = new_pointer.change(jump=self.get_next_jump(self.next_state).uid)
+        if next_state is None:
+            raise exceptions.NoJumpsFromLastStateError(state=self.pointer.state)
+
+        if not isinstance(next_state, facts.Finish):
+            next_jump = self.get_next_jump(next_state)
+
+        new_pointer = self.pointer.change(state=next_state.uid,
+                                          jump=next_jump.uid if next_jump else None)
+
+        if self.pointer.jump is not None:
+            self.on_jump_end(jump=self.knowledge_base[self.pointer.jump])
 
         self.knowledge_base -= self.pointer
         self.knowledge_base += new_pointer
+
+        if self.pointer.state is not None:
+            self.on_state(state=self.knowledge_base[self.pointer.state])
+
+        if self.pointer.jump is not None:
+            self.on_jump_start(jump=self.knowledge_base[self.pointer.jump])
+
 
     def can_do_step(self):
         return self.next_state is not None and all(requirement.check(self.knowledge_base) for requirement in self.next_state.require)
@@ -63,8 +82,12 @@ class Machine(object):
 
         new_pointer = self.pointer.change(jump=self.get_next_jump(self.knowledge_base[self.pointer.state]).uid)
 
-        self.knowledge_base -= self.pointer
-        self.knowledge_base += new_pointer
+        if new_pointer.jump is not None and self.pointer.jump != new_pointer.jump:
+            self.on_jump_start(jump=self.knowledge_base[new_pointer.jump])
+
+            self.knowledge_base -= self.pointer
+            self.knowledge_base += new_pointer
+
 
     def get_next_jump(self, state, single=True):
         jumps = self.get_available_jumps(state)

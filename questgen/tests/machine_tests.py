@@ -1,4 +1,5 @@
 # coding: utf-8
+import mock
 
 import unittest
 
@@ -108,12 +109,26 @@ class MachineTests(unittest.TestCase):
         jump_2 = Jump(state_from=self.state_1.uid, state_to=self.state_2.uid)
         self.kb += [jump_1, jump_2]
 
-        self.assertEqual(list(self.kb.filter(Pointer)), [])
-        self.machine.step()
-        self.assertEqual(len(list(self.kb.filter(Pointer))), 1)
+        calls_manager = mock.MagicMock()
+
+        with mock.patch.object(self.machine, 'on_state') as on_state:
+            with mock.patch.object(self.machine, 'on_jump_start') as on_jump_start:
+                with mock.patch.object(self.machine, 'on_jump_end') as on_jump_end:
+
+                    calls_manager.attach_mock(on_state, 'on_state')
+                    calls_manager.attach_mock(on_jump_start, 'on_jump_start')
+                    calls_manager.attach_mock(on_jump_end, 'on_jump_end')
+
+                    self.assertEqual(list(self.kb.filter(Pointer)), [])
+                    self.machine.step()
+                    self.assertEqual(len(list(self.kb.filter(Pointer))), 1)
+
+                    self.assertEqual(calls_manager.mock_calls, [mock.call.on_state(state=self.start),
+                                                                mock.call.on_jump_start(jump=jump_1)])
+
         pointer = self.machine.pointer
         self.assertEqual(pointer.state, self.start.uid)
-        self.assertTrue(pointer.jump in [jump_1.uid, jump_2.uid])
+        self.assertEqual(pointer.jump, jump_1.uid)
 
 
     def test_do_step__finish(self):
@@ -121,7 +136,21 @@ class MachineTests(unittest.TestCase):
         self.kb += jump_1
 
         self.machine.step()
-        self.machine.step()
+
+        calls_manager = mock.MagicMock()
+
+        with mock.patch.object(self.machine, 'on_state') as on_state:
+            with mock.patch.object(self.machine, 'on_jump_start') as on_jump_start:
+                with mock.patch.object(self.machine, 'on_jump_end') as on_jump_end:
+
+                    calls_manager.attach_mock(on_state, 'on_state')
+                    calls_manager.attach_mock(on_jump_start, 'on_jump_start')
+                    calls_manager.attach_mock(on_jump_end, 'on_jump_end')
+
+                    self.machine.step()
+
+                    self.assertEqual(calls_manager.mock_calls, [mock.call.on_jump_end(jump=jump_1),
+                                                                mock.call.on_state(state=self.finish_1)])
 
         pointer = self.machine.pointer
         self.assertEqual(pointer.state, self.finish_1.uid)
@@ -141,7 +170,22 @@ class MachineTests(unittest.TestCase):
         self.kb += [jump_1, jump_2]
 
         self.machine.step()
-        self.machine.step()
+
+        calls_manager = mock.MagicMock()
+
+        with mock.patch.object(self.machine, 'on_state') as on_state:
+            with mock.patch.object(self.machine, 'on_jump_start') as on_jump_start:
+                with mock.patch.object(self.machine, 'on_jump_end') as on_jump_end:
+
+                    calls_manager.attach_mock(on_state, 'on_state')
+                    calls_manager.attach_mock(on_jump_start, 'on_jump_start')
+                    calls_manager.attach_mock(on_jump_end, 'on_jump_end')
+
+                    self.machine.step()
+
+                    self.assertEqual(calls_manager.mock_calls, [mock.call.on_jump_end(jump=jump_1),
+                                                                mock.call.on_state(state=self.state_1),
+                                                                mock.call.on_jump_start(jump=jump_2)])
 
         pointer = self.machine.pointer
         self.assertEqual(pointer.state, self.state_1.uid)
@@ -156,7 +200,19 @@ class MachineTests(unittest.TestCase):
 
         self.kb += (choice, option_1, option_2, path, pointer)
 
-        self.machine.sync_pointer()
+        calls_manager = mock.MagicMock()
+
+        with mock.patch.object(self.machine, 'on_state') as on_state:
+            with mock.patch.object(self.machine, 'on_jump_start') as on_jump_start:
+                with mock.patch.object(self.machine, 'on_jump_end') as on_jump_end:
+
+                    calls_manager.attach_mock(on_state, 'on_state')
+                    calls_manager.attach_mock(on_jump_start, 'on_jump_start')
+                    calls_manager.attach_mock(on_jump_end, 'on_jump_end')
+
+                    self.machine.sync_pointer()
+
+                    self.assertEqual(calls_manager.mock_calls, [mock.call.on_jump_start(jump=option_2)])
 
         self.assertEqual(self.machine.pointer.jump, option_2.uid)
         self.assertEqual(self.machine.pointer.state, choice.uid)

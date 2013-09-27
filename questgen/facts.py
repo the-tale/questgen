@@ -101,13 +101,14 @@ class Actor(Fact): pass
 
 class State(Fact):
     _attributes = dict(require=(), actions=(), **Fact._attributes)
-    _serializable = ('require', 'actions')
+    _serializable = ['require', 'actions'] + list(Fact._serializable)
 
 
 class Jump(Fact):
     _references = ('state_from', 'state_to')
-    _attributes = dict(state_from=None, state_to=None, **Fact._attributes)
+    _attributes = dict(state_from=None, state_to=None, start_actions=(), end_actions=(), **Fact._attributes)
     _required = tuple(['state_from', 'state_to'] + list(Fact._required))
+    _serializable = ['start_actions', 'end_actions'] + list(Fact._serializable)
 
     def update_uid(self):
         self.uid='#jump(%s, %s)' % (self.state_from, self.state_to)
@@ -146,7 +147,9 @@ class Start(State):
     _attributes = dict(type=None, **State._attributes)
     _required = tuple(['type'] + list(State._required))
 
-class Finish(State): pass
+class Finish(State):
+    _attributes = dict(type=None, **State._attributes)
+    _required = tuple(['type'] + list(State._required))
 
 class Choice(State): pass
 

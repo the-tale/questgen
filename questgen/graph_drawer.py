@@ -27,6 +27,10 @@ class HEAD_COLORS(object):
 
     LINK = '#ffaaaa'
 
+    JUMP = '#ffffff'
+    JUMP_ACTIONS_START = '#eeeeee'
+    JUMP_ACTIONS_END = '#dddddd'
+
 
 class Drawer(object):
 
@@ -51,11 +55,11 @@ class Drawer(object):
 
         return node
 
-    def _add_option_edge(self, jump):
+    def _add_edge(self, jump):
         node = gv.node(self.graph, jump.uid)
 
         gv.setv(node, 'shape', 'plaintext')
-        gv.setv(node, 'label', table(tr(td(jump.type)), port=jump.uid).encode('utf-8'))
+        gv.setv(node, 'label', self.create_label_for(jump).encode('utf-8'))
         gv.setv(node, 'fontsize', '10')
 
         self.nodes[jump.uid] = node
@@ -66,17 +70,19 @@ class Drawer(object):
         gv.setv(edge_1, 'dir', 'none')
         gv.setv(edge_1, 'tailport', jump.state_from)
         gv.setv(edge_1, 'headport', jump.uid)
-        gv.setv(edge_1, 'style', 'dotted')
         gv.setv(edge_1, 'weight', '40')
         gv.setv(edge_1, 'minlen', '1')
 
         gv.setv(edge_2, 'tailport', jump.uid)
         gv.setv(edge_2, 'headport', jump.state_to)
-        gv.setv(edge_2, 'style', 'dotted')
         gv.setv(edge_2, 'weight', '40')
         gv.setv(edge_2, 'minlen', '1')
 
-    def _add_edge(self, jump):
+        if isinstance(jump, facts.Option):
+            gv.setv(edge_1, 'style', 'dotted')
+            gv.setv(edge_2, 'style', 'dotted')
+
+    def _add_empty_edge(self, jump):
         edge = gv.edge(self.nodes[jump.state_from], self.nodes[jump.state_to])
         gv.setv(edge, 'headport', jump.state_to)
         gv.setv(edge, 'tailport', jump.state_from)
@@ -85,10 +91,10 @@ class Drawer(object):
 
 
     def add_edge(self, jump):
-        if isinstance(jump, facts.Option):
-            self._add_option_edge(jump)
-        else:
+        if hasattr(jump, 'type') or jump.start_actions or jump.end_actions:
             self._add_edge(jump)
+        else:
+            self._add_empty_edge(jump)
 
     def add_link(self, link):
         node = gv.node(self.graph, link.uid)
@@ -162,6 +168,8 @@ class Drawer(object):
             return self.create_label_for_state(fact)
         if isinstance(fact, facts.Event):
             return self.create_label_for_event(fact)
+        if isinstance(fact, facts.Jump):
+            return self.create_label_for_jump(fact)
         return None
 
     def create_label_for_start(self, start):
@@ -197,13 +205,7 @@ class Drawer(object):
                 trs.append(tr(td(self.create_label_for_located_near(requirement), bgcolor=requirements_bgcolor, colspan=2)))
 
         for action in state.actions:
-            if isinstance(action, facts.Message):
-                trs.append(tr(td(self.create_label_for_message(action), bgcolor=actions_bgcolor, colspan=2)))
-            elif isinstance(action, facts.GivePower):
-                trs.append(tr(td(self.create_label_for_give_power(action), bgcolor=actions_bgcolor, colspan=2)))
-            elif isinstance(action, facts.LocatedNear):
-                trs.append(tr(td(self.create_label_for_located_near(action), bgcolor=actions_bgcolor, colspan=2)))
-
+            trs.append(tr(td(self.create_label_for_action(action), bgcolor=actions_bgcolor, colspan=2)))
 
         if hasattr(state, 'type'):
             head = tr(td(i(state.uid)), td(b(state.type), align='right'))
@@ -217,12 +219,34 @@ class Drawer(object):
                      bgcolor=bgcolor,
                      port=state.uid)
 
+    def create_label_for_action(self, action):
+        if isinstance(action, facts.Message):
+            return self.create_label_for_message(action)
+        elif isinstance(action, facts.GivePower):
+            return self.create_label_for_give_power(action)
+        elif isinstance(action, facts.LocatedNear):
+            return self.create_label_for_located_near(action)
+
     def create_label_for_event(self, event):
         return table(tr(td(i(event.uid))),
                      tr(td(b(event.label))),
                      tr(td(event.description, colspan=2)),
                      bgcolor=HEAD_COLORS.EVENT,
                      port=event.uid)
+
+    def create_label_for_jump(self, jump):
+        trs = []
+
+        if hasattr(jump, 'type'):
+            trs.append(tr(td(jump.type, bgcolor=HEAD_COLORS.JUMP)))
+
+        for action in jump.start_actions:
+            trs.append(tr(td(self.create_label_for_action(action), bgcolor=HEAD_COLORS.JUMP_ACTIONS_START)))
+
+        for action in jump.end_actions:
+            trs.append(tr(td(self.create_label_for_action(action), bgcolor=HEAD_COLORS.JUMP_ACTIONS_END)))
+
+        return table(*trs, port=jump.uid, border=0)
 
     def create_label_for_located_in(self, requirement):
         return u'%s <b>находится в</b>&nbsp;%s' % (requirement.object, requirement.place)
@@ -243,14 +267,16 @@ def i(data): return u'<i>%s</i>' % data
 def table(*trs, **kwargs):
     bgcolor = kwargs.get('bgcolor')
     port = kwargs.get('port')
+    border = kwargs.get('border', 1)
     return u'''<
     <table cellpadding="1"
            cellspacing="0"
-           border="1"
+           border="%(border)d"
            %(bgcolor)s
            %(port)s
            cellborder="1">%(body)s</table>
     >''' % {'body': ''.join(trs),
+            'border': border,
             'port': 'port="%s"' % port if port else '',
             'bgcolor': 'BGCOLOR="%s"' % bgcolor if bgcolor is not None else ''}
 

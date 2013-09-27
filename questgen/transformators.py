@@ -67,7 +67,9 @@ def determine_default_choices(knowledge_base):
         knowledge_base += facts.ChoicePath(choice=choice.uid, option=default_option.uid, default=True)
 
 
-def change_choice(knowledge_base, choice_uid, new_option_uid, default):
+def change_choice(knowledge_base, new_option_uid, default):
+
+    choice_uid = knowledge_base[new_option_uid].state_from
 
     old_path = (path for path in knowledge_base.filter(facts.ChoicePath) if path.choice == choice_uid).next()
 

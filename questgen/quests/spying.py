@@ -81,14 +81,14 @@ class Spying(BaseQuest):
         spying_middle = Choice(uid=ns+'spying_middle',
                                label=u'Шпионаж',
                                description=u'герой начинает шпионить',
-                               actions=[Message(id='start_spying'),
-                                        LocatedNear(object=hero_uid, place=receiver_position)])
+                               actions=[LocatedNear(object=hero_uid, place=receiver_position)])
 
         continue_spying = State(uid=ns+'continue_spying',
                                 label=u'Продолжить шпионаж',
                                 description=u'Герой шпионит за целью',
-                                actions=[Message(id='continue_spying'),
-                                         LocatedNear(object=hero_uid, place=receiver_position)])
+                                require=[LocatedNear(object=hero_uid, place=receiver_position)],
+                                actions=[LocatedNear(object=hero_uid, place=receiver_position),
+                                         Message(id='continue_spying')])
 
         open_up = State(uid=ns+'open_up',
                         label=u'Раскрыться',
@@ -98,6 +98,7 @@ class Spying(BaseQuest):
 
 
         report_data = Finish(uid=ns+'report_data',
+                             type='report_data',
                              label=u'Сообщить сообранную информацию',
                              description=u'Вернуться к нанивателю и сообщить собранную информацию',
                              require=[LocatedIn(object=hero_uid, place=initiator_position)],
@@ -106,6 +107,7 @@ class Spying(BaseQuest):
                                       GivePower(person=receiver, power=-1)])
 
         open_up_finish = Finish(uid=ns+'open_up_finish',
+                                type='open_up_finish',
                                 label=u'Завершить задание',
                                 description=u'Завершить задание и остатсья в городе цели',
                                 tags=(open_up_variants.uid,),
@@ -115,6 +117,7 @@ class Spying(BaseQuest):
                                       GivePower(person=receiver, power=1)])
 
         open_up_lying = Finish(uid=ns+'open_up_lying',
+                               type='open_up_lying',
                                label=u'Обмануть заказчика',
                                description=u'Вернуться к заказчику и сообщить ложную информацию',
                                tags=(open_up_variants.uid,),
@@ -123,11 +126,11 @@ class Spying(BaseQuest):
                                         GivePower(person=initiator, power=-1),
                                         GivePower(person=receiver, power=1)])
 
-        start_spying__spying_middle = Option(state_from=start_spying.uid, state_to=spying_middle.uid, type='spy')
-        start_spying__open_up = Option(state_from=start_spying.uid, state_to=open_up.uid, type='open_up')
+        start_spying__spying_middle = Option(state_from=start_spying.uid, state_to=spying_middle.uid, type='spy', start_actions=[Message(id='start_spying'),])
+        start_spying__open_up = Option(state_from=start_spying.uid, state_to=open_up.uid, type='open_up', start_actions=[Message(id='start_open_up'),])
 
         spying_middle__continue_spying = Option(state_from=spying_middle.uid, state_to=continue_spying.uid, type='spy')
-        spying_middle__open_up = Option(state_from=spying_middle.uid, state_to=open_up.uid, type='open_up')
+        spying_middle__open_up = Option(state_from=spying_middle.uid, state_to=open_up.uid, type='open_up', start_actions=[Message(id='start_open_up'),])
 
 
         facts = [ start,
@@ -147,10 +150,10 @@ class Spying(BaseQuest):
                   spying_middle__continue_spying,
                   spying_middle__open_up,
 
-                  Jump(state_from=continue_spying.uid, state_to=report_data.uid),
+                  Jump(state_from=continue_spying.uid, state_to=report_data.uid, start_actions=[Message(id='move_to_report_data'),]),
 
                   Jump(state_from=open_up.uid, state_to=open_up_finish.uid),
-                  Jump(state_from=open_up.uid, state_to=open_up_lying.uid),
+                  Jump(state_from=open_up.uid, state_to=open_up_lying.uid, start_actions=[Message(id='move_to_report_lie'),]),
 
                   OptionsLink(options=(start_spying__open_up.uid, spying_middle__open_up.uid)),
                   OptionsLink(options=(start_spying__spying_middle.uid, spying_middle__continue_spying.uid)),
