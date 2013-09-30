@@ -10,7 +10,7 @@ class Selector(object):
 
     def __init__(self, kb):
         self._kb = kb
-        self._reserved = set()
+        self.reset()
 
     def _locations(self, restrict_places, restrict_objects, objects=None, places=None):
         locations = self._kb.filter(facts.LocatedIn)
@@ -29,13 +29,19 @@ class Selector(object):
 
         return locations
 
-    def heroes(self): return list(self._kb.filter(facts.Hero))
+    def heroes(self): return list(h.uid for h in self._kb.filter(facts.Hero))
 
-    def new_place(self):
-        places = [place for place in self._kb.filter(facts.Place) if place.uid not in self._reserved]
+    def new_place(self, terrains=None):
+        places = (place for place in self._kb.filter(facts.Place) if place.uid not in self._reserved)
+
+        if terrains:
+            terrains = set(terrains)
+            places = (place for place in places if set(place.terrains) & terrains)
+
+        places = list(places)
 
         if not places:
-            raise exceptions.NoFactSelectedError(method='new_place', arguments=None)
+            raise exceptions.NoFactSelectedError(method='new_place', arguments={'terrains': terrains})
 
         place_uid = random.choice(places).uid
         self._reserved.add(place_uid)
@@ -80,3 +86,8 @@ class Selector(object):
         self._reserved.add(person_uid)
 
         return person_uid
+
+    def preferences_mob(self): return self._kb.filter(facts.PreferenceMob).next().uid
+
+    def reset(self):
+        self._reserved = set()

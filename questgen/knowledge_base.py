@@ -13,8 +13,8 @@ class KnowledgeBase(object):
         self.restrictions = []
         self.ns_number = 0
 
-    def serialize(self):
-        return {'facts': {fact.uid: fact.serialize() for fact in self._facts.values()},
+    def serialize(self, short=False):
+        return {'facts': {fact.uid: fact.serialize(short=short) for fact in self._facts.values()},
                 'ns_number': self.ns_number}
 
     @classmethod

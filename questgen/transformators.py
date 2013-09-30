@@ -129,14 +129,86 @@ def remove_restricted_states(knowledge_base):
         for state in knowledge_base.filter(facts.State):
             for action in state.actions:
                 if isinstance(action, facts.GivePower):
-                    if action.person == restriction_fact.person and action.power < 0:
+                    if action.object == restriction_fact.object and action.power < 0:
                         states_to_remove.add(state)
 
     for restriction_fact in knowledge_base.filter(facts.OnlyBadBranches):
         for state in knowledge_base.filter(facts.State):
             for action in state.actions:
                 if isinstance(action, facts.GivePower):
-                    if action.person == restriction_fact.person and action.power > 0:
+                    if action.object == restriction_fact.object and action.power > 0:
                         states_to_remove.add(state)
 
     knowledge_base -= states_to_remove
+
+
+def _get_actors(fact):
+    used_actors = set()
+
+    if isinstance(fact, facts.LocatedIn):
+        used_actors.add(fact.object)
+        used_actors.add(fact.place)
+    elif isinstance(fact, facts.LocatedNear):
+        used_actors.add(fact.object)
+        used_actors.add(fact.place)
+    elif isinstance(fact, facts.PreferenceMob):
+        used_actors.add(fact.mob)
+    elif isinstance(fact, facts.PreferenceHometown):
+        used_actors.add(fact.object)
+        used_actors.add(fact.place)
+    elif isinstance(fact, facts.PreferenceFriend):
+        used_actors.add(fact.object)
+        used_actors.add(fact.person)
+    elif isinstance(fact, facts.PreferenceEnemy):
+        used_actors.add(fact.object)
+        used_actors.add(fact.person)
+    elif isinstance(fact, facts.PreferenceEquipmentSlot):
+        used_actors.add(fact.object)
+        used_actors.add(fact.equipment_slot)
+    elif isinstance(fact, facts.QuestParticipant):
+        used_actors.add(fact.participant)
+    elif isinstance(fact, facts.GivePower):
+        used_actors.add(fact.object)
+    elif isinstance(fact, facts.Fight):
+        used_actors.add(fact.mob)
+
+    return used_actors
+
+
+def remove_unused_actors(knowledge_base):
+    used_actors = set()
+
+    for state in knowledge_base.filter(facts.State):
+        for action in state.actions:
+            used_actors |= _get_actors(action)
+
+        for requirement in state.require:
+            used_actors |= _get_actors(action)
+
+    for participant in knowledge_base.filter(facts.QuestParticipant):
+        used_actors |= _get_actors(participant)
+
+    # remove fully unused conditions
+    to_remove = set()
+
+    for condition in knowledge_base.filter(facts.Condition):
+        actors = _get_actors(condition)
+        if not (actors & used_actors):
+            to_remove.add(condition)
+
+    knowledge_base -= to_remove
+
+    # add actors, used in conditions
+    for condition in knowledge_base.filter(facts.Condition):
+        used_actors |= _get_actors(condition)
+
+    # remove actors
+
+    to_remove = set()
+    for actor in knowledge_base.filter(facts.Actor):
+        if actor.uid in used_actors:
+            continue
+
+        to_remove.add(actor)
+
+    knowledge_base -= to_remove

@@ -3,7 +3,7 @@
 import unittest
 
 from questgen.knowledge_base import KnowledgeBase
-from questgen.facts import Fact, Place, Person
+from questgen.facts import Fact, Place, Person, FACTS
 from questgen import exceptions
 from questgen import restrictions
 
@@ -13,10 +13,15 @@ class KnowledgeBaseTests(unittest.TestCase):
         self.kb = KnowledgeBase()
 
         self.fact = Fact(uid='fact')
-        self.fact_2 = Fact(uid='fact_2')
+        self.fact_2 = Fact(uid='fact_2', description=u'cba')
 
         self.kb += [ self.fact,
                      self.fact_2 ]
+
+    def test_serialize(self):
+        self.assertEqual(self.kb.serialize(), KnowledgeBase.deserialize(self.kb.serialize(), FACTS).serialize())
+        self.assertEqual(self.kb.serialize(short=True), KnowledgeBase.deserialize(self.kb.serialize(short=True), FACTS).serialize())
+        self.assertNotEqual(self.kb.serialize(), KnowledgeBase.deserialize(self.kb.serialize(short=True), FACTS).serialize())
 
     def test_contains__for_child(self):
         self.assertTrue('fact' in self.kb)

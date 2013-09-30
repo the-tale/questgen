@@ -12,12 +12,11 @@ class Fact(object):
     _references = ()
     _attributes = {'uid': None,
                    'tags': (),
-                   'label': None,
                    'description': None,
-                   'exceptions': None,
                    'externals': None}
     _required = ()
     _serializable = ()
+    _short = ('description')
 
     def __init__(self, **kwargs):
         for name in self._required:
@@ -30,11 +29,11 @@ class Fact(object):
                 raise exceptions.WrongAttributeError(fact=self.__class__, attribute=name)
         self.update_uid()
 
-    def serialize(self):
+    def serialize(self, short=False):
         data = {'class': self.__class__.__name__,
                 'attributes': {attribute: getattr(self, attribute)
                                for attribute, default in self._attributes.iteritems()
-                               if getattr(self, attribute) != default}}
+                               if getattr(self, attribute) != default and (not short or attribute not in self._short)}}
         for attribute in self._serializable:
             if attribute not in data['attributes']:
                 continue
@@ -276,12 +275,16 @@ class Message(Action):
         self.uid = '#message(%s)' % self.id
 
 class GivePower(Action):
-    _references = ('person',)
-    _attributes = dict(person=None, power=None, **Action._attributes)
-    _required = tuple(['person', 'power'] + list(Action._required))
+    _references = ('object',)
+    _attributes = dict(object=None, power=None, **Action._attributes)
+    _required = tuple(['object', 'power'] + list(Action._required))
 
     def update_uid(self):
-        self.uid = '#give_power(%s, %f)' % (self.person, self.power)
+        self.uid = '#give_power(%s, %f)' % (self.object, self.power)
+
+class Fight(Action):
+    _attributes = dict(mob=None, **Action._attributes)
+    _required = tuple(['mob'] + list(Action._required))
 
 
 ######################
@@ -289,23 +292,23 @@ class GivePower(Action):
 ######################
 
 class OnlyGoodBranches(Restriction):
-    _references = ('person',)
-    _attributes = dict(person=None, **Action._attributes)
-    _required = tuple(['person'] + list(Action._required))
+    _references = ('object',)
+    _attributes = dict(object=None, **Action._attributes)
+    _required = tuple(['object'] + list(Action._required))
 
     def update_uid(self):
-        self.uid = '#only_good_branches(%s)' % self.person
+        self.uid = '#only_good_branches(%s)' % self.object
 
 class OnlyBadBranches(Restriction):
-    _references = ('person',)
-    _attributes = dict(person=None, **Action._attributes)
-    _required = tuple(['person'] + list(Action._required))
+    _references = ('object',)
+    _attributes = dict(object=None, **Action._attributes)
+    _required = tuple(['object'] + list(Action._required))
 
     def update_uid(self):
-        self.uid = '#only_bad_branches(%s)' % self.person
+        self.uid = '#only_bad_branches(%s)' % self.object
 
 
 
 FACTS = {fact_class.fact_class(): fact_class
          for fact_class in globals().values()
-         if isinstance(fact_class, type) and issubclass(fact_class, Fact) and fact_class != Fact}
+         if isinstance(fact_class, type) and issubclass(fact_class, Fact)}

@@ -213,7 +213,6 @@ class Drawer(object):
             head = tr(td(i(state.uid)))
 
         return table(head,
-                     tr(td(b(state.label), colspan=2)),
                      tr(td(state.description, colspan=2)),
                      *trs,
                      bgcolor=bgcolor,
@@ -226,10 +225,11 @@ class Drawer(object):
             return self.create_label_for_give_power(action)
         elif isinstance(action, facts.LocatedNear):
             return self.create_label_for_located_near(action)
+        elif isinstance(action, facts.Fight):
+            return self.create_label_for_fight(action)
 
     def create_label_for_event(self, event):
         return table(tr(td(i(event.uid))),
-                     tr(td(b(event.label))),
                      tr(td(event.description, colspan=2)),
                      bgcolor=HEAD_COLORS.EVENT,
                      port=event.uid)
@@ -259,6 +259,9 @@ class Drawer(object):
 
     def create_label_for_give_power(self, give_power):
         return u'<b>увеличть влияние</b>&nbsp; %s <b>на</b> %.2f' % (give_power.person, give_power.power)
+
+    def create_label_for_fight(self, fight):
+        return u'<b>сразиться с</b>&nbsp; %s' % fight.mob
 
 
 def b(data): return u'<b>%s</b>' % data

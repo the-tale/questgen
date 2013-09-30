@@ -17,7 +17,7 @@ class MachineTests(unittest.TestCase):
         self.start = Start(uid='start', type='test')
         self.state_1 = State(uid='state_1')
         self.state_2 = State(uid='state_2')
-        self.finish_1 = Finish(uid='finish_1')
+        self.finish_1 = Finish(uid='finish_1', type='finish')
 
         self.kb += [ self.start, self.state_1, self.state_2, self.finish_1]
 

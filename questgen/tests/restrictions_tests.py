@@ -44,7 +44,7 @@ class FinishStateExistsTests(RestrictionsTestsBase):
 
     def setUp(self):
         super(FinishStateExistsTests, self).setUp()
-        self.finish = Finish(uid='finish')
+        self.finish = Finish(uid='finish', type='finish')
         self.restriction = restrictions.FinishStateExists()
 
     def test_success(self):
@@ -56,7 +56,7 @@ class FinishStateExistsTests(RestrictionsTestsBase):
 
     def test_more_then_one_finish(self):
         self.kb += self.finish
-        self.kb += Finish(uid='finish_2')
+        self.kb += Finish(uid='finish_2', type='finish')
         self.restriction.validate(self.kb)
 
 
@@ -65,7 +65,7 @@ class NoJumpsFromFinishTests(RestrictionsTestsBase):
     def setUp(self):
         super(NoJumpsFromFinishTests, self).setUp()
         self.kb += [Start(uid='start', type='test'),
-                    Finish(uid='finish_1'),
+                    Finish(uid='finish_1', type='finish'),
                     Jump(state_from='start', state_to='finish_1')]
         self.restriction = restrictions.NoJumpsFromFinish()
 
@@ -139,8 +139,8 @@ class ConnectedStateJumpGraphTests(RestrictionsTestsBase):
         self.kb += [Start(uid='start', type='test'),
                     State(uid='state_1'),
                     State(uid='state_2'),
-                    Finish(uid='finish_1'),
-                    Finish(uid='finish_2'),
+                    Finish(uid='finish_1', type='finish'),
+                    Finish(uid='finish_2', type='finish'),
                     Jump(state_from='start', state_to='state_1'),
                     Jump(state_from='state_1', state_to='state_2'),
                     Jump(state_from='state_1', state_to='finish_1'),
@@ -166,7 +166,7 @@ class NoCirclesInStateJumpGraphTests(RestrictionsTestsBase):
                     State(uid='state_1'),
                     State(uid='state_2'),
                     State(uid='state_3'),
-                    Finish(uid='finish_1'),
+                    Finish(uid='finish_1', type='finish'),
                     Jump(state_from='start', state_to='state_1'),
                     Jump(state_from='state_1', state_to='state_2'),
                     Jump(state_from='state_2', state_to='state_3'),
@@ -189,8 +189,8 @@ class MultipleJumpsFromNormalStateTests(RestrictionsTestsBase):
         self.kb += [Start(uid='start', type='test'),
                     Choice(uid='state_1'),
                     State(uid='state_2'),
-                    Finish(uid='finish_1'),
-                    Finish(uid='finish_2'),
+                    Finish(uid='finish_1', type='finish'),
+                    Finish(uid='finish_2', type='finish'),
                     Jump(state_from='start', state_to='state_1'),
                     Option(state_from='state_1', state_to='state_2', type='opt_1'),
                     Option(state_from='state_1', state_to='finish_1', type='opt_2'),
@@ -213,8 +213,8 @@ class ChoicesConsistencyTests(RestrictionsTestsBase):
         self.kb += [Start(uid='start', type='test'),
                     Choice(uid='state_1'),
                     State(uid='state_2'),
-                    Finish(uid='finish_1'),
-                    Finish(uid='finish_2'),
+                    Finish(uid='finish_1', type='finish'),
+                    Finish(uid='finish_2', type='finish'),
                     Jump(state_from='start', state_to='state_1'),
                     Option(state_from='state_1', state_to='state_2', type='opt_1'),
                     Option(state_from='state_1', state_to='finish_1', type='opt_2'),

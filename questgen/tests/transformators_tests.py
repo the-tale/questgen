@@ -4,7 +4,7 @@ import unittest
 
 from questgen import exceptions
 from questgen.knowledge_base import KnowledgeBase
-from questgen.facts import Start, State, Jump, Finish, Event, OnlyGoodBranches, OnlyBadBranches, GivePower, Choice, Option, OptionsLink, ChoicePath
+from questgen.facts import Start, State, Jump, Finish, Event, OnlyGoodBranches, OnlyBadBranches, GivePower, Choice, Option, OptionsLink, ChoicePath, Person, Place
 from questgen import transformators
 
 
@@ -29,7 +29,7 @@ class ActivateEventsTests(TransformatorsTestsBase):
 
     def test_no_events(self):
         facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish'),
+                  Finish(uid='st_finish', type='finish'),
                   Jump(state_from='start', state_to='st_finish') ]
         self.kb += facts
         transformators.activate_events(self.kb)
@@ -37,7 +37,7 @@ class ActivateEventsTests(TransformatorsTestsBase):
 
     def test_no_tag(self):
         facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish'),
+                  Finish(uid='st_finish', type='finish'),
                   Jump(state_from='start', state_to='st_finish'),
                   Event(uid='event_tag') ]
         self.kb += facts
@@ -46,7 +46,7 @@ class ActivateEventsTests(TransformatorsTestsBase):
 
     def test_simple_tagged_jump(self):
         facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish'),
+                  Finish(uid='st_finish', type='finish'),
                   Jump(state_from='start', state_to='st_finish', tags=('event_tag', )),
                   Event(uid='event_tag') ]
         self.kb += facts
@@ -55,8 +55,8 @@ class ActivateEventsTests(TransformatorsTestsBase):
 
     def test_multiple_tagged_jump(self):
         facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish_1'),
-                  Finish(uid='st_finish_2'),
+                  Finish(uid='st_finish_1', type='finish'),
+                  Finish(uid='st_finish_2', type='finish'),
                   Event(uid='event_tag') ]
         self.kb += facts
 
@@ -73,8 +73,8 @@ class ActivateEventsTests(TransformatorsTestsBase):
 
     def test_multiple_events_jump_marked_for_multiple_events(self):
         facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish_1'),
-                  Finish(uid='st_finish_2'),
+                  Finish(uid='st_finish_1', type='finish'),
+                  Finish(uid='st_finish_2', type='finish'),
                   Event(uid='event_tag'),
                   Event(uid='event_2_tag')]
         self.kb += facts
@@ -88,10 +88,10 @@ class ActivateEventsTests(TransformatorsTestsBase):
 
     def test_multiple_events(self):
         facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish_1'),
-                  Finish(uid='st_finish_2'),
-                  Finish(uid='st_finish_3'),
-                  Finish(uid='st_finish_4'),
+                  Finish(uid='st_finish_1', type='finish'),
+                  Finish(uid='st_finish_2', type='finish'),
+                  Finish(uid='st_finish_3', type='finish'),
+                  Finish(uid='st_finish_4', type='finish'),
                   Event(uid='event_tag'),
                   Event(uid='event_2_tag')]
 
@@ -122,7 +122,7 @@ class RemoveBrokenStatesTests(TransformatorsTestsBase):
 
     def test_no_broken_states(self):
         facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish'),
+                  Finish(uid='st_finish', type='finish'),
                   Jump(state_from='start', state_to='st_finish') ]
         self.kb += facts
         transformators.activate_events(self.kb)
@@ -130,7 +130,7 @@ class RemoveBrokenStatesTests(TransformatorsTestsBase):
 
     def test_single_broken_state(self):
         facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish'),
+                  Finish(uid='st_finish', type='finish'),
                   Jump(state_from='start', state_to='st_finish') ]
         self.kb += facts
 
@@ -143,7 +143,7 @@ class RemoveBrokenStatesTests(TransformatorsTestsBase):
 
     def test_broken_jumps(self):
         facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish'),
+                  Finish(uid='st_finish', type='finish'),
                   Jump(state_from='start', state_to='st_finish') ]
         self.kb += facts
 
@@ -160,7 +160,7 @@ class RemoveBrokenStatesTests(TransformatorsTestsBase):
 
     def test_broken_path(self):
         facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish'),
+                  Finish(uid='st_finish', type='finish'),
                   Jump(state_from='start', state_to='st_finish') ]
         self.kb += facts
 
@@ -178,7 +178,7 @@ class RemoveBrokenStatesTests(TransformatorsTestsBase):
 
     def test_finish_at_not_finish_state(self):
         facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish'),
+                  Finish(uid='st_finish', type='finish'),
                   Jump(state_from='start', state_to='st_finish') ]
         self.kb += facts
 
@@ -200,7 +200,7 @@ class RemoveRestrictedStatesTests(TransformatorsTestsBase):
 
     def test_no_restricted_states(self):
         facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish'),
+                  Finish(uid='st_finish', type='finish'),
                   Jump(state_from='start', state_to='st_finish') ]
         self.kb += facts
         transformators.remove_restricted_states(self.kb)
@@ -208,31 +208,57 @@ class RemoveRestrictedStatesTests(TransformatorsTestsBase):
 
     def test_has_restricted_states(self):
         facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish', actions=[GivePower(person='person_1', power=1), GivePower(person='person_2', power=-1)]),
+                  Person(uid='person_1'),
+                  Person(uid='person_2'),
+                  Finish(uid='st_finish', type='finish', actions=[GivePower(object='person_1', power=1), GivePower(object='person_2', power=-1)]),
                   Jump(state_from='start', state_to='st_finish'),
-                  OnlyGoodBranches(person='person_1'),
-                  OnlyBadBranches(person='person_2')]
+                  OnlyGoodBranches(object='person_1'),
+                  OnlyBadBranches(object='person_2')]
         self.kb += facts
         transformators.remove_restricted_states(self.kb)
         self.check_in_knowledge_base(self.kb, facts)
 
-    def test_only_good_branches(self):
+    def test_only_good_branches__person(self):
         facts = [ Start(uid='start', type='test'),
                   Jump(state_from='start', state_to='st_finish'),
-                  OnlyGoodBranches(person='person')]
+                  Person(uid='person'),
+                  OnlyGoodBranches(object='person')]
         self.kb += facts
-        self.kb += Finish(uid='st_finish', actions=[GivePower(person='person', power=-1)]),
+        self.kb += Finish(uid='st_finish', type='finish', actions=[GivePower(object='person', power=-1)]),
         transformators.remove_restricted_states(self.kb)
         self.check_in_knowledge_base(self.kb, facts)
 
-    def test_only_bad_branches(self):
+    def test_only_bad_branches__person(self):
         facts = [ Start(uid='start', type='test'),
                   Jump(state_from='start', state_to='st_finish'),
-                  OnlyBadBranches(person='person')]
+                  Person(uid='person'),
+                  OnlyBadBranches(object='person')]
         self.kb += facts
-        self.kb += Finish(uid='st_finish', actions=[GivePower(person='person', power=1)]),
+        self.kb += Finish(uid='st_finish', type='finish', actions=[GivePower(object='person', power=1)]),
         transformators.remove_restricted_states(self.kb)
         self.check_in_knowledge_base(self.kb, facts)
+
+
+    def test_only_good_branches__place(self):
+        facts = [ Start(uid='start', type='test'),
+                  Jump(state_from='start', state_to='st_finish'),
+                  Place(uid='place'),
+                  OnlyGoodBranches(object='place')]
+        self.kb += facts
+        self.kb += Finish(uid='st_finish', type='finish', actions=[GivePower(object='place', power=-1)]),
+        transformators.remove_restricted_states(self.kb)
+        self.check_in_knowledge_base(self.kb, facts)
+
+    def test_only_bad_branches__place(self):
+        facts = [ Start(uid='start', type='test'),
+                  Jump(state_from='start', state_to='st_finish'),
+                  Place(uid='place'),
+                  OnlyBadBranches(object='place')]
+        self.kb += facts
+        self.kb += Finish(uid='st_finish', type='finish', actions=[GivePower(object='place', power=1)]),
+        transformators.remove_restricted_states(self.kb)
+        self.check_in_knowledge_base(self.kb, facts)
+
 
 
 
@@ -243,7 +269,7 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
 
     def test_no_choices(self):
         facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish'),
+                  Finish(uid='st_finish', type='finish'),
                   Jump(state_from='start', state_to='st_finish') ]
         self.kb += facts
         transformators.determine_default_choices(self.kb)
@@ -253,8 +279,8 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
     def test_one_choice(self):
         start = Start(uid='start', type='test')
         choice_1 = Choice(uid='choice_1')
-        finish_1 = Finish(uid='finish_1')
-        finish_2 = Finish(uid='finish_2')
+        finish_1 = Finish(uid='finish_1', type='finish')
+        finish_2 = Finish(uid='finish_2', type='finish')
 
         facts = [ start,
                   choice_1,
@@ -273,8 +299,8 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
         start = Start(uid='start', type='test')
         choice_1 = Choice(uid='choice_1')
         choice_2 = Choice(uid='choice_2')
-        finish_1 = Finish(uid='finish_1')
-        finish_2 = Finish(uid='finish_2')
+        finish_1 = Finish(uid='finish_1', type='finish')
+        finish_2 = Finish(uid='finish_2', type='finish')
 
         option_1 = Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
         option_2 = Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
@@ -305,8 +331,8 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
         start = Start(uid='start', type='test')
         choice_1 = Choice(uid='choice_1')
         choice_2 = Choice(uid='choice_2')
-        finish_1 = Finish(uid='finish_1')
-        finish_2 = Finish(uid='finish_2')
+        finish_1 = Finish(uid='finish_1', type='finish')
+        finish_2 = Finish(uid='finish_2', type='finish')
 
         option_1 = Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
         option_2 = Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
@@ -341,8 +367,8 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
         start = Start(uid='start', type='test')
         choice_1 = Choice(uid='choice_1')
         choice_2 = Choice(uid='choice_2')
-        finish_1 = Finish(uid='finish_1')
-        finish_2 = Finish(uid='finish_2')
+        finish_1 = Finish(uid='finish_1', type='finish')
+        finish_2 = Finish(uid='finish_2', type='finish')
 
         option_1 = Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
         option_2 = Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
@@ -380,8 +406,8 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
             start = Start(uid='start', type='test')
             choice_1 = Choice(uid='choice_1')
             choice_2 = Choice(uid='choice_2')
-            finish_1 = Finish(uid='finish_1')
-            finish_2 = Finish(uid='finish_2')
+            finish_1 = Finish(uid='finish_1', type='finish')
+            finish_2 = Finish(uid='finish_2', type='finish')
 
             option_1 = Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
             option_2 = Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
@@ -426,8 +452,8 @@ class ChangeChoiceTests(TransformatorsTestsBase):
         start = Start(uid='start', type='test')
         choice_1 = Choice(uid='choice_1')
         choice_2 = Choice(uid='choice_2')
-        finish_1 = Finish(uid='finish_1')
-        finish_2 = Finish(uid='finish_2')
+        finish_1 = Finish(uid='finish_1', type='finish')
+        finish_2 = Finish(uid='finish_2', type='finish')
 
         option_1 = Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
         option_2 = Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
@@ -471,8 +497,8 @@ class ChangeChoiceTests(TransformatorsTestsBase):
         start = Start(uid='start', type='test')
         choice_1 = Choice(uid='choice_1')
         choice_2 = Choice(uid='choice_2')
-        finish_1 = Finish(uid='finish_1')
-        finish_2 = Finish(uid='finish_2')
+        finish_1 = Finish(uid='finish_1', type='finish')
+        finish_2 = Finish(uid='finish_2', type='finish')
 
         option_1 = Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
         option_2 = Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')

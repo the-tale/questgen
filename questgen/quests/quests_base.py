@@ -19,22 +19,24 @@ class QuestsBase(object):
         if isinstance(quest, Iterable) and not expected_quest:
             map(lambda element: self.__iadd__(element, expected_quest=True), quest)
         elif issubclass(quest, BaseQuest):
-            if quest.UID in self._quests:
+            if quest.TYPE in self._quests:
                 raise exceptions.DuplicatedQuestError(quest=quest)
-            self._quests[quest.UID] = quest
+            self._quests[quest.TYPE] = quest
         else:
             raise exceptions.WrongQuestTypeError(quest=quest)
 
         return self
 
     def _available_quests(self, excluded=None, allowed=None, tags=None):
+
         quests = self._quests.itervalues()
 
         if excluded is not None:
-            quests = (quest for quest in quests if quest.UID not in excluded)
+            quests = (quest for quest in quests if quest.TYPE not in excluded)
 
         if allowed is not None:
-            quests = (quest for quest in quests if quest.UID in allowed)
+            quests = (quest for quest in quests if quest.TYPE in allowed)
+
 
         if tags is not None:
             for tag in tags:
