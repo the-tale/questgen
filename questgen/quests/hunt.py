@@ -61,8 +61,7 @@ class Hunt(QuestBetween2):
 
         start_hunting = State(uid=ns+'start_hunting',
                               description=u'Прибытие в город охоты',
-                              require=[LocatedIn(object=hero_uid, place=receiver_position)],
-                              actions=[LocatedNear(object=hero_uid, place=receiver_position)])
+                              require=[LocatedIn(object=hero_uid, place=receiver_position)])
 
         hunt_loop = []
 
@@ -70,8 +69,7 @@ class Hunt(QuestBetween2):
 
             hunt = State(uid=ns+'hunt_%d' % i,
                          description=u'Охота',
-                         require=[LocatedNear(object=hero_uid, place=receiver_position)],
-                         actions=[LocatedNear(object=hero_uid, place=receiver_position)])
+                         actions=[LocatedNear(object=hero_uid, place=receiver_position, terrains=mob.terrains)])
 
             fight = State(uid=ns+'fight_%d' % i,
                           description=u'Сражение с жертвой',

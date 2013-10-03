@@ -22,7 +22,7 @@ class Machine(object):
 
     @property
     def is_processed(self): # TODO: tests
-        return self.pointer.state in self.knowledge_base and isinstance(self.knowledge_base[self.pointer.state], facts.Finish)
+        return self.current_state.uid in self.knowledge_base and isinstance(self.current_state, facts.Finish)
 
     @property
     def current_state(self):
@@ -35,41 +35,49 @@ class Machine(object):
 
     @property
     def next_state(self):
+        if self.current_state is None:
+            return self.get_start_state()
+
         if self.pointer.jump is None:
-            if self.pointer.state is None:
-                return self.get_start_state()
-            else:
-                return None
+            return None
 
         return self.knowledge_base[self.knowledge_base[self.pointer.jump].state_to]
 
     def step(self):
         next_state = self.next_state
-        next_jump = None
 
-        if next_state is None:
-            raise exceptions.NoJumpsFromLastStateError(state=self.pointer.state)
+        if next_state:
+            new_pointer = self.pointer.change(state=next_state.uid, jump=None)
 
-        if not isinstance(next_state, facts.Finish):
-            next_jump = self.get_next_jump(next_state)
+            if self.pointer.jump is not None:
+                self.on_jump_end(jump=self.knowledge_base[self.pointer.jump])
 
-        new_pointer = self.pointer.change(state=next_state.uid,
-                                          jump=next_jump.uid if next_jump else None)
+            self.on_state(state=next_state)
+        else:
+            next_jump = None
 
-        if self.pointer.jump is not None:
-            self.on_jump_end(jump=self.knowledge_base[self.pointer.jump])
+            if isinstance(self.current_state, facts.Finish):
+                raise exceptions.NoJumpsFromLastStateError(state=self.current_state)
+
+            next_jump = self.get_next_jump(self.current_state)
+
+            new_pointer = self.pointer.change(jump=next_jump.uid if next_jump else None)
+
+            if next_jump is not None:
+                self.on_jump_start(jump=next_jump)
 
         self.knowledge_base -= self.pointer
         self.knowledge_base += new_pointer
 
-        if self.pointer.state is not None:
-            self.on_state(state=self.knowledge_base[self.pointer.state])
-
-        if self.pointer.jump is not None:
-            self.on_jump_start(jump=self.knowledge_base[self.pointer.jump])
 
 
     def can_do_step(self):
+        if self.current_state and isinstance(self.current_state, facts.Finish):
+            return False
+
+        if self.pointer.jump is None:
+            return True
+
         return self.next_state is not None and all(requirement.check(self.knowledge_base) for requirement in self.next_state.require)
 
     def step_until_can(self):
@@ -77,10 +85,10 @@ class Machine(object):
             self.step()
 
     def sync_pointer(self):
-        if self.pointer.state is None:
+        if self.current_state is None:
             return
 
-        new_pointer = self.pointer.change(jump=self.get_next_jump(self.knowledge_base[self.pointer.state]).uid)
+        new_pointer = self.pointer.change(jump=self.get_next_jump(self.current_state).uid)
 
         if new_pointer.jump is not None and self.pointer.jump != new_pointer.jump:
             self.on_jump_start(jump=self.knowledge_base[new_pointer.jump])

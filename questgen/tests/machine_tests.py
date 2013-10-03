@@ -123,18 +123,18 @@ class MachineTests(unittest.TestCase):
                     self.machine.step()
                     self.assertEqual(len(list(self.kb.filter(Pointer))), 1)
 
-                    self.assertEqual(calls_manager.mock_calls, [mock.call.on_state(state=self.start),
-                                                                mock.call.on_jump_start(jump=jump_1)])
+                    self.assertEqual(calls_manager.mock_calls, [mock.call.on_state(state=self.start)])
 
         pointer = self.machine.pointer
         self.assertEqual(pointer.state, self.start.uid)
-        self.assertEqual(pointer.jump, jump_1.uid)
+        self.assertEqual(pointer.jump, None)
 
 
     def test_do_step__finish(self):
         jump_1 = Jump(state_from=self.start.uid, state_to=self.finish_1.uid)
         self.kb += jump_1
 
+        self.machine.step()
         self.machine.step()
 
         calls_manager = mock.MagicMock()
@@ -162,7 +162,38 @@ class MachineTests(unittest.TestCase):
 
         self.machine.step()
         self.machine.step()
+        self.machine.step()
+
         self.assertRaises(exceptions.NoJumpsFromLastStateError, self.machine.step)
+
+    def test_do_step__next_jump(self):
+        jump_1 = Jump(state_from=self.start.uid, state_to=self.state_1.uid)
+        jump_2 = Jump(state_from=self.state_1.uid, state_to=self.state_2.uid)
+        self.kb += [jump_1, jump_2]
+
+        self.machine.step()
+
+        calls_manager = mock.MagicMock()
+
+        pointer = self.machine.pointer
+        self.assertEqual(pointer.state, self.start.uid)
+        self.assertEqual(pointer.jump, None)
+
+        with mock.patch.object(self.machine, 'on_state') as on_state:
+            with mock.patch.object(self.machine, 'on_jump_start') as on_jump_start:
+                with mock.patch.object(self.machine, 'on_jump_end') as on_jump_end:
+
+                    calls_manager.attach_mock(on_state, 'on_state')
+                    calls_manager.attach_mock(on_jump_start, 'on_jump_start')
+                    calls_manager.attach_mock(on_jump_end, 'on_jump_end')
+
+                    self.machine.step()
+
+                    self.assertEqual(calls_manager.mock_calls, [mock.call.on_jump_start(jump=jump_1)])
+
+        pointer = self.machine.pointer
+        self.assertEqual(pointer.state, self.start.uid)
+        self.assertEqual(pointer.jump, jump_1.uid)
 
     def test_do_step__next_state(self):
         jump_1 = Jump(state_from=self.start.uid, state_to=self.state_1.uid)
@@ -170,6 +201,12 @@ class MachineTests(unittest.TestCase):
         self.kb += [jump_1, jump_2]
 
         self.machine.step()
+        self.machine.step()
+        self.machine.step()
+
+        pointer = self.machine.pointer
+        self.assertEqual(pointer.state, self.state_1.uid)
+        self.assertEqual(pointer.jump, None)
 
         calls_manager = mock.MagicMock()
 
@@ -183,9 +220,7 @@ class MachineTests(unittest.TestCase):
 
                     self.machine.step()
 
-                    self.assertEqual(calls_manager.mock_calls, [mock.call.on_jump_end(jump=jump_1),
-                                                                mock.call.on_state(state=self.state_1),
-                                                                mock.call.on_jump_start(jump=jump_2)])
+                    self.assertEqual(calls_manager.mock_calls, [mock.call.on_jump_start(jump=jump_2)])
 
         pointer = self.machine.pointer
         self.assertEqual(pointer.state, self.state_1.uid)

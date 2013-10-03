@@ -58,8 +58,15 @@ class SimpleQuestTests(unittest.TestCase):
 
     def test_full_story_forced(self):
         self.machine.step()
+        self.assertEqual(self.machine.pointer, Pointer(state='start'))
+
+        self.machine.step()
         self.assertEqual(self.machine.pointer,
                          Pointer(state='start', jump=Jump(state_from='start', state_to='st_throught_place').uid))
+
+        self.machine.step()
+        self.assertEqual(self.machine.pointer, Pointer(state='st_throught_place'))
+
         self.machine.step()
         self.assertEqual(self.machine.pointer,
                          Pointer(state='st_throught_place',
@@ -72,8 +79,10 @@ class SimpleQuestTests(unittest.TestCase):
 
     def test_full_story_real(self):
         # no move, since hero not in right place
-        self.machine.step_until_can()
         self.assertEqual(self.machine.pointer, Pointer(state=None, jump=None) )
+
+        self.machine.step_until_can()
+        self.assertEqual(self.machine.pointer, Pointer(state='start', jump=Jump(state_from='start', state_to='st_throught_place').uid) )
 
         self.kb += LocatedIn(object='hero', place='place_from')
 
@@ -87,6 +96,7 @@ class SimpleQuestTests(unittest.TestCase):
                          Pointer(state='start', jump=Jump(state_from='start', state_to='st_throught_place').uid))
 
         LocatedIn.relocate(self.kb, 'hero', 'place_thought')
+
         self.machine.step_until_can()
         self.assertEqual(self.machine.pointer,
                          Pointer(state='st_throught_place',

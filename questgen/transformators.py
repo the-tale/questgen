@@ -212,3 +212,6 @@ def remove_unused_actors(knowledge_base):
         to_remove.add(actor)
 
     knowledge_base -= to_remove
+
+    # remove restrictions
+    knowledge_base -= list(knowledge_base.filter(facts.Restriction))

@@ -8,8 +8,11 @@ from questgen import restrictions
 
 from questgen.quests.spying import Spying
 from questgen.quests.hunt import Hunt
+from questgen.quests.hometown import Hometown
+from questgen.quests.search_smith import SearchSmith
+from questgen.relations import PROFESSION
 
-QUESTS = [Spying, Hunt]
+QUESTS = [Spying, Hunt, Hometown, SearchSmith]
 
 for Quest in QUESTS:
 
@@ -23,16 +26,17 @@ for Quest in QUESTS:
             facts.Place(uid='place_2', terrains=(0,)),
             facts.Place(uid='place_3', terrains=(0,)),
 
-            facts.Person(uid='person_1', profession=0),
-            facts.Person(uid='person_2', profession=0),
-            facts.Person(uid='person_3', profession=0),
+            facts.Person(uid='person_1', profession=PROFESSION.NONE),
+            facts.Person(uid='person_2', profession=PROFESSION.BLACKSMITH),
+            facts.Person(uid='person_3', profession=PROFESSION.NONE),
 
             facts.LocatedIn(object='person_1', place='place_1'),
             facts.LocatedIn(object='person_2', place='place_2'),
             facts.LocatedIn(object='person_3', place='place_3'),
 
             facts.Mob(uid='mob_1', terrains=(0,)),
-            facts.PreferenceMob(object='hero', mob='mob_1')]
+            facts.PreferenceMob(object='hero', mob='mob_1'),
+            facts.PreferenceHometown(object='hero', place='place_2') ]
 
     kb += Quest.construct_from_nothing(kb, Selector(kb))
 

@@ -21,15 +21,14 @@ class SelectordsTests(unittest.TestCase):
                      facts.Place(uid='place_3', terrains=(0,)),
 
                      facts.Person(uid='person_1', profession=0),
-                     facts.Person(uid='person_2', profession=0),
-                     facts.Person(uid='person_3', profession=0),
+                     facts.Person(uid='person_2', profession=1),
+                     facts.Person(uid='person_3', profession=2),
 
                      facts.LocatedIn(object='person_1', place='place_1'),
                      facts.LocatedIn(object='person_2', place='place_2'),
                      facts.LocatedIn(object='person_3', place='place_3'),
 
-                     facts.Mob(uid='mob_1', terrains=(0,)),
-                     facts.PreferenceMob(object='hero', mob='mob_1')]
+                     facts.Mob(uid='mob_1', terrains=(0,))]
 
         self.selector = selectors.Selector(self.kb)
 
@@ -59,6 +58,11 @@ class SelectordsTests(unittest.TestCase):
         self.assertEqual(self.selector.new_place(terrains=[1]), 'place_1')
         self.assertTrue(self.selector.new_place(terrains=[0]) in ['place_2', 'place_3'])
 
+    def test_new_place__candidates(self):
+        self.assertRaises(exceptions.NoFactSelectedError, self.selector.new_place, candidates=())
+        self.assertEqual(self.selector.new_place(candidates=['place_1']), 'place_1')
+        self.assertTrue(self.selector.new_place(candidates=['place_2', 'place_3']) in ['place_2', 'place_3'])
+
     def test_place_for(self):
         self.assertEqual(self.selector._reserved, set())
 
@@ -81,6 +85,15 @@ class SelectordsTests(unittest.TestCase):
                       self.selector.new_person(),]
 
             self.assertEqual(set(persons), set(['person_1', 'person_2', 'person_3']))
+
+            self.selector.reset()
+
+    def test_new_person__profession(self):
+        for i in xrange(100):
+            persons = [self.selector.new_person(professions=(0, 2)),
+                      self.selector.new_person(professions=(0, 2))]
+
+            self.assertEqual(set(persons), set(['person_1', 'person_3']))
 
             self.selector.reset()
 
@@ -109,4 +122,15 @@ class SelectordsTests(unittest.TestCase):
 
 
     def test_preferences_mob(self):
+        self.kb += facts.PreferenceMob(object='hero', mob='mob_1')
         self.assertEqual(self.selector.preferences_mob(), facts.PreferenceMob(object='hero', mob='mob_1').uid)
+
+    def test_preferences_mob__not_found(self):
+        self.assertRaises(exceptions.NoFactSelectedError, self.selector.preferences_mob)
+
+    def test_preferences_hometown(self):
+        self.kb += facts.PreferenceHometown(object='hero', place='place_2')
+        self.assertEqual(self.selector.preferences_hometown(), facts.PreferenceHometown(object='hero', place='place_2').uid)
+
+    def test_preferences_hometown__not_found(self):
+        self.assertRaises(exceptions.NoFactSelectedError, self.selector.preferences_hometown)

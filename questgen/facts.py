@@ -192,7 +192,7 @@ class LocatedIn(Condition):
 
 class LocatedNear(Condition):
     _references = ('object', 'place')
-    _attributes = dict(object=None, place=None, **Condition._attributes)
+    _attributes = dict(object=None, place=None, terrains=None, **Condition._attributes)
     _required = tuple(['object', 'place'] + list(Condition._required))
 
     def update_uid(self):
@@ -285,6 +285,18 @@ class GivePower(Action):
 class Fight(Action):
     _attributes = dict(mob=None, **Action._attributes)
     _required = tuple(['mob'] + list(Action._required))
+
+
+class DoNothing(Action):
+    _attributes = dict(type=None, **Action._attributes)
+    _required = tuple(['type'] + list(Action._required))
+
+    def update_uid(self):
+        self.uid = '#donothing(%s)' % (self.type,)
+
+class UpgradeEquipment(Action):
+    def update_uid(self):
+        self.uid = '#upgrade_equipment()'
 
 
 ######################

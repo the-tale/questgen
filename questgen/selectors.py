@@ -12,6 +12,9 @@ class Selector(object):
         self._kb = kb
         self.reset()
 
+    def reserve(self, fact):
+        self._reserved.add(fact.uid)
+
     def _locations(self, restrict_places, restrict_objects, objects=None, places=None):
         locations = self._kb.filter(facts.LocatedIn)
 
@@ -31,8 +34,11 @@ class Selector(object):
 
     def heroes(self): return list(h.uid for h in self._kb.filter(facts.Hero))
 
-    def new_place(self, terrains=None):
+    def new_place(self, candidates=None, terrains=None):
         places = (place for place in self._kb.filter(facts.Place) if place.uid not in self._reserved)
+
+        if candidates is not None:
+            places = (place for place in places if place.uid in candidates)
 
         if terrains:
             terrains = set(terrains)
@@ -61,14 +67,19 @@ class Selector(object):
 
         return place_uid
 
-    def new_person(self):
+    def new_person(self, professions=None):
         locations = self._locations(restrict_places=True, restrict_objects=True)
-        persons = list(location.object for location in locations if isinstance(self._kb[location.object], facts.Person))
+        persons = (self._kb[location.object] for location in locations if isinstance(self._kb[location.object], facts.Person))
+
+        if professions is not None:
+            persons = (person for person in persons if person.profession in professions)
+
+        persons = list(persons)
 
         if not persons:
             raise exceptions.NoFactSelectedError(method='new_person', arguments=None)
 
-        person_uid = random.choice(persons)
+        person_uid = random.choice(persons).uid
         self._reserved.add(person_uid)
 
         return person_uid
@@ -87,7 +98,17 @@ class Selector(object):
 
         return person_uid
 
-    def preferences_mob(self): return self._kb.filter(facts.PreferenceMob).next().uid
+    def preferences_mob(self):
+        try:
+            return self._kb.filter(facts.PreferenceMob).next().uid
+        except StopIteration:
+            raise exceptions.NoFactSelectedError(method='preferences_mob', arguments={})
+
+    def preferences_hometown(self):
+        try:
+            return self._kb.filter(facts.PreferenceHometown).next().uid
+        except StopIteration:
+            raise exceptions.NoFactSelectedError(method='preferences_hometown', arguments={})
 
     def reset(self):
         self._reserved = set()

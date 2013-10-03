@@ -220,13 +220,15 @@ class Drawer(object):
 
     def create_label_for_action(self, action):
         if isinstance(action, facts.Message):
-            return self.create_label_for_message(action)
+            return self.create_action_label_for_message(action)
         elif isinstance(action, facts.GivePower):
-            return self.create_label_for_give_power(action)
+            return self.create_action_label_for_give_power(action)
         elif isinstance(action, facts.LocatedNear):
-            return self.create_label_for_located_near(action)
+            return self.create_action_label_for_located_near(action)
         elif isinstance(action, facts.Fight):
-            return self.create_label_for_fight(action)
+            return self.create_action_label_for_fight(action)
+        elif isinstance(action, facts.DoNothing):
+            return self.create_action_label_for_donothing(action)
 
     def create_label_for_event(self, event):
         return table(tr(td(i(event.uid))),
@@ -254,14 +256,33 @@ class Drawer(object):
     def create_label_for_located_near(self, requirement):
         return u'%s <b>находится около</b>&nbsp;%s' % (requirement.object, requirement.place)
 
-    def create_label_for_message(self, message):
+    # def create_label_for_message(self, message):
+    #     return u'<b>сообщение:</b>&nbsp;%s' % message.id
+
+    # def create_label_for_give_power(self, give_power):
+    #     return u'<b>увеличивает влияние</b>&nbsp; %s <b>на</b> %.2f' % (give_power.person, give_power.power)
+
+    # def create_label_for_fight(self, fight):
+    #     return u'<b>сражается с</b>&nbsp; %s' % fight.mob
+
+
+    def create_action_label_for_located_near(self, requirement):
+        if requirement.terrains:
+            return u'<b>отправить </b> %s<b>бродить около</b>&nbsp;%s<br/> среди ландшафтов %s' % (requirement.object, requirement.place, requirement.terrains)
+        else:
+            return u'<b>отправить </b> %s<b>бродить около</b>&nbsp;%s<br/>' % (requirement.object, requirement.place)
+
+    def create_action_label_for_message(self, message):
         return u'<b>сообщение:</b>&nbsp;%s' % message.id
 
-    def create_label_for_give_power(self, give_power):
-        return u'<b>увеличть влияние</b>&nbsp; %s <b>на</b> %.2f' % (give_power.person, give_power.power)
+    def create_action_label_for_give_power(self, give_power):
+        return u'<b>увеличить влияние </b>&nbsp; %s <b>на </b> %.2f' % (give_power.object, give_power.power)
 
-    def create_label_for_fight(self, fight):
+    def create_action_label_for_fight(self, fight):
         return u'<b>сразиться с</b>&nbsp; %s' % fight.mob
+
+    def create_action_label_for_donothing(self, donothing):
+        return u'<b>заняться </b>&nbsp; %s' % donothing.type
 
 
 def b(data): return u'<b>%s</b>' % data
