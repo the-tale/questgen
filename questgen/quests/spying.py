@@ -1,21 +1,7 @@
 # coding: utf-8
 
-from questgen.quests.base_quest import QuestBetween2, ROLES
-from questgen.facts import ( Start,
-                             State,
-                             Jump,
-                             Finish,
-                             Event,
-                             Place,
-                             Person,
-                             LocatedIn,
-                             LocatedNear,
-                             Choice,
-                             Option,
-                             Message,
-                             GivePower,
-                             OptionsLink,
-                             QuestParticipant)
+from questgen.quests.base_quest import QuestBetween2, ROLES, RESULTS
+from questgen import facts
 
 
 class Spying(QuestBetween2):
@@ -28,80 +14,80 @@ class Spying(QuestBetween2):
     # can_continue - can be not first quest in tree
 
     @classmethod
-    def construct(cls, knowledge_base, selector, initiator, initiator_position, receiver, receiver_position):
+    def construct(cls, selector, initiator, initiator_position, receiver, receiver_position):
 
-        hero_uid = selector.heroes()[0]
+        hero = selector.heroes()[0]
 
-        ns = knowledge_base.get_next_ns()
+        ns = selector._kb.get_next_ns()
 
-        open_up_variants = Event(uid=ns+'open_up_variants', description=u'Варианты окончания раскрытия')
-
-        start = Start(uid=ns+'start',
+        start = facts.Start(uid=ns+'start',
                       type=cls.TYPE,
+                      is_entry=selector.is_first_quest,
                       description=u'Начало: задание на шпионаж',
-                      require=[LocatedIn(object=hero_uid, place=initiator_position),
-                               LocatedIn(object=receiver, place=receiver_position)],
-                      actions=[Message(id='intro')])
+                      require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid),
+                               facts.LocatedIn(object=receiver.uid, place=receiver_position.uid)],
+                      actions=[facts.Message(type='intro')])
 
-        participants = [QuestParticipant(start=start.uid, participant=initiator, role=ROLES.INITIATOR),
-                        QuestParticipant(start=start.uid, participant=receiver, role=ROLES.RECEIVER) ]
+        participants = [facts.QuestParticipant(start=start.uid, participant=initiator.uid, role=ROLES.INITIATOR),
+                        facts.QuestParticipant(start=start.uid, participant=receiver.uid, role=ROLES.RECEIVER) ]
 
-        start_spying = Choice(uid=ns+'start_spying',
+        start_spying = facts.Choice(uid=ns+'start_spying',
                               description=u'Прибытие в город цели',
-                              require=[LocatedIn(object=hero_uid, place=receiver_position)],
-                              actions=[Message(id='arrived_to_target')])
+                              require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)],
+                              actions=[facts.Message(type='arrived_to_target')])
 
 
-        spying_middle = Choice(uid=ns+'spying_middle',
+        spying_middle = facts.Choice(uid=ns+'spying_middle',
                                description=u'Шпионаж',
-                               actions=[LocatedNear(object=hero_uid, place=receiver_position)])
+                               actions=[facts.MoveNear(object=hero.uid, place=receiver_position.uid)])
 
-        continue_spying = State(uid=ns+'continue_spying',
+        continue_spying = facts.State(uid=ns+'continue_spying',
                                 description=u'Продолжить шпионаж',
-                                require=[LocatedNear(object=hero_uid, place=receiver_position)],
-                                actions=[LocatedNear(object=hero_uid, place=receiver_position),
-                                         Message(id='continue_spying')])
+                                require=[facts.LocatedNear(object=hero.uid, place=receiver_position.uid)],
+                                actions=[facts.MoveNear(object=hero.uid, place=receiver_position.uid),
+                                         facts.Message(type='continue_spying')])
 
-        open_up = State(uid=ns+'open_up',
+        open_up = facts.State(uid=ns+'open_up',
                         description=u'Раскрыться',
-                        require=[LocatedIn(object=hero_uid, place=receiver_position)],
-                        actions=[Message(id='open_up')])
+                        require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)],
+                        actions=[facts.Message(type='open_up')])
 
 
-        report_data = Finish(uid=ns+'report_data',
+        report_data = facts.Finish(uid=ns+'report_data',
                              type='report_data',
+                             result=RESULTS.SUCCESSED,
                              description=u'Сообщить сообранную информацию',
-                             require=[LocatedIn(object=hero_uid, place=initiator_position)],
-                             actions=[Message(id='report_data'),
-                                      GivePower(object=initiator, power=1),
-                                      GivePower(object=receiver, power=-1)])
+                             require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
+                             actions=[facts.Message(type='report_data'),
+                                      facts.GivePower(object=initiator.uid, power=1),
+                                      facts.GivePower(object=receiver.uid, power=-1)])
 
-        open_up_finish = Finish(uid=ns+'open_up_finish',
+        open_up_finish = facts.Finish(uid=ns+'open_up_finish',
                                 type='open_up_finish',
+                                result=RESULTS.FAILED,
                                 description=u'Завершить задание и остатсья в городе цели',
-                                tags=(open_up_variants.uid,),
-                                require=[LocatedIn(object=hero_uid, place=receiver_position)],
-                                actions=[Message(id='open_up_finish'),
-                                      GivePower(object=initiator, power=-1),
-                                      GivePower(object=receiver, power=1)])
+                                require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)],
+                                actions=[facts.Message(type='open_up_finish'),
+                                      facts.GivePower(object=initiator.uid, power=-1),
+                                      facts.GivePower(object=receiver.uid, power=1)])
 
-        open_up_lying = Finish(uid=ns+'open_up_lying',
+        open_up_lying = facts.Finish(uid=ns+'open_up_lying',
                                type='open_up_lying',
+                               result=RESULTS.SUCCESSED,
                                description=u'Вернуться к заказчику и сообщить ложную информацию',
-                               tags=(open_up_variants.uid,),
-                               require=[LocatedIn(object=hero_uid, place=initiator_position)],
-                               actions=[Message(id='open_up_lying'),
-                                        GivePower(object=initiator, power=-1),
-                                        GivePower(object=receiver, power=1)])
+                               require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
+                               actions=[facts.Message(type='open_up_lying'),
+                                        facts.GivePower(object=initiator.uid, power=-1),
+                                        facts.GivePower(object=receiver.uid, power=1)])
 
-        start_spying__spying_middle = Option(state_from=start_spying.uid, state_to=spying_middle.uid, type='spy', start_actions=[Message(id='start_spying'),])
-        start_spying__open_up = Option(state_from=start_spying.uid, state_to=open_up.uid, type='open_up', start_actions=[Message(id='start_open_up'),])
+        start_spying__spying_middle = facts.Option(state_from=start_spying.uid, state_to=spying_middle.uid, type='spy', start_actions=[facts.Message(type='start_spying'),])
+        start_spying__open_up = facts.Option(state_from=start_spying.uid, state_to=open_up.uid, type='open_up', start_actions=[facts.Message(type='start_open_up'),])
 
-        spying_middle__continue_spying = Option(state_from=spying_middle.uid, state_to=continue_spying.uid, type='spy')
-        spying_middle__open_up = Option(state_from=spying_middle.uid, state_to=open_up.uid, type='open_up', start_actions=[Message(id='start_open_up'),])
+        spying_middle__continue_spying = facts.Option(state_from=spying_middle.uid, state_to=continue_spying.uid, type='spy')
+        spying_middle__open_up = facts.Option(state_from=spying_middle.uid, state_to=open_up.uid, type='open_up', start_actions=[facts.Message(type='start_open_up'),])
 
 
-        facts = [ start,
+        line = [ start,
                   start_spying,
                   spying_middle,
                   continue_spying,
@@ -110,7 +96,7 @@ class Spying(QuestBetween2):
                   open_up_finish,
                   open_up_lying,
 
-                  Jump(state_from=start.uid, state_to=start_spying.uid),
+                  facts.Jump(state_from=start.uid, state_to=start_spying.uid),
 
                   start_spying__spying_middle,
                   start_spying__open_up,
@@ -118,17 +104,17 @@ class Spying(QuestBetween2):
                   spying_middle__continue_spying,
                   spying_middle__open_up,
 
-                  Jump(state_from=continue_spying.uid, state_to=report_data.uid, start_actions=[Message(id='move_to_report_data'),]),
+                  facts.Jump(state_from=continue_spying.uid, state_to=report_data.uid, start_actions=[facts.Message(type='move_to_report_data'),]),
 
-                  Jump(state_from=open_up.uid, state_to=open_up_finish.uid),
-                  Jump(state_from=open_up.uid, state_to=open_up_lying.uid, start_actions=[Message(id='move_to_report_lie'),]),
+                  facts.Jump(state_from=open_up.uid, state_to=open_up_finish.uid),
+                  facts.Jump(state_from=open_up.uid, state_to=open_up_lying.uid, start_actions=[facts.Message(type='move_to_report_lie'),]),
 
-                  OptionsLink(options=(start_spying__open_up.uid, spying_middle__open_up.uid)),
-                  OptionsLink(options=(start_spying__spying_middle.uid, spying_middle__continue_spying.uid)),
+                  facts.OptionsLink(options=(start_spying__open_up.uid, spying_middle__open_up.uid)),
+                  facts.OptionsLink(options=(start_spying__spying_middle.uid, spying_middle__continue_spying.uid)),
 
-                  open_up_variants
+                  facts.Event(uid=ns+'open_up_variants', description=u'Варианты окончания раскрытия', members=(open_up_finish.uid, open_up_lying.uid))
                 ]
 
-        facts.extend(participants)
+        line.extend(participants)
 
-        return facts
+        return line

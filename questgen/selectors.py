@@ -8,9 +8,18 @@ from questgen import facts
 
 class Selector(object):
 
-    def __init__(self, kb):
+    def __init__(self, kb, qb):
         self._kb = kb
+        self._qb = qb
         self.reset()
+        self._is_first_quest = True
+
+    @property
+    def is_first_quest(self):
+        if self._is_first_quest:
+            self._is_first_quest = False
+            return True
+        return False
 
     def reserve(self, fact):
         self._reserved.add(fact.uid)
@@ -32,7 +41,7 @@ class Selector(object):
 
         return locations
 
-    def heroes(self): return list(h.uid for h in self._kb.filter(facts.Hero))
+    def heroes(self): return list(h for h in self._kb.filter(facts.Hero))
 
     def new_place(self, candidates=None, terrains=None):
         places = (place for place in self._kb.filter(facts.Place) if place.uid not in self._reserved)
@@ -49,10 +58,10 @@ class Selector(object):
         if not places:
             raise exceptions.NoFactSelectedError(method='new_place', arguments={'terrains': terrains})
 
-        place_uid = random.choice(places).uid
-        self._reserved.add(place_uid)
+        place = random.choice(places)
+        self._reserved.add(place.uid)
 
-        return place_uid
+        return place
 
 
     def place_for(self, objects):
@@ -61,11 +70,11 @@ class Selector(object):
         if not locations:
             raise exceptions.NoFactSelectedError(method='place', arguments={'objects': objects})
 
-        place_uid = random.choice(locations).place
+        place = self._kb[random.choice(locations).place]
 
-        self._reserved.add(place_uid)
+        self._reserved.add(place.uid)
 
-        return place_uid
+        return place
 
     def new_person(self, professions=None):
         locations = self._locations(restrict_places=True, restrict_objects=True)
@@ -79,10 +88,10 @@ class Selector(object):
         if not persons:
             raise exceptions.NoFactSelectedError(method='new_person', arguments=None)
 
-        person_uid = random.choice(persons).uid
-        self._reserved.add(person_uid)
+        person = random.choice(persons)
+        self._reserved.add(person.uid)
 
-        return person_uid
+        return person
 
     def person_from(self, places):
         locations = self._locations(places=places, restrict_places=False, restrict_objects=False)
@@ -92,21 +101,21 @@ class Selector(object):
         if not persons:
             raise exceptions.NoFactSelectedError(method='person_from', arguments={'places': places})
 
-        person_uid = random.choice(persons)
+        person = self._kb[random.choice(persons)]
 
-        self._reserved.add(person_uid)
+        self._reserved.add(person.uid)
 
-        return person_uid
+        return person
 
     def preferences_mob(self):
         try:
-            return self._kb.filter(facts.PreferenceMob).next().uid
+            return self._kb.filter(facts.PreferenceMob).next()
         except StopIteration:
             raise exceptions.NoFactSelectedError(method='preferences_mob', arguments={})
 
     def preferences_hometown(self):
         try:
-            return self._kb.filter(facts.PreferenceHometown).next().uid
+            return self._kb.filter(facts.PreferenceHometown).next()
         except StopIteration:
             raise exceptions.NoFactSelectedError(method='preferences_hometown', arguments={})
 

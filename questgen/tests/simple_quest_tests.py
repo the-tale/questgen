@@ -27,6 +27,7 @@ class SimpleQuestTests(unittest.TestCase):
 
         # quest
         self.kb += [ Start(uid='start',
+                           is_entry=True,
                            type='simple_test',
                            require=(LocatedIn(object='person_from', place='place_from'),
                                     LocatedIn(object='person_to', place='place_to'),
@@ -37,6 +38,7 @@ class SimpleQuestTests(unittest.TestCase):
 
                      Finish(uid='st_finish',
                             type='finish',
+                            result=0,
                             require=(LocatedIn(object='hero', place='place_to'),)),
 
                      Jump(state_from='start', state_to='st_throught_place'),
@@ -44,12 +46,15 @@ class SimpleQuestTests(unittest.TestCase):
 
         self.kb += [ Hero(uid='hero') ]
 
-        self.kb.validate_consistency([ restrictions.SingleStartState(),
-                                       restrictions.NoJumpsFromFinish(),
-                                       restrictions.SingleLocationForObject(),
-                                       restrictions.ReferencesIntegrity(),
-                                       restrictions.ConnectedStateJumpGraph(),
-                                       restrictions.NoCirclesInStateJumpGraph() ])
+        self.kb.validate_consistency([restrictions.SingleStartStateWithNoEnters(),
+                                      restrictions.FinishStateExists(),
+                                      restrictions.AllStatesHasJumps(),
+                                      restrictions.SingleLocationForObject(),
+                                      restrictions.ReferencesIntegrity(),
+                                      restrictions.ConnectedStateJumpGraph(),
+                                      restrictions.NoCirclesInStateJumpGraph(),
+                                      restrictions.MultipleJumpsFromNormalState(),
+                                      restrictions.ChoicesConsistency()])
 
         self.machine = machine.Machine(knowledge_base=self.kb)
 

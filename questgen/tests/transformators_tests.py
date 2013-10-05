@@ -4,7 +4,7 @@ import unittest
 
 from questgen import exceptions
 from questgen.knowledge_base import KnowledgeBase
-from questgen.facts import Start, State, Jump, Finish, Event, OnlyGoodBranches, OnlyBadBranches, GivePower, Choice, Option, OptionsLink, ChoicePath, Person, Place
+from questgen import facts
 from questgen import transformators
 
 
@@ -28,89 +28,65 @@ class ActivateEventsTests(TransformatorsTestsBase):
         super(ActivateEventsTests, self).setUp()
 
     def test_no_events(self):
-        facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish', type='finish'),
-                  Jump(state_from='start', state_to='st_finish') ]
-        self.kb += facts
+        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+                       facts.Finish(uid='st_finish', type='finish', result=0),
+                       facts.Jump(state_from='start', state_to='st_finish') ]
+        self.kb += facts_list
         transformators.activate_events(self.kb)
-        self.check_in_knowledge_base(self.kb, facts)
+        self.check_in_knowledge_base(self.kb, facts_list)
 
     def test_no_tag(self):
-        facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish', type='finish'),
-                  Jump(state_from='start', state_to='st_finish'),
-                  Event(uid='event_tag') ]
-        self.kb += facts
-        self.assertRaises(exceptions.NoTaggedEventMembersError, transformators.activate_events, self.kb)
-        self.check_in_knowledge_base(self.kb, facts)
+        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+                       facts.Finish(uid='st_finish', type='finish', result=0),
+                       facts.Jump(state_from='start', state_to='st_finish'),
+                       facts.Event(uid='event_tag', members=()) ]
+        self.kb += facts_list
+        self.assertRaises(exceptions.NoEventMembersError, transformators.activate_events, self.kb)
+        self.check_in_knowledge_base(self.kb, facts_list)
 
     def test_simple_tagged_jump(self):
-        facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish', type='finish'),
-                  Jump(state_from='start', state_to='st_finish', tags=('event_tag', )),
-                  Event(uid='event_tag') ]
-        self.kb += facts
+        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+                       facts.Finish(uid='st_finish', type='finish', result=0),
+                       facts.Jump(state_from='start', state_to='st_finish'),
+                       facts.Event(uid='event_tag', members=('st_finish', )) ]
+        self.kb += facts_list
         transformators.activate_events(self.kb)
-        self.check_in_knowledge_base(self.kb, facts)
+        self.check_in_knowledge_base(self.kb, facts_list)
 
     def test_multiple_tagged_jump(self):
-        facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish_1', type='finish'),
-                  Finish(uid='st_finish_2', type='finish'),
-                  Event(uid='event_tag') ]
-        self.kb += facts
-
-        jump_1 = Jump(state_from='start', state_to='st_finish_1', tags=('event_tag', ))
-        jump_2 = Jump(state_from='start', state_to='st_finish_2', tags=('event_tag', ))
-
-        self.kb += (jump_1, jump_2)
+        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+                       facts.Event(uid='event_tag', members=('st_finish_1', 'st_finish_2')) ]
+        finishes = [ facts.Finish(uid='st_finish_1', type='finish', result=0),
+                     facts.Finish(uid='st_finish_2', type='finish', result=0),]
+        self.kb += facts_list
+        self.kb += finishes
 
         transformators.activate_events(self.kb)
 
-        self.check_in_knowledge_base(self.kb, facts)
-        self.assertTrue( (jump_1.uid in self.kb and jump_2.uid not in self.kb) or
-                         (jump_2.uid in self.kb and jump_1.uid not in self.kb) )
-
-    def test_multiple_events_jump_marked_for_multiple_events(self):
-        facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish_1', type='finish'),
-                  Finish(uid='st_finish_2', type='finish'),
-                  Event(uid='event_tag'),
-                  Event(uid='event_2_tag')]
-        self.kb += facts
-
-        jump_1 = Jump(state_from='start', state_to='st_finish_1', tags=('event_tag', 'event_2_tag'))
-        jump_2 = Jump(state_from='start', state_to='st_finish_2', tags=('event_tag',))
-
-        self.kb += (jump_1, jump_2)
-
-        self.assertRaises(exceptions.MoreThenOneEventTagError, transformators.activate_events, self.kb)
+        self.check_in_knowledge_base(self.kb, facts_list)
+        self.assertTrue( ('st_finish_1' in self.kb and 'st_finish_2' not in self.kb) or
+                         ('st_finish_2' in self.kb and 'st_finish_1' not in self.kb) )
 
     def test_multiple_events(self):
-        facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish_1', type='finish'),
-                  Finish(uid='st_finish_2', type='finish'),
-                  Finish(uid='st_finish_3', type='finish'),
-                  Finish(uid='st_finish_4', type='finish'),
-                  Event(uid='event_tag'),
-                  Event(uid='event_2_tag')]
+        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+                       facts.Event(uid='event_tag', members=('st_finish_1', 'st_finish_2')),
+                       facts.Event(uid='event_2_tag', members=('st_finish_3', 'st_finish_4'))]
 
-        self.kb += facts
+        finishes = [ facts.Finish(uid='st_finish_1', type='finish', result=0),
+                     facts.Finish(uid='st_finish_2', type='finish', result=0),
+                     facts.Finish(uid='st_finish_3', type='finish', result=0),
+                     facts.Finish(uid='st_finish_4', type='finish', result=0) ]
 
-        jump_1 = Jump(state_from='start', state_to='st_finish_1', tags=('event_tag',))
-        jump_2 = Jump(state_from='start', state_to='st_finish_2', tags=('event_tag',))
-        jump_3 = Jump(state_from='start', state_to='st_finish_3', tags=('event_2_tag',))
-        jump_4 = Jump(state_from='start', state_to='st_finish_4', tags=('event_2_tag',))
-
-        self.kb += (jump_1, jump_2, jump_3, jump_4)
+        self.kb += facts_list
+        self.kb += finishes
 
         transformators.activate_events(self.kb)
 
-        self.check_in_knowledge_base(self.kb, facts)
-        self.assertTrue( (jump_1.uid in self.kb and jump_2.uid not in self.kb) or
-                         (jump_2.uid in self.kb and jump_1.uid not in self.kb) )
-        self.assertTrue( (jump_3.uid in self.kb and jump_4.uid not in self.kb) or
-                         (jump_4.uid in self.kb and jump_3.uid not in self.kb) )
+        self.check_in_knowledge_base(self.kb, facts_list)
+        self.assertTrue( ('st_finish_1' in self.kb and 'st_finish_2' not in self.kb) or
+                         ('st_finish_2' in self.kb and 'st_finish_1' not in self.kb) )
+        self.assertTrue( ('st_finish_3' in self.kb and 'st_finish_4' not in self.kb) or
+                         ('st_finish_4' in self.kb and 'st_finish_3' not in self.kb) )
 
 
 
@@ -121,75 +97,91 @@ class RemoveBrokenStatesTests(TransformatorsTestsBase):
 
 
     def test_no_broken_states(self):
-        facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish', type='finish'),
-                  Jump(state_from='start', state_to='st_finish') ]
-        self.kb += facts
+        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+                       facts.Finish(uid='st_finish', type='finish', result=0),
+                       facts.Jump(state_from='start', state_to='st_finish') ]
+        self.kb += facts_list
         transformators.activate_events(self.kb)
-        self.check_in_knowledge_base(self.kb, facts)
+        self.check_in_knowledge_base(self.kb, facts_list)
 
     def test_single_broken_state(self):
-        facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish', type='finish'),
-                  Jump(state_from='start', state_to='st_finish') ]
-        self.kb += facts
+        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+                       facts.Finish(uid='st_finish', type='finish', result=0),
+                       facts.Jump(state_from='start', state_to='st_finish') ]
+        self.kb += facts_list
 
-        broken_state = State(uid='st_broken')
+        broken_state = facts.State(uid='st_broken')
 
         self.kb += broken_state
         transformators.remove_broken_states(self.kb)
-        self.check_in_knowledge_base(self.kb, facts)
+        self.check_in_knowledge_base(self.kb, facts_list)
         self.assertFalse(broken_state.uid in self.kb)
 
-    def test_broken_jumps(self):
-        facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish', type='finish'),
-                  Jump(state_from='start', state_to='st_finish') ]
-        self.kb += facts
+    def test_single_broken_start(self):
+        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+                       facts.Finish(uid='st_finish', type='finish', result=0),
+                       facts.Jump(state_from='start', state_to='st_finish') ]
+        self.kb += facts_list
 
-        broken_jump_from = Jump(state_from='st_broken_state', state_to='st_finish')
-        broken_jump_to = Jump(state_from='start', state_to='st_broken_state')
+        broken_facts = [ facts.Start(uid='start_broken', type='test', is_entry=False),
+                         facts.Jump(state_from='start_broken', state_to='st_finish') ]
+
+        self.kb += broken_facts
+
+        transformators.remove_broken_states(self.kb)
+
+        self.check_in_knowledge_base(self.kb, facts_list)
+        self.check_not_in_knowledge_base(self.kb, broken_facts)
+
+    def test_broken_jumps(self):
+        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+                       facts.Finish(uid='st_finish', type='finish', result=0),
+                       facts.Jump(state_from='start', state_to='st_finish') ]
+        self.kb += facts_list
+
+        broken_jump_from = facts.Jump(state_from='st_broken_state', state_to='st_finish')
+        broken_jump_to = facts.Jump(state_from='start', state_to='st_broken_state')
 
         self.kb += (broken_jump_from, broken_jump_to)
 
         transformators.remove_broken_states(self.kb)
 
-        self.check_in_knowledge_base(self.kb, facts)
+        self.check_in_knowledge_base(self.kb, facts_list)
         self.assertFalse(broken_jump_from.uid in self.kb)
         self.assertFalse(broken_jump_to.uid in self.kb)
 
     def test_broken_path(self):
-        facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish', type='finish'),
-                  Jump(state_from='start', state_to='st_finish') ]
-        self.kb += facts
+        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+                       facts.Finish(uid='st_finish', type='finish', result=0),
+                       facts.Jump(state_from='start', state_to='st_finish') ]
+        self.kb += facts_list
 
-        broken_path = [State(uid='st_broken_1'),
-                       State(uid='st_broken_2'),
-                       Jump(state_from='st_broken_1', state_to='st_broken_2'),
-                       Jump(state_from='st_broken_2', state_to='st_finish')]
+        broken_path = [facts.State(uid='st_broken_1'),
+                       facts.State(uid='st_broken_2'),
+                       facts.Jump(state_from='st_broken_1', state_to='st_broken_2'),
+                       facts.Jump(state_from='st_broken_2', state_to='st_finish')]
 
         self.kb += broken_path
 
         transformators.remove_broken_states(self.kb)
 
-        self.check_in_knowledge_base(self.kb, facts)
+        self.check_in_knowledge_base(self.kb, facts_list)
         self.check_not_in_knowledge_base(self.kb, broken_path)
 
     def test_finish_at_not_finish_state(self):
-        facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish', type='finish'),
-                  Jump(state_from='start', state_to='st_finish') ]
-        self.kb += facts
+        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+                       facts.Finish(uid='st_finish', type='finish', result=0),
+                       facts.Jump(state_from='start', state_to='st_finish') ]
+        self.kb += facts_list
 
-        broken_path = [State(uid='st_broken_1'),
-                       Jump(state_from='start', state_to='st_broken_1')]
+        broken_path = [facts.State(uid='st_broken_1'),
+                       facts.Jump(state_from='start', state_to='st_broken_1')]
 
         self.kb += broken_path
 
         transformators.remove_broken_states(self.kb)
 
-        self.check_in_knowledge_base(self.kb, facts)
+        self.check_in_knowledge_base(self.kb, facts_list)
         self.check_not_in_knowledge_base(self.kb, broken_path)
 
 
@@ -199,65 +191,65 @@ class RemoveRestrictedStatesTests(TransformatorsTestsBase):
         super(RemoveRestrictedStatesTests, self).setUp()
 
     def test_no_restricted_states(self):
-        facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish', type='finish'),
-                  Jump(state_from='start', state_to='st_finish') ]
-        self.kb += facts
+        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+                  facts.Finish(uid='st_finish', type='finish', result=0),
+                  facts.Jump(state_from='start', state_to='st_finish') ]
+        self.kb += facts_list
         transformators.remove_restricted_states(self.kb)
-        self.check_in_knowledge_base(self.kb, facts)
+        self.check_in_knowledge_base(self.kb, facts_list)
 
     def test_has_restricted_states(self):
-        facts = [ Start(uid='start', type='test'),
-                  Person(uid='person_1'),
-                  Person(uid='person_2'),
-                  Finish(uid='st_finish', type='finish', actions=[GivePower(object='person_1', power=1), GivePower(object='person_2', power=-1)]),
-                  Jump(state_from='start', state_to='st_finish'),
-                  OnlyGoodBranches(object='person_1'),
-                  OnlyBadBranches(object='person_2')]
-        self.kb += facts
+        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+                  facts.Person(uid='person_1'),
+                  facts.Person(uid='person_2'),
+                  facts.Finish(uid='st_finish', type='finish', actions=[facts.GivePower(object='person_1', power=1), facts.GivePower(object='person_2', power=-1)], result=0),
+                  facts.Jump(state_from='start', state_to='st_finish'),
+                  facts.OnlyGoodBranches(object='person_1'),
+                  facts.OnlyBadBranches(object='person_2')]
+        self.kb += facts_list
         transformators.remove_restricted_states(self.kb)
-        self.check_in_knowledge_base(self.kb, facts)
+        self.check_in_knowledge_base(self.kb, facts_list)
 
     def test_only_good_branches__person(self):
-        facts = [ Start(uid='start', type='test'),
-                  Jump(state_from='start', state_to='st_finish'),
-                  Person(uid='person'),
-                  OnlyGoodBranches(object='person')]
-        self.kb += facts
-        self.kb += Finish(uid='st_finish', type='finish', actions=[GivePower(object='person', power=-1)]),
+        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+                  facts.Jump(state_from='start', state_to='st_finish'),
+                  facts.Person(uid='person'),
+                  facts.OnlyGoodBranches(object='person')]
+        self.kb += facts_list
+        self.kb += facts.Finish(uid='st_finish', type='finish', actions=[facts.GivePower(object='person', power=-1)], result=0),
         transformators.remove_restricted_states(self.kb)
-        self.check_in_knowledge_base(self.kb, facts)
+        self.check_in_knowledge_base(self.kb, facts_list)
 
     def test_only_bad_branches__person(self):
-        facts = [ Start(uid='start', type='test'),
-                  Jump(state_from='start', state_to='st_finish'),
-                  Person(uid='person'),
-                  OnlyBadBranches(object='person')]
-        self.kb += facts
-        self.kb += Finish(uid='st_finish', type='finish', actions=[GivePower(object='person', power=1)]),
+        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+                  facts.Jump(state_from='start', state_to='st_finish'),
+                  facts.Person(uid='person'),
+                  facts.OnlyBadBranches(object='person')]
+        self.kb += facts_list
+        self.kb += facts.Finish(uid='st_finish', type='finish', actions=[facts.GivePower(object='person', power=1)], result=0),
         transformators.remove_restricted_states(self.kb)
-        self.check_in_knowledge_base(self.kb, facts)
+        self.check_in_knowledge_base(self.kb, facts_list)
 
 
     def test_only_good_branches__place(self):
-        facts = [ Start(uid='start', type='test'),
-                  Jump(state_from='start', state_to='st_finish'),
-                  Place(uid='place'),
-                  OnlyGoodBranches(object='place')]
-        self.kb += facts
-        self.kb += Finish(uid='st_finish', type='finish', actions=[GivePower(object='place', power=-1)]),
+        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+                  facts.Jump(state_from='start', state_to='st_finish'),
+                  facts.Place(uid='place'),
+                  facts.OnlyGoodBranches(object='place')]
+        self.kb += facts_list
+        self.kb += facts.Finish(uid='st_finish', type='finish', actions=[facts.GivePower(object='place', power=-1)], result=0),
         transformators.remove_restricted_states(self.kb)
-        self.check_in_knowledge_base(self.kb, facts)
+        self.check_in_knowledge_base(self.kb, facts_list)
 
     def test_only_bad_branches__place(self):
-        facts = [ Start(uid='start', type='test'),
-                  Jump(state_from='start', state_to='st_finish'),
-                  Place(uid='place'),
-                  OnlyBadBranches(object='place')]
-        self.kb += facts
-        self.kb += Finish(uid='st_finish', type='finish', actions=[GivePower(object='place', power=1)]),
+        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+                  facts.Jump(state_from='start', state_to='st_finish'),
+                  facts.Place(uid='place'),
+                  facts.OnlyBadBranches(object='place')]
+        self.kb += facts_list
+        self.kb += facts.Finish(uid='st_finish', type='finish', actions=[facts.GivePower(object='place', power=1)], result=0),
         transformators.remove_restricted_states(self.kb)
-        self.check_in_knowledge_base(self.kb, facts)
+        self.check_in_knowledge_base(self.kb, facts_list)
 
 
 
@@ -268,47 +260,47 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
         super(DetermineDefaultChoicesTests, self).setUp()
 
     def test_no_choices(self):
-        facts = [ Start(uid='start', type='test'),
-                  Finish(uid='st_finish', type='finish'),
-                  Jump(state_from='start', state_to='st_finish') ]
-        self.kb += facts
+        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+                  facts.Finish(uid='st_finish', type='finish', result=0),
+                  facts.Jump(state_from='start', state_to='st_finish') ]
+        self.kb += facts_list
         transformators.determine_default_choices(self.kb)
-        self.check_in_knowledge_base(self.kb, facts)
-        self.assertEqual(len(list(self.kb.filter(OptionsLink))), 0)
+        self.check_in_knowledge_base(self.kb, facts_list)
+        self.assertEqual(len(list(self.kb.filter(facts.OptionsLink))), 0)
 
     def test_one_choice(self):
-        start = Start(uid='start', type='test')
-        choice_1 = Choice(uid='choice_1')
-        finish_1 = Finish(uid='finish_1', type='finish')
-        finish_2 = Finish(uid='finish_2', type='finish')
+        start = facts.Start(uid='start', type='test', is_entry=True)
+        choice_1 = facts.Choice(uid='choice_1')
+        finish_1 = facts.Finish(uid='finish_1', type='finish', result=0)
+        finish_2 = facts.Finish(uid='finish_2', type='finish', result=0)
 
-        facts = [ start,
+        facts_list = [ start,
                   choice_1,
                   finish_1,
                   finish_2,
-                  Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1'),
-                  Option(state_from=choice_1.uid, state_to=finish_2.uid, type='opt_2') ]
-        self.kb += facts
+                  facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1'),
+                  facts.Option(state_from=choice_1.uid, state_to=finish_2.uid, type='opt_2') ]
+        self.kb += facts_list
         transformators.determine_default_choices(self.kb)
-        self.check_in_knowledge_base(self.kb, facts)
-        self.assertEqual(len(list(self.kb.filter(OptionsLink))), 0)
-        self.assertEqual(len(list(self.kb.filter(ChoicePath))), 1)
-        self.assertEqual(len(set([path.choice for path in self.kb.filter(ChoicePath)])), 1)
+        self.check_in_knowledge_base(self.kb, facts_list)
+        self.assertEqual(len(list(self.kb.filter(facts.OptionsLink))), 0)
+        self.assertEqual(len(list(self.kb.filter(facts.ChoicePath))), 1)
+        self.assertEqual(len(set([path.choice for path in self.kb.filter(facts.ChoicePath)])), 1)
 
     def test_two_choices(self):
-        start = Start(uid='start', type='test')
-        choice_1 = Choice(uid='choice_1')
-        choice_2 = Choice(uid='choice_2')
-        finish_1 = Finish(uid='finish_1', type='finish')
-        finish_2 = Finish(uid='finish_2', type='finish')
+        start = facts.Start(uid='start', type='test', is_entry=True)
+        choice_1 = facts.Choice(uid='choice_1')
+        choice_2 = facts.Choice(uid='choice_2')
+        finish_1 = facts.Finish(uid='finish_1', type='finish', result=0)
+        finish_2 = facts.Finish(uid='finish_2', type='finish', result=0)
 
-        option_1 = Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
-        option_2 = Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
+        option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
+        option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
 
-        option_2_1 = Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1')
-        option_2_2 = Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2')
+        option_2_1 = facts.Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1')
+        option_2_2 = facts.Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2')
 
-        facts = [ start,
+        facts_list = [ start,
                   choice_1,
                   choice_2,
                   finish_1,
@@ -319,28 +311,28 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
                   option_2_1,
                   option_2_2]
 
-        self.kb += facts
+        self.kb += facts_list
         transformators.determine_default_choices(self.kb)
-        self.check_in_knowledge_base(self.kb, facts)
-        self.assertEqual(len(list(self.kb.filter(OptionsLink))), 0)
-        self.assertEqual(len(list(self.kb.filter(ChoicePath))), 2)
-        self.assertEqual(len(set([path.choice for path in self.kb.filter(ChoicePath)])), 2)
+        self.check_in_knowledge_base(self.kb, facts_list)
+        self.assertEqual(len(list(self.kb.filter(facts.OptionsLink))), 0)
+        self.assertEqual(len(list(self.kb.filter(facts.ChoicePath))), 2)
+        self.assertEqual(len(set([path.choice for path in self.kb.filter(facts.ChoicePath)])), 2)
 
 
     def test_linked_choices(self):
-        start = Start(uid='start', type='test')
-        choice_1 = Choice(uid='choice_1')
-        choice_2 = Choice(uid='choice_2')
-        finish_1 = Finish(uid='finish_1', type='finish')
-        finish_2 = Finish(uid='finish_2', type='finish')
+        start = facts.Start(uid='start', type='test', is_entry=True)
+        choice_1 = facts.Choice(uid='choice_1')
+        choice_2 = facts.Choice(uid='choice_2')
+        finish_1 = facts.Finish(uid='finish_1', type='finish', result=0)
+        finish_2 = facts.Finish(uid='finish_2', type='finish', result=0)
 
-        option_1 = Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
-        option_2 = Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
+        option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
+        option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
 
-        option_2_1 = Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1')
-        option_2_2 = Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2')
+        option_2_1 = facts.Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1')
+        option_2_2 = facts.Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2')
 
-        facts = [ start,
+        facts_list = [ start,
                   choice_1,
                   choice_2,
                   finish_1,
@@ -351,32 +343,32 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
                   option_2_1,
                   option_2_2,
 
-                  OptionsLink(options=(option_1.uid, option_2_1.uid)),
-                  OptionsLink(options=(option_2.uid, option_2_2.uid))]
+                  facts.OptionsLink(options=(option_1.uid, option_2_1.uid)),
+                  facts.OptionsLink(options=(option_2.uid, option_2_2.uid))]
 
-        self.kb += facts
+        self.kb += facts_list
         transformators.determine_default_choices(self.kb)
-        self.check_in_knowledge_base(self.kb, facts)
-        self.assertEqual(len(list(self.kb.filter(ChoicePath))), 2)
-        self.assertEqual(len(set([path.choice for path in self.kb.filter(ChoicePath)])), 2)
+        self.check_in_knowledge_base(self.kb, facts_list)
+        self.assertEqual(len(list(self.kb.filter(facts.ChoicePath))), 2)
+        self.assertEqual(len(set([path.choice for path in self.kb.filter(facts.ChoicePath)])), 2)
 
-        chosen_options = set([path.option for path in self.kb.filter(ChoicePath)])
+        chosen_options = set([path.option for path in self.kb.filter(facts.ChoicePath)])
         self.assertTrue(chosen_options == set([option_1.uid, option_2_1.uid]) or chosen_options == set([option_2.uid, option_2_2.uid]) )
 
     def test_linked_choices__option_with_two_links(self):
-        start = Start(uid='start', type='test')
-        choice_1 = Choice(uid='choice_1')
-        choice_2 = Choice(uid='choice_2')
-        finish_1 = Finish(uid='finish_1', type='finish')
-        finish_2 = Finish(uid='finish_2', type='finish')
+        start = facts.Start(uid='start', type='test', is_entry=True)
+        choice_1 = facts.Choice(uid='choice_1')
+        choice_2 = facts.Choice(uid='choice_2')
+        finish_1 = facts.Finish(uid='finish_1', type='finish', result=0)
+        finish_2 = facts.Finish(uid='finish_2', type='finish', result=0)
 
-        option_1 = Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
-        option_2 = Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
+        option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
+        option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
 
-        option_2_1 = Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1')
-        option_2_2 = Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2')
+        option_2_1 = facts.Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1')
+        option_2_2 = facts.Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2')
 
-        facts = [ start,
+        facts_list = [ start,
                   choice_1,
                   choice_2,
                   finish_1,
@@ -387,13 +379,13 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
                   option_2_1,
                   option_2_2,
 
-                  OptionsLink(options=(option_1.uid, option_2_1.uid)),
-                  OptionsLink(options=(option_2.uid, option_2_2.uid, option_1.uid))]
+                  facts.OptionsLink(options=(option_1.uid, option_2_1.uid)),
+                  facts.OptionsLink(options=(option_2.uid, option_2_2.uid, option_1.uid))]
 
-        self.kb += facts
+        self.kb += facts_list
         self.assertRaises(exceptions.OptionWithTwoLinksError, transformators.determine_default_choices, self.kb)
-        self.check_in_knowledge_base(self.kb, facts)
-        self.assertEqual(len(list(self.kb.filter(ChoicePath))), 0)
+        self.check_in_knowledge_base(self.kb, facts_list)
+        self.assertEqual(len(list(self.kb.filter(facts.ChoicePath))), 0)
 
     def test_linked_choices__linked_option_with_processed_choice(self):
         # exception raised when first processed choice_1 and choice is option_2
@@ -403,19 +395,19 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
 
         for i in xrange(100):
             kb = KnowledgeBase()
-            start = Start(uid='start', type='test')
-            choice_1 = Choice(uid='choice_1')
-            choice_2 = Choice(uid='choice_2')
-            finish_1 = Finish(uid='finish_1', type='finish')
-            finish_2 = Finish(uid='finish_2', type='finish')
+            start = facts.Start(uid='start', type='test', is_entry=True)
+            choice_1 = facts.Choice(uid='choice_1')
+            choice_2 = facts.Choice(uid='choice_2')
+            finish_1 = facts.Finish(uid='finish_1', type='finish', result=0)
+            finish_2 = facts.Finish(uid='finish_2', type='finish', result=0)
 
-            option_1 = Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
-            option_2 = Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
+            option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
+            option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
 
-            option_2_1 = Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1')
-            option_2_2 = Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2')
+            option_2_1 = facts.Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1')
+            option_2_2 = facts.Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2')
 
-            facts = [ start,
+            facts_list = [ start,
                       choice_1,
                       choice_2,
                       finish_1,
@@ -426,22 +418,20 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
                       option_2_1,
                       option_2_2,
 
-                      OptionsLink(options=(option_2.uid, option_2_2.uid))]
+                      facts.OptionsLink(options=(option_2.uid, option_2_2.uid))]
 
-            kb += facts
+            kb += facts_list
 
             try:
                 transformators.determine_default_choices(kb)
             except exceptions.LinkedOptionWithProcessedChoiceError:
                 is_raised = True
-                self.assertEqual(len(list(kb.filter(ChoicePath))), 1)
-                self.assertEqual([path.choice for path in kb.filter(ChoicePath)], [choice_2.uid])
-                self.assertEqual([path.option for path in kb.filter(ChoicePath)], [option_2_1.uid])
+                self.assertEqual(len(list(kb.filter(facts.ChoicePath))), 1)
+                self.assertEqual([path.choice for path in kb.filter(facts.ChoicePath)], [choice_2.uid])
+                self.assertEqual([path.option for path in kb.filter(facts.ChoicePath)], [option_2_1.uid])
                 break
 
         self.assertTrue(is_raised)
-
-
 
 class ChangeChoiceTests(TransformatorsTestsBase):
 
@@ -449,19 +439,19 @@ class ChangeChoiceTests(TransformatorsTestsBase):
         super(ChangeChoiceTests, self).setUp()
 
     def test_single_choice(self):
-        start = Start(uid='start', type='test')
-        choice_1 = Choice(uid='choice_1')
-        choice_2 = Choice(uid='choice_2')
-        finish_1 = Finish(uid='finish_1', type='finish')
-        finish_2 = Finish(uid='finish_2', type='finish')
+        start = facts.Start(uid='start', type='test', is_entry=True)
+        choice_1 = facts.Choice(uid='choice_1')
+        choice_2 = facts.Choice(uid='choice_2')
+        finish_1 = facts.Finish(uid='finish_1', type='finish', result=0)
+        finish_2 = facts.Finish(uid='finish_2', type='finish', result=0)
 
-        option_1 = Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
-        option_2 = Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
+        option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
+        option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
 
-        option_2_1 = Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1')
-        option_2_2 = Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2')
+        option_2_1 = facts.Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1')
+        option_2_2 = facts.Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2')
 
-        facts = [ start,
+        facts_list = [ start,
                   choice_1,
                   choice_2,
                   finish_1,
@@ -472,41 +462,41 @@ class ChangeChoiceTests(TransformatorsTestsBase):
                   option_2_1,
                   option_2_2,
 
-                  ChoicePath(choice=choice_2.uid, option=option_2_2.uid, default=True)
+                  facts.ChoicePath(choice=choice_2.uid, option=option_2_2.uid, default=True)
                 ]
 
-        self.kb += facts
+        self.kb += facts_list
 
-        choices = [ChoicePath(choice=choice_1.uid, option=option_2.uid, default=True)]
+        choices = [facts.ChoicePath(choice=choice_1.uid, option=option_2.uid, default=True)]
 
         self.kb += choices
 
         transformators.change_choice(self.kb, option_1.uid, default=False)
 
-        self.check_in_knowledge_base(self.kb, facts)
+        self.check_in_knowledge_base(self.kb, facts_list)
         self.check_not_in_knowledge_base(self.kb, choices)
 
-        self.assertEqual(len(list(self.kb.filter(ChoicePath))), 2)
-        self.assertEqual(len(set([path.choice for path in self.kb.filter(ChoicePath)])), 2)
+        self.assertEqual(len(list(self.kb.filter(facts.ChoicePath))), 2)
+        self.assertEqual(len(set([path.choice for path in self.kb.filter(facts.ChoicePath)])), 2)
 
-        self.assertEqual(set([path.option for path in self.kb.filter(ChoicePath)]),
+        self.assertEqual(set([path.option for path in self.kb.filter(facts.ChoicePath)]),
                          set([option_1.uid, option_2_2.uid]))
 
 
     def test_linked_choices(self):
-        start = Start(uid='start', type='test')
-        choice_1 = Choice(uid='choice_1')
-        choice_2 = Choice(uid='choice_2')
-        finish_1 = Finish(uid='finish_1', type='finish')
-        finish_2 = Finish(uid='finish_2', type='finish')
+        start = facts.Start(uid='start', type='test', is_entry=True)
+        choice_1 = facts.Choice(uid='choice_1')
+        choice_2 = facts.Choice(uid='choice_2')
+        finish_1 = facts.Finish(uid='finish_1', type='finish', result=0)
+        finish_2 = facts.Finish(uid='finish_2', type='finish', result=0)
 
-        option_1 = Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
-        option_2 = Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
+        option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
+        option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
 
-        option_2_1 = Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1')
-        option_2_2 = Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2')
+        option_2_1 = facts.Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1')
+        option_2_2 = facts.Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2')
 
-        facts = [ start,
+        facts_list = [ start,
                   choice_1,
                   choice_2,
                   finish_1,
@@ -517,24 +507,24 @@ class ChangeChoiceTests(TransformatorsTestsBase):
                   option_2_1,
                   option_2_2,
 
-                  OptionsLink(options=(option_1.uid, option_2_1.uid)),
-                  OptionsLink(options=(option_2.uid, option_2_2.uid))
+                  facts.OptionsLink(options=(option_1.uid, option_2_1.uid)),
+                  facts.OptionsLink(options=(option_2.uid, option_2_2.uid))
                 ]
 
-        self.kb += facts
+        self.kb += facts_list
 
-        choices = [ChoicePath(choice=choice_1.uid, option=option_2.uid, default=True),
-                   ChoicePath(choice=choice_2.uid, option=option_2_2.uid, default=True)]
+        choices = [facts.ChoicePath(choice=choice_1.uid, option=option_2.uid, default=True),
+                   facts.ChoicePath(choice=choice_2.uid, option=option_2_2.uid, default=True)]
 
         self.kb += choices
 
         transformators.change_choice(self.kb, option_1.uid, default=False)
 
-        self.check_in_knowledge_base(self.kb, facts)
+        self.check_in_knowledge_base(self.kb, facts_list)
         self.check_not_in_knowledge_base(self.kb, choices)
 
-        self.assertEqual(len(list(self.kb.filter(ChoicePath))), 2)
-        self.assertEqual(len(set([path.choice for path in self.kb.filter(ChoicePath)])), 2)
+        self.assertEqual(len(list(self.kb.filter(facts.ChoicePath))), 2)
+        self.assertEqual(len(set([path.choice for path in self.kb.filter(facts.ChoicePath)])), 2)
 
-        self.assertEqual(set([path.option for path in self.kb.filter(ChoicePath)]),
+        self.assertEqual(set([path.option for path in self.kb.filter(facts.ChoicePath)]),
                          set([option_1.uid, option_2_1.uid]))

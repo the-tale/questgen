@@ -11,7 +11,6 @@ from questgen import exceptions
 class Fact(object):
     _references = ()
     _attributes = {'uid': None,
-                   'tags': (),
                    'description': None,
                    'externals': None}
     _required = ()
@@ -123,7 +122,14 @@ class Pointer(Fact):
                                                  for attribute, default in State._attributes.iteritems()})
 
 
-class Event(Fact): pass
+class Event(Fact):
+    _attributes = dict(members=None, **Action._attributes)
+    _required = tuple(['members'] + list(Action._required))
+
+
+class SubQuest(Fact):
+    _attributes = dict(members=None, **Action._attributes)
+    _required = tuple(['members'] + list(Action._required))
 
 ######################
 # Concrete classes
@@ -143,12 +149,12 @@ class Mob(Actor):
 
 
 class Start(State):
-    _attributes = dict(type=None, **State._attributes)
-    _required = tuple(['type'] + list(State._required))
+    _attributes = dict(type=None, is_entry=False, **State._attributes)
+    _required = tuple(['type', 'is_entry'] + list(State._required))
 
 class Finish(State):
-    _attributes = dict(type=None, **State._attributes)
-    _required = tuple(['type'] + list(State._required))
+    _attributes = dict(type=None, result=None, **State._attributes)
+    _required = tuple(['type', 'result'] + list(State._required))
 
 class Choice(State): pass
 
@@ -268,11 +274,11 @@ class QuestParticipant(Fact):
 
 
 class Message(Action):
-    _attributes = dict(id=None, **Action._attributes)
-    _required = tuple(['id'] + list(Action._required))
+    _attributes = dict(type=None, **Action._attributes)
+    _required = tuple(['type'] + list(Action._required))
 
     def update_uid(self):
-        self.uid = '#message(%s)' % self.id
+        self.uid = '#message(%s)' % self.type
 
 class GivePower(Action):
     _references = ('object',)
@@ -284,7 +290,6 @@ class GivePower(Action):
 
 class Fight(Action):
     _attributes = dict(mob=None, **Action._attributes)
-    _required = tuple(['mob'] + list(Action._required))
 
 
 class DoNothing(Action):
@@ -297,6 +302,22 @@ class DoNothing(Action):
 class UpgradeEquipment(Action):
     def update_uid(self):
         self.uid = '#upgrade_equipment()'
+
+class MoveNear(Condition):
+    _references = ('object', 'place')
+    _attributes = dict(object=None, place=None, terrains=None, **Condition._attributes)
+    _required = tuple(['object',] + list(Condition._required))
+
+    def update_uid(self):
+        self.uid = '#move_near(%s, %s)' % (self.object, self.place)
+
+class MoveIn(Condition):
+    _references = ('object', 'place')
+    _attributes = dict(object=None, place=None, percents=None, **Condition._attributes)
+    _required = tuple(['object', 'place', 'percents'] + list(Condition._required))
+
+    def update_uid(self):
+        self.uid = '#move_in(%s, %s, %.3f)' % (self.object, self.place, self.percents)
 
 
 ######################

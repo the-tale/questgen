@@ -51,7 +51,10 @@ class QuestsBase(object):
     def _quests__from_place(self, **kwargs):
         return self._quests_by_method(method_name='construct_from_place', **kwargs)
 
-    def create_start_quest(self, knowledge_base, selector, start_place, excluded=None, allowed=None, tags=None):
+    def _quests__from_person(self, **kwargs):
+        return self._quests_by_method(method_name='construct_from_person', **kwargs)
+
+    def create_quest_from_place(self, selector, start_place, excluded=None, allowed=None, tags=None):
         choices = list(self._quests__from_place(excluded=excluded, allowed=allowed, tags=tags))
 
         if not choices:
@@ -59,4 +62,14 @@ class QuestsBase(object):
 
         quest_class = random.choice(choices)
 
-        return quest_class.construct_from_place(knowledge_base, selector, start_place=start_place)
+        return quest_class.construct_from_place(selector=selector, start_place=start_place)
+
+    def create_quest_from_person(self, selector, initiator, excluded=None, allowed=None, tags=None):
+        choices = list(self._quests__from_person(excluded=excluded, allowed=allowed, tags=tags))
+
+        if not choices:
+            raise exceptions.NoQuestChoicesRollBackError()
+
+        quest_class = random.choice(choices)
+
+        return quest_class.construct_from_person(selector, initiator=initiator)

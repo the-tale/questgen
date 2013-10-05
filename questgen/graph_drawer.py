@@ -1,5 +1,4 @@
 # coding:utf-8
-from collections import defaultdict
 
 import gv
 
@@ -22,8 +21,10 @@ class HEAD_COLORS(object):
     FINISH_ACTIONS = '#ffffff'
     CHOICE_ACTIONS = '#eeeeff'
 
-    SUBGRAPH = '#ffffdd'
+    EVENT_SUBGRAPH = '#ffffdd'
     EVENT = '#eeeecc'
+
+    SUBQUEST_SUBGRAPH = '#ddffff'
 
     LINK = '#ffaaaa'
 
@@ -32,13 +33,63 @@ class HEAD_COLORS(object):
     JUMP_ACTIONS_END = '#dddddd'
 
 
+class SubGraph(object):
+
+    def __init__(self, uid, color, members):
+        self.uid = 'cluster_%s' % uid
+        self.color = color
+        self.members = set(members)
+        self.children = set()
+        self.parents = set()
+
+    def find_children(self, subgraphs):
+        for graph in subgraphs:
+            if graph.members - self.members:
+                continue
+            if graph is self:
+                continue
+            self.children.add(graph)
+            graph.parents.add(self)
+
+    def find_real_children(self):
+        real_children = set()
+
+        for child in self.children:
+            if not any(child in check_child.children for check_child in self.children):
+                real_children.add(child)
+
+        self.children = real_children
+
+    @classmethod
+    def draw_hierarchy(cls, graphs, graph, nodes):
+
+        for subgraph in graphs:
+            if subgraph.parents:
+                continue
+            subgraph.draw(graph, nodes)
+
+    def draw(self, graph, nodes):
+        subgraph = gv.graph(graph, self.uid)
+        gv.setv(subgraph, 'label', self.uid)
+        # gv.setv(subgraph, 'rank', 'same')
+        gv.setv(subgraph, 'shape', 'box')
+        gv.setv(subgraph, 'bgcolor', self.color)
+
+        for node_uid in self.members:
+            if node_uid in nodes:
+                gv.node(subgraph, node_uid)
+
+        for child in self.children:
+            child.draw(subgraph, nodes)
+
+
 class Drawer(object):
 
     def __init__(self, knowledge_base):
         self.kb = knowledge_base
         self.graph = gv.strictdigraph('quest')
-        self.tags = defaultdict(set)
         self.nodes = {}
+        self.subgraphs = {}
 
         self.linked_edges = set()
 
@@ -49,9 +100,6 @@ class Drawer(object):
         gv.setv(node, 'fontsize', '10')
 
         self.nodes[fact.uid] = node
-
-        for tag in fact.tags:
-            self.tags[tag].add(fact.uid)
 
         return node
 
@@ -106,6 +154,8 @@ class Drawer(object):
         gv.setv(node, 'fixedsize', 'true')
         gv.setv(node, 'width', '0.33')
 
+        self.nodes[link.uid] = node
+
         for option_uid in link.options:
             self.linked_edges.add(option_uid)
             edge = gv.edge(node, option_uid)
@@ -117,15 +167,15 @@ class Drawer(object):
 
     def draw(self, path):
 
-        gv.setv(self.graph, 'rankdir', 'LR')
-        gv.setv(self.graph, 'splines', 'ortho')
+        # gv.setv(self.graph, 'rankdir', 'LR')
+        # gv.setv(self.graph, 'splines', 'ortho')
         # gv.setv(self.graph, 'concentrate', 'true') # merge edges
 
         for state in self.kb.filter(facts.State):
             self.add_node(state)
 
-        for event in self.kb.filter(facts.Event):
-            self.add_node(event)
+        # for event in self.kb.filter(facts.Event):
+        #     self.add_node(event)
 
         for jump in self.kb.filter(facts.Jump):
             self.add_edge(jump)
@@ -133,31 +183,74 @@ class Drawer(object):
         for link in self.kb.filter(facts.OptionsLink):
             self.add_link(link)
 
-        for tag, elements in self.tags.items():
-            subgraph_uid = 'cluster_' + tag
+        ######################
+        # draw subgraph
+        ######################
 
-            subgraph = gv.graph(self.graph, subgraph_uid)
+        subgraphs = []
 
-            self.nodes[subgraph_uid] = subgraph
+        for event in self.kb.filter(facts.Event):
+            subgraphs.append(SubGraph(uid=event.uid, color=HEAD_COLORS.EVENT_SUBGRAPH, members=event.members))
 
-            for node_uid in elements:
-                gv.node(subgraph, node_uid)
+        for subquest in self.kb.filter(facts.SubQuest):
+            subgraphs.append(SubGraph(uid=subquest.uid, color=HEAD_COLORS.SUBQUEST_SUBGRAPH, members=subquest.members))
 
-            gv.setv(subgraph, 'label', tag)
-            gv.setv(subgraph, 'rank', 'same')
-            gv.setv(subgraph, 'shape', 'box')
-            gv.setv(subgraph, 'bgcolor', HEAD_COLORS.SUBGRAPH)
+        for subgraph in subgraphs:
+            subgraph.find_children(subgraphs)
 
-            for event in self.kb.filter(facts.Event):
-                if event.uid == tag:
-                    gv.node(subgraph, event.uid)
+        for subgraph in subgraphs:
+            subgraph.find_real_children()
+
+        # if len(subgraphs) > 1:
+        #     print subgraphs[0].children
+        #     print subgraphs[1].children
+
+        SubGraph.draw_hierarchy(subgraphs, self.graph, self.nodes)
+
+        # for event in self.kb.filter(facts.Event):
+        #     subgraph_uid = 'cluster_' + event.uid
+
+        #     subgraph = gv.graph(self.graph, subgraph_uid)
+        #     gv.setv(subgraph, 'label', event.uid)
+        #     gv.setv(subgraph, 'rank', 'same')
+        #     gv.setv(subgraph, 'shape', 'box')
+        #     gv.setv(subgraph, 'bgcolor', HEAD_COLORS.EVENT_SUBGRAPH)
+
+        #     self.nodes[subgraph_uid] = subgraph
+        #     self.subgraphs[subgraph_uid] = subgraph
+
+        #     for node_uid in event.members:
+        #         gv.node(subgraph, node_uid)
+
+        # for subquest in self.kb.filter(facts.SubQuest):
+        #     subgraph_uid = 'cluster_' + subquest.uid
+
+        #     subgraph = gv.graph(self.graph, subgraph_uid)
+
+        #     self.nodes[subgraph_uid] = subgraph
+        #     self.subgraphs[subgraph_uid] = subgraph
+
+        #     for node_uid in subquest.members:
+        #         if node_uid in self.nodes:
+        #             # print node_uid
+        #             gv.node(subgraph, node_uid)
+        #         if isinstance(self.kb[node_uid], facts.Event):
+        #             # print 'cluster_'+node_uid
+        #             gv.graph(subgraph, 'cluster_'+node_uid)
+
+        #     gv.setv(subgraph, 'label', subquest.uid)
+        #     # gv.setv(subgraph, 'rank', 'same')
+        #     gv.setv(subgraph, 'shape', 'box')
+        #     gv.setv(subgraph, 'bgcolor', HEAD_COLORS.SUBQUEST_SUBGRAPH)
+
 
         gv.layout(self.graph, 'dot');
-        # gv.render(graph, 'dot')
+        # gv.render(self.graph, 'dot')
         gv.render(self.graph, path[path.rfind('.')+1:], path)
 
 
     def create_label_for(self, fact):
+        # return fact.uid.encode('utf-8')
         if isinstance(fact, facts.Start):
             return self.create_label_for_start(fact)
         if isinstance(fact, facts.Finish):
@@ -207,13 +300,20 @@ class Drawer(object):
         for action in state.actions:
             trs.append(tr(td(self.create_label_for_action(action), bgcolor=actions_bgcolor, colspan=2)))
 
-        if hasattr(state, 'type'):
-            head = tr(td(i(state.uid)), td(b(state.type), align='right'))
-        else:
-            head = tr(td(i(state.uid)))
+        colspan = 1
 
-        return table(head,
-                     tr(td(state.description, colspan=2)),
+        head = [td(i(state.uid))]
+
+        if hasattr(state, 'type'):
+            head.append(td(b(state.type), align='center'))
+            colspan += 1
+
+        if hasattr(state, 'result'):
+            head.append(td(b(state.result), align='center'))
+            colspan += 1
+
+        return table(tr(*head),
+                     tr(td(state.description, colspan=colspan)),
                      *trs,
                      bgcolor=bgcolor,
                      port=state.uid)
@@ -223,8 +323,10 @@ class Drawer(object):
             return self.create_action_label_for_message(action)
         elif isinstance(action, facts.GivePower):
             return self.create_action_label_for_give_power(action)
-        elif isinstance(action, facts.LocatedNear):
-            return self.create_action_label_for_located_near(action)
+        elif isinstance(action, facts.MoveNear):
+            return self.create_action_label_for_move_near(action)
+        elif isinstance(action, facts.MoveIn):
+            return self.create_action_label_for_move_in(action)
         elif isinstance(action, facts.Fight):
             return self.create_action_label_for_fight(action)
         elif isinstance(action, facts.DoNothing):
@@ -256,24 +358,21 @@ class Drawer(object):
     def create_label_for_located_near(self, requirement):
         return u'%s <b>находится около</b>&nbsp;%s' % (requirement.object, requirement.place)
 
-    # def create_label_for_message(self, message):
-    #     return u'<b>сообщение:</b>&nbsp;%s' % message.id
 
-    # def create_label_for_give_power(self, give_power):
-    #     return u'<b>увеличивает влияние</b>&nbsp; %s <b>на</b> %.2f' % (give_power.person, give_power.power)
-
-    # def create_label_for_fight(self, fight):
-    #     return u'<b>сражается с</b>&nbsp; %s' % fight.mob
-
-
-    def create_action_label_for_located_near(self, requirement):
+    def create_action_label_for_move_near(self, requirement):
         if requirement.terrains:
             return u'<b>отправить </b> %s<b>бродить около</b>&nbsp;%s<br/> среди ландшафтов %s' % (requirement.object, requirement.place, requirement.terrains)
         else:
             return u'<b>отправить </b> %s<b>бродить около</b>&nbsp;%s<br/>' % (requirement.object, requirement.place)
 
+    def create_action_label_for_move_in(self, requirement):
+        if requirement.percents:
+            return u'%s <b>отправить в </b>&nbsp;%s <b>и пройти </b> %.1f%%<b> пути</b>' % (requirement.object, requirement.place, requirement.percents*100)
+        else:
+            return u'%s <b>отправить в </b>&nbsp;%s' % (requirement.object, requirement.place)
+
     def create_action_label_for_message(self, message):
-        return u'<b>сообщение:</b>&nbsp;%s' % message.id
+        return u'<b>сообщение:</b>&nbsp;%s' % message.type
 
     def create_action_label_for_give_power(self, give_power):
         return u'<b>увеличить влияние </b>&nbsp; %s <b>на </b> %.2f' % (give_power.object, give_power.power)

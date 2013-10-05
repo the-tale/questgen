@@ -3,7 +3,7 @@
 import unittest
 
 from questgen.knowledge_base import KnowledgeBase
-from questgen.facts import Start, LocatedIn, LocatedNear, Person, State, Jump, Finish, Choice, Option
+from questgen import facts
 from questgen import restrictions
 
 class RestrictionsTestsBase(unittest.TestCase):
@@ -21,12 +21,12 @@ class CommonRestrictionsTests(RestrictionsTestsBase):
         self.assertRaises(restrictions.AlwaysError.Error, restrictions.AlwaysError().validate, self.kb)
 
 
-class SingleStartStateTests(RestrictionsTestsBase):
+class SingleStartStateWithNoEntersTests(RestrictionsTestsBase):
 
     def setUp(self):
-        super(SingleStartStateTests, self).setUp()
-        self.start = Start(uid='start', type='test')
-        self.restriction = restrictions.SingleStartState()
+        super(SingleStartStateWithNoEntersTests, self).setUp()
+        self.start = facts.Start(uid='start', type='test', is_entry=True)
+        self.restriction = restrictions.SingleStartStateWithNoEnters()
 
     def test_success(self):
         self.kb += self.start
@@ -35,16 +35,23 @@ class SingleStartStateTests(RestrictionsTestsBase):
     def test_no_start(self):
         self.assertRaises(self.restriction.Error, self.restriction.validate, self.kb)
 
-    def test_more_then_one_start(self):
-        self.kb += self.start
-        self.assertRaises(Exception, self.kb.__iadd__, Start(uid='start', type='test'))
+    def test_more_then_one_start__without_enters(self):
+        self.kb += ( self.start,
+                     facts.Start(uid='start_2', type='test', is_entry=True) )
+        self.assertRaises(self.restriction.Error, self.restriction.validate, self.kb)
+
+    def test_more_then_one_start__with_enters(self):
+        self.kb += ( self.start,
+                     facts.Start(uid='start_2', type='test', is_entry=True),
+                     facts.Jump(state_from=self.start.uid, state_to='start_2'))
+        self.restriction.validate(self.kb)
 
 
 class FinishStateExistsTests(RestrictionsTestsBase):
 
     def setUp(self):
         super(FinishStateExistsTests, self).setUp()
-        self.finish = Finish(uid='finish', type='finish')
+        self.finish = facts.Finish(uid='finish', type='finish', result=0)
         self.restriction = restrictions.FinishStateExists()
 
     def test_success(self):
@@ -56,24 +63,27 @@ class FinishStateExistsTests(RestrictionsTestsBase):
 
     def test_more_then_one_finish(self):
         self.kb += self.finish
-        self.kb += Finish(uid='finish_2', type='finish')
+        self.kb += facts.Finish(uid='finish_2', type='finish', result=1)
         self.restriction.validate(self.kb)
 
 
-class NoJumpsFromFinishTests(RestrictionsTestsBase):
+class AllStatesHasJumpsTests(RestrictionsTestsBase):
 
     def setUp(self):
-        super(NoJumpsFromFinishTests, self).setUp()
-        self.kb += [Start(uid='start', type='test'),
-                    Finish(uid='finish_1', type='finish'),
-                    Jump(state_from='start', state_to='finish_1')]
-        self.restriction = restrictions.NoJumpsFromFinish()
+        super(AllStatesHasJumpsTests, self).setUp()
+        self.kb += [facts.Start(uid='start', type='test', is_entry=True),
+                    facts.State(uid='state_1'),
+                    facts.Finish(uid='finish_1', type='finish', result=0),
+                    facts.Jump(state_from='start', state_to='state_1'),
+                    facts.Jump(state_from='state_1', state_to='finish_1')]
+        self.restriction = restrictions.AllStatesHasJumps()
 
     def test_success(self):
         self.restriction.validate(self.kb)
 
     def test_error(self):
-        self.kb += Jump(state_from='finish_1', state_to='start')
+        self.kb += [facts.State(uid='state_2'),
+                    facts.Jump(state_from='start', state_to='state_2')]
         self.assertRaises(self.restriction.Error, self.restriction.validate, self.kb)
 
 
@@ -84,30 +94,30 @@ class SingleLocationForObjectTests(RestrictionsTestsBase):
         self.restriction = restrictions.SingleLocationForObject()
 
     def test_success(self):
-        self.kb += LocatedIn(object='person', place='place')
+        self.kb += facts.LocatedIn(object='person', place='place')
         self.restriction.validate(self.kb)
 
     def test_no_location(self):
         self.restriction.validate(self.kb)
 
     def test_more_then_one_location__for_person(self):
-        self.kb += [ LocatedIn(object='person', place='place'),
-                     LocatedIn(object='person', place='place_2')]
+        self.kb += [ facts.LocatedIn(object='person', place='place'),
+                     facts.LocatedIn(object='person', place='place_2')]
         self.assertRaises(self.restriction.Error, self.restriction.validate, self.kb)
 
     def test_more_then_one_location__for_person__diferent_relations(self):
-        self.kb += [ LocatedIn(object='person', place='place'),
-                     LocatedNear(object='person', place='place_2')]
+        self.kb += [ facts.LocatedIn(object='person', place='place'),
+                     facts.LocatedNear(object='person', place='place_2')]
         self.assertRaises(self.restriction.Error, self.restriction.validate, self.kb)
 
     def test_more_then_one_location__for_place(self):
-        self.kb += [ LocatedIn(object='person', place='place'),
-                     LocatedIn(object='person_2', place='place')]
+        self.kb += [ facts.LocatedIn(object='person', place='place'),
+                     facts.LocatedIn(object='person_2', place='place')]
         self.restriction.validate(self.kb)
 
     def test_more_then_one_location__for_place__diferent_relations(self):
-        self.kb += [ LocatedNear(object='person', place='place'),
-                     LocatedIn(object='person_2', place='place')]
+        self.kb += [ facts.LocatedNear(object='person', place='place'),
+                     facts.LocatedIn(object='person_2', place='place')]
         self.restriction.validate(self.kb)
 
 
@@ -121,12 +131,12 @@ class ReferencesIntegrityTests(RestrictionsTestsBase):
         self.restriction.validate(self.kb)
 
     def test_none_value(self):
-        self.kb += [Person(uid='person'),
-                    LocatedIn(object='person', place=None) ]
+        self.kb += [facts.Person(uid='person'),
+                    facts.LocatedIn(object='person', place=None) ]
         self.restriction.validate(self.kb)
 
     def test_bad_reference(self):
-        self.kb += LocatedIn(object='person', place=None)
+        self.kb += facts.LocatedIn(object='person', place=None)
         self.assertRaises(self.restriction.Error, self.restriction.validate, self.kb)
 
 
@@ -136,23 +146,23 @@ class ConnectedStateJumpGraphTests(RestrictionsTestsBase):
         super(ConnectedStateJumpGraphTests, self).setUp()
         self.restriction = restrictions.ConnectedStateJumpGraph()
 
-        self.kb += [Start(uid='start', type='test'),
-                    State(uid='state_1'),
-                    State(uid='state_2'),
-                    Finish(uid='finish_1', type='finish'),
-                    Finish(uid='finish_2', type='finish'),
-                    Jump(state_from='start', state_to='state_1'),
-                    Jump(state_from='state_1', state_to='state_2'),
-                    Jump(state_from='state_1', state_to='finish_1'),
-                    Jump(state_from='state_2', state_to='finish_2')]
+        self.kb += [facts.Start(uid='start', type='test', is_entry=True),
+                    facts.State(uid='state_1'),
+                    facts.Start(uid='start_2', type='test', is_entry=True),
+                    facts.Finish(uid='finish_1', type='finish', result=0),
+                    facts.Finish(uid='finish_2', type='finish', result=0),
+                    facts.Jump(state_from='start', state_to='state_1'),
+                    facts.Jump(state_from='state_1', state_to='start_2'),
+                    facts.Jump(state_from='state_1', state_to='finish_1'),
+                    facts.Jump(state_from='start_2', state_to='finish_2')]
 
     def test_success(self):
         self.restriction.validate(self.kb)
 
     def test_state_not_reached(self):
-        self.kb += [State(uid='state_3'),
-                    State(uid='state_4'),
-                    Jump(state_from='state_3', state_to='state_4')]
+        self.kb += [facts.State(uid='state_3'),
+                    facts.State(uid='state_4'),
+                    facts.Jump(state_from='state_3', state_to='state_4')]
         self.assertRaises(self.restriction.Error, self.restriction.validate, self.kb)
 
 
@@ -162,21 +172,21 @@ class NoCirclesInStateJumpGraphTests(RestrictionsTestsBase):
         super(NoCirclesInStateJumpGraphTests, self).setUp()
         self.restriction = restrictions.NoCirclesInStateJumpGraph()
 
-        self.kb += [Start(uid='start', type='test'),
-                    State(uid='state_1'),
-                    State(uid='state_2'),
-                    State(uid='state_3'),
-                    Finish(uid='finish_1', type='finish'),
-                    Jump(state_from='start', state_to='state_1'),
-                    Jump(state_from='state_1', state_to='state_2'),
-                    Jump(state_from='state_2', state_to='state_3'),
-                    Jump(state_from='state_3', state_to='finish_1')]
+        self.kb += [facts.Start(uid='start', type='test', is_entry=True),
+                    facts.State(uid='state_1'),
+                    facts.State(uid='state_2'),
+                    facts.Start(uid='start_3', type='test', is_entry=True),
+                    facts.Finish(uid='finish_1', type='finish', result=0),
+                    facts.Jump(state_from='start', state_to='state_1'),
+                    facts.Jump(state_from='state_1', state_to='state_2'),
+                    facts.Jump(state_from='state_2', state_to='start_3'),
+                    facts.Jump(state_from='start_3', state_to='finish_1')]
 
     def test_success(self):
         self.restriction.validate(self.kb)
 
     def test_state_not_reached(self):
-        self.kb += Jump(state_from='state_3', state_to='state_1')
+        self.kb += facts.Jump(state_from='start_3', state_to='state_1')
         self.assertRaises(self.restriction.Error, self.restriction.validate, self.kb)
 
 
@@ -186,21 +196,21 @@ class MultipleJumpsFromNormalStateTests(RestrictionsTestsBase):
         super(MultipleJumpsFromNormalStateTests, self).setUp()
         self.restriction = restrictions.MultipleJumpsFromNormalState()
 
-        self.kb += [Start(uid='start', type='test'),
-                    Choice(uid='state_1'),
-                    State(uid='state_2'),
-                    Finish(uid='finish_1', type='finish'),
-                    Finish(uid='finish_2', type='finish'),
-                    Jump(state_from='start', state_to='state_1'),
-                    Option(state_from='state_1', state_to='state_2', type='opt_1'),
-                    Option(state_from='state_1', state_to='finish_1', type='opt_2'),
-                    Jump(state_from='state_2', state_to='finish_2')]
+        self.kb += [facts.Start(uid='start', type='test', is_entry=True),
+                    facts.Choice(uid='state_1'),
+                    facts.State(uid='state_2'),
+                    facts.Finish(uid='finish_1', type='finish', result=0),
+                    facts.Finish(uid='finish_2', type='finish', result=0),
+                    facts.Jump(state_from='start', state_to='state_1'),
+                    facts.Option(state_from='state_1', state_to='state_2', type='opt_1'),
+                    facts.Option(state_from='state_1', state_to='finish_1', type='opt_2'),
+                    facts.Jump(state_from='state_2', state_to='finish_2')]
 
     def test_success(self):
         self.restriction.validate(self.kb)
 
     def test_state_not_reached(self):
-        self.kb += Jump(state_from='state_2', state_to='finish_1')
+        self.kb += facts.Jump(state_from='state_2', state_to='finish_1')
         self.assertRaises(self.restriction.Error, self.restriction.validate, self.kb)
 
 
@@ -210,23 +220,23 @@ class ChoicesConsistencyTests(RestrictionsTestsBase):
         super(ChoicesConsistencyTests, self).setUp()
         self.restriction = restrictions.ChoicesConsistency()
 
-        self.kb += [Start(uid='start', type='test'),
-                    Choice(uid='state_1'),
-                    State(uid='state_2'),
-                    Finish(uid='finish_1', type='finish'),
-                    Finish(uid='finish_2', type='finish'),
-                    Jump(state_from='start', state_to='state_1'),
-                    Option(state_from='state_1', state_to='state_2', type='opt_1'),
-                    Option(state_from='state_1', state_to='finish_1', type='opt_2'),
-                    Jump(state_from='state_2', state_to='finish_2')]
+        self.kb += [facts.Start(uid='start', type='test', is_entry=True),
+                    facts.Choice(uid='state_1'),
+                    facts.State(uid='state_2'),
+                    facts.Finish(uid='finish_1', type='finish', result=0),
+                    facts.Finish(uid='finish_2', type='finish', result=0),
+                    facts.Jump(state_from='start', state_to='state_1'),
+                    facts.Option(state_from='state_1', state_to='state_2', type='opt_1'),
+                    facts.Option(state_from='state_1', state_to='finish_1', type='opt_2'),
+                    facts.Jump(state_from='state_2', state_to='finish_2')]
 
     def test_success(self):
         self.restriction.validate(self.kb)
 
     def test_option_like_jump(self):
-        self.kb += Option(state_from='state_2', state_to='finish_1', type='opt_3')
+        self.kb += facts.Option(state_from='state_2', state_to='finish_1', type='opt_3')
         self.assertRaises(self.restriction.OptionLikeJumpError, self.restriction.validate, self.kb)
 
     def test_jump_like_option(self):
-        self.kb += Jump(state_from='state_1', state_to='finish_1')
+        self.kb += facts.Jump(state_from='state_1', state_to='finish_1')
         self.assertRaises(self.restriction.JumpLikeOptionError, self.restriction.validate, self.kb)

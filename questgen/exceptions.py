@@ -62,11 +62,8 @@ class MoreThenOneJumpsAvailableError(MachineError):
 ####################################################################
 class TransformatorsError(QuestgenError): pass
 
-class NoTaggedEventMembersError(TransformatorsError):
+class NoEventMembersError(TransformatorsError):
     MSG = u'no tagged event members for event "%(event)r"'
-
-class MoreThenOneEventTagError(TransformatorsError):
-    MSG = u'fact "%(fact)r" marked more then one event tags'
 
 class OptionWithTwoLinksError(TransformatorsError):
     MSG = u'option "%(option)r" has more then one link'
@@ -89,15 +86,6 @@ class WrongQuestTypeError(QuestsBaseError):
 
 
 ####################################################################
-# selectoes
-####################################################################
-
-class SelectorsBaseError(QuestgenError): pass
-
-class NoFactSelectedError(SelectorsBaseError):
-    MSG = u'can not found fact with method "%(method)s" and arguments: %(arguments)s'
-
-####################################################################
 # roll back errors
 ####################################################################
 
@@ -106,3 +94,13 @@ class RollBackError(QuestgenError):
 
 class NoQuestChoicesRollBackError(RollBackError):
     MSG = u'no quests choices for next quest'
+
+
+####################################################################
+# selectoes
+####################################################################
+
+class SelectorsBaseError(RollBackError): pass
+
+class NoFactSelectedError(SelectorsBaseError):
+    MSG = u'can not found fact with method "%(method)s" and arguments: %(arguments)s'

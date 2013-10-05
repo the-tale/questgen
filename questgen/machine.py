@@ -31,7 +31,8 @@ class Machine(object):
         return self.knowledge_base[self.pointer.state]
 
     def get_start_state(self):
-        return self.knowledge_base.filter(facts.Start).next()
+        jump_ends = set((jump.state_to for jump in self.knowledge_base.filter(facts.Jump)))
+        return (start for start in self.knowledge_base.filter(facts.Start) if start.uid not in jump_ends).next()
 
     @property
     def next_state(self):

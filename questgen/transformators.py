@@ -12,18 +12,12 @@ def activate_events(knowledge_base):
 
     events = list(knowledge_base.filter(facts.Event))
 
-    # validate events
-    events_tags = set(event.uid for event in events)
-    for fact in knowledge_base.facts():
-        if  len(events_tags & set(fact.tags)) > 1:
-            raise exceptions.MoreThenOneEventTagError(fact=fact)
-
     # chose events
     for event in events:
-        event_facts = filter(lambda fact: event.uid in fact.tags, knowledge_base.facts())
+        event_facts = [knowledge_base[fact_uid] for fact_uid in event.members]
 
         if not event_facts:
-            raise exceptions.NoTaggedEventMembersError(event=event)
+            raise exceptions.NoEventMembersError(event=event)
 
         choosen_facts.append(random.choice(event_facts))
         removed_facts.extend(event_facts)
@@ -97,7 +91,7 @@ def remove_broken_states(knowledge_base):
         states_to_remove = []
 
         for state in knowledge_base.filter(facts.State):
-            if isinstance(state, facts.Start):
+            if isinstance(state, facts.Start) and state.is_entry:
                 pass
             elif not filter(lambda jump: jump.state_to == state.uid, knowledge_base.filter(facts.Jump)):
                 states_to_remove.append(state)
@@ -149,6 +143,12 @@ def _get_actors(fact):
         used_actors.add(fact.object)
         used_actors.add(fact.place)
     elif isinstance(fact, facts.LocatedNear):
+        used_actors.add(fact.object)
+        used_actors.add(fact.place)
+    if isinstance(fact, facts.MoveIn):
+        used_actors.add(fact.object)
+        used_actors.add(fact.place)
+    elif isinstance(fact, facts.MoveNear):
         used_actors.add(fact.object)
         used_actors.add(fact.place)
     elif isinstance(fact, facts.PreferenceMob):

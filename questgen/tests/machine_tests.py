@@ -14,10 +14,10 @@ class MachineTests(unittest.TestCase):
     def setUp(self):
         self.kb = KnowledgeBase()
 
-        self.start = Start(uid='start', type='test')
+        self.start = Start(uid='start', type='test', is_entry=True)
         self.state_1 = State(uid='state_1')
         self.state_2 = State(uid='state_2')
-        self.finish_1 = Finish(uid='finish_1', type='finish')
+        self.finish_1 = Finish(uid='finish_1', type='finish', result=0)
 
         self.kb += [ self.start, self.state_1, self.state_2, self.finish_1]
 
@@ -93,7 +93,7 @@ class MachineTests(unittest.TestCase):
         self.assertFalse(self.machine.can_do_step())
 
     def test_can_do_step__success(self):
-        state_3 = State(uid='state_3', require=[Start(uid='start', type='test')])
+        state_3 = State(uid='state_3', require=[Start(uid='start', type='test', is_entry=True)])
         jump_3 = Jump(state_from=self.start.uid, state_to=state_3.uid)
         self.kb += [ state_3, jump_3]
 
@@ -251,3 +251,15 @@ class MachineTests(unittest.TestCase):
 
         self.assertEqual(self.machine.pointer.jump, option_2.uid)
         self.assertEqual(self.machine.pointer.state, choice.uid)
+
+    def test_get_start_state(self):
+        start_2 = Start(uid='s2', type='test', is_entry=True)
+        start_3 = Start(uid='start_3', type='test', is_entry=True)
+
+
+        self.kb += [ start_2,
+                     start_3,
+                     Jump(state_from=self.start.uid, state_to=start_2.uid),
+                     Jump(state_from=start_3.uid, state_to=self.start.uid) ]
+
+        self.assertEqual(self.machine.get_start_state().uid, start_3.uid)
