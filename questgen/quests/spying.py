@@ -54,27 +54,27 @@ class Spying(QuestBetween2):
 
 
         report_data = facts.Finish(uid=ns+'report_data',
-                             type='report_data',
                              result=RESULTS.SUCCESSED,
                              description=u'Сообщить сообранную информацию',
                              require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
-                             actions=[facts.GivePower(object=initiator.uid, power=1),
+                             actions=[facts.GiveReward(object=hero.uid, type='report_data'),
+                                      facts.GivePower(object=initiator.uid, power=1),
                                       facts.GivePower(object=receiver.uid, power=-1)])
 
         open_up_finish = facts.Finish(uid=ns+'open_up_finish',
-                                type='open_up_finish',
                                 result=RESULTS.FAILED,
                                 description=u'Завершить задание и остатсья в городе цели',
                                 require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)],
-                                actions=[facts.GivePower(object=initiator.uid, power=-1),
+                                actions=[facts.GiveReward(object=hero.uid, type='open_up_finish'),
+                                         facts.GivePower(object=initiator.uid, power=-1),
                                          facts.GivePower(object=receiver.uid, power=1)])
 
         open_up_lying = facts.Finish(uid=ns+'open_up_lying',
-                               type='open_up_lying',
                                result=RESULTS.SUCCESSED,
                                description=u'Вернуться к заказчику и сообщить ложную информацию',
                                require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
-                               actions=[facts.GivePower(object=initiator.uid, power=-1),
+                               actions=[facts.GiveReward(object=hero.uid, type='open_up_lying'),
+                                        facts.GivePower(object=initiator.uid, power=-1),
                                         facts.GivePower(object=receiver.uid, power=1)])
 
         start_spying__spying_middle = facts.Option(state_from=start_spying.uid, state_to=spying_middle.uid, type='spy', start_actions=[facts.Message(type='start_spying'),])

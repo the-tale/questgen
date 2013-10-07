@@ -48,11 +48,9 @@ class SearchSmith(QuestBetween2):
                                actions=[facts.UpgradeEquipment()])
 
         finish = facts.Finish(uid=ns+'finish',
-                              type='finish',
                               result=RESULTS.SUCCESSED,
                               description=u'завершить задание',
-                              actions=[facts.Message(type='finish'),
-                                       facts.GivePower(object=receiver_position.uid, power=1)])
+                              actions=[facts.GivePower(object=receiver_position.uid, power=1)])
 
         line = [ start,
 

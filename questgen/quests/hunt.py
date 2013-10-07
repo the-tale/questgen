@@ -15,6 +15,7 @@ from questgen.facts import ( Start,
                              Option,
                              Message,
                              GivePower,
+                             GiveReward,
                              Fight,
                              OptionsLink,
                              QuestParticipant)
@@ -84,11 +85,11 @@ class Hunt(QuestBetween2):
                               fight])
 
         sell_prey = Finish(uid=ns+'sell_prey',
-                           type='sell_prey',
                            result=RESULTS.SUCCESSED,
                            description=u'Продать добычу',
                            require=[LocatedIn(object=hero.uid, place=receiver_position.uid)],
-                           actions=[GivePower(object=receiver_position.uid, power=1)])
+                           actions=[GiveReward(object=hero.uid, type='sell_prey'),
+                                    GivePower(object=receiver_position.uid, power=1)])
 
         facts = [ start,
                   start_hunting,

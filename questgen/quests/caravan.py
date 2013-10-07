@@ -55,11 +55,10 @@ class Caravan(QuestBetween2):
                                               facts.Fight(uid='fight_2'), ))
 
         finish_defence = facts.Finish(uid=ns+'finish_defence',
-                                      type='finish_defence',
                                       result=RESULTS.SUCCESSED,
                                       description=u'Караван приходит в точку назначения',
                                       require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)],
-                                      actions=[facts.Message(type='finish_defence'),
+                                      actions=[facts.GiveReward(object=hero.uid, type='finish_defence'),
                                                facts.GivePower(object=initiator.uid, power=1),
                                                facts.GivePower(object=receiver.uid, power=1)])
 
@@ -87,11 +86,10 @@ class Caravan(QuestBetween2):
                                     facts.MoveNear(object=hero.uid)))
 
         finish_attack = facts.Finish(uid=ns+'finish_attack',
-                                     type='finish_attack',
                                      result=RESULTS.FAILED,
                                      description=u'Продать товар на чёрном рынке',
                                      require=[facts.LocatedIn(object=hero.uid, place=black_market.uid)],
-                                     actions=[facts.Message(type='finish_attack'),
+                                     actions=[facts.GiveReward(object=hero.uid, type='finish_attack'),
                                               facts.GivePower(object=initiator.uid, power=-1),
                                               facts.GivePower(object=receiver.uid, power=-1),
                                               facts.GivePower(object=black_market.uid, power=1)])

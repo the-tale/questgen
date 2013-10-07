@@ -59,10 +59,10 @@ class Hometown(QuestBetween2):
         actions = random.sample(action_choices, 3)
 
         finish = facts.Finish(uid=ns+'finish',
-                              type='finish',
                               result=RESULTS.SUCCESSED,
                               description=u'завершить посещение города',
-                              actions=[facts.GivePower(object=receiver_position.uid, power=1)])
+                              actions=[facts.GiveReward(object=hero.uid, type='finish'),
+                                       facts.GivePower(object=receiver_position.uid, power=1)])
 
         line = [ start,
 

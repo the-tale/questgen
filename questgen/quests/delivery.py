@@ -14,6 +14,7 @@ from questgen.facts import ( Start,
                              Option,
                              Message,
                              GivePower,
+                             GiveReward,
                              OptionsLink,
                              QuestParticipant)
 
@@ -53,19 +54,19 @@ class Delivery(QuestBetween2):
 
 
         finish_delivery = Finish(uid=ns+'finish_delivery',
-                                 type='finish_delivery',
                                  result=RESULTS.SUCCESSED,
                                  description=u'Доставить посылку получателю',
                                  require=[LocatedIn(object=hero.uid, place=receiver_position.uid)],
-                                 actions=[GivePower(object=initiator.uid, power=1),
+                                 actions=[GiveReward(object=hero.uid, type='finish_delivery'),
+                                          GivePower(object=initiator.uid, power=1),
                                           GivePower(object=receiver.uid, power=1)])
 
         finish_steal = Finish(uid=ns+'finish_steal',
-                                 type='finish_steal',
                                  result=RESULTS.FAILED,
                                  description=u'Доставить посылку скупщику',
                                  require=[LocatedIn(object=hero.uid, place=antagonist_position.uid)],
-                                 actions=[GivePower(object=initiator.uid, power=-1),
+                                 actions=[GiveReward(object=hero.uid, type='finish_steal'),
+                                          GivePower(object=initiator.uid, power=-1),
                                           GivePower(object=receiver.uid, power=-1),
                                           GivePower(object=antagonist.uid, power=1)])
 

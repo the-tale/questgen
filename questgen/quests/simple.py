@@ -20,12 +20,10 @@ class Simple(QuestBetween2):
                             description=u'Начало: самый простой квест')
 
         finish_successed = facts.Finish(uid=ns+'finish_successed',
-                                        type='finish_successed',
                                         result=RESULTS.SUCCESSED,
                                         description=u'завершить задание удачно')
 
         finish_failed = facts.Finish(uid=ns+'finish_failed',
-                                     type='finish_failed',
                                      result=RESULTS.FAILED,
                                      description=u'завершить задание плохо')
 

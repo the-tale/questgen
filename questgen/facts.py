@@ -155,8 +155,8 @@ class Start(State):
     _required = tuple(['type', 'is_entry'] + list(State._required))
 
 class Finish(State):
-    _attributes = dict(type=None, result=None, **State._attributes)
-    _required = tuple(['type', 'result'] + list(State._required))
+    _attributes = dict(result=None, **State._attributes)
+    _required = tuple(['result'] + list(State._required))
 
 class Choice(State): pass
 
@@ -289,6 +289,14 @@ class GivePower(Action):
 
     def update_uid(self):
         self.uid = '#give_power(%s, %f)' % (self.object, self.power)
+
+class GiveReward(Action):
+    _references = ('object',)
+    _attributes = dict(object=None, type=None, **Action._attributes)
+    _required = tuple(['object', 'type'] + list(Action._required))
+
+    def update_uid(self):
+        self.uid = '#give_reward(%s, %s)' % (self.object, self.type)
 
 class Fight(Action):
     _attributes = dict(mob=None, **Action._attributes)

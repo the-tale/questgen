@@ -286,6 +286,8 @@ class Drawer(object):
             return self.create_action_label_for_message(action)
         elif isinstance(action, facts.GivePower):
             return self.create_action_label_for_give_power(action)
+        elif isinstance(action, facts.GiveReward):
+            return self.create_action_label_for_give_reward(action)
         elif isinstance(action, facts.MoveNear):
             return self.create_action_label_for_move_near(action)
         elif isinstance(action, facts.MoveIn):
@@ -339,6 +341,9 @@ class Drawer(object):
 
     def create_action_label_for_give_power(self, give_power):
         return u'<b>увеличить влияние </b>&nbsp; %s <b>на </b> %.2f' % (give_power.object, give_power.power)
+
+    def create_action_label_for_give_reward(self, give_reward):
+        return u'<b>выдать награду </b>&nbsp; %s <b>типа </b> %s' % (give_reward.object, give_reward.type)
 
     def create_action_label_for_fight(self, fight):
         return u'<b>сразиться с</b>&nbsp; %s' % fight.mob

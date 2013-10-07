@@ -45,11 +45,11 @@ class CollectDebt(QuestBetween2):
                                      facts.Fight(uid='attack')])
 
         finish_attack = facts.Finish(uid=ns+'finish_attack',
-                                     type='finish_attack',
                                      result=RESULTS.SUCCESSED,
                                      description=u'долг выбит',
                                      require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
-                                     actions=[facts.GivePower(object=initiator.uid, power=1),
+                                     actions=[facts.GiveReward(object=hero.uid, type='finish_attack'),
+                                              facts.GivePower(object=initiator.uid, power=1),
                                               facts.GivePower(object=receiver.uid, power=-1)])
 
         help = facts.State(uid=ns+'help',
@@ -57,11 +57,11 @@ class CollectDebt(QuestBetween2):
                            require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)])
 
         finish_help = facts.Finish(uid=ns+'finish_help',
-                                   type='finish_help',
                                    result=RESULTS.SUCCESSED,
                                    description=u'помощь оказана',
                                    require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
-                                   actions=[facts.GivePower(object=initiator.uid, power=1),
+                                   actions=[facts.GiveReward(object=hero.uid, type='finish_help'),
+                                            facts.GivePower(object=initiator.uid, power=1),
                                             facts.GivePower(object=receiver.uid, power=1)])
 
         help_quest = selector._qb.create_quest_from_person(selector, initiator=receiver, tags=('can_continue',))

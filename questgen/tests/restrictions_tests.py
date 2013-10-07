@@ -51,7 +51,7 @@ class FinishStateExistsTests(RestrictionsTestsBase):
 
     def setUp(self):
         super(FinishStateExistsTests, self).setUp()
-        self.finish = facts.Finish(uid='finish', type='finish', result=0)
+        self.finish = facts.Finish(uid='finish', result=0)
         self.restriction = restrictions.FinishStateExists()
 
     def test_success(self):
@@ -63,7 +63,7 @@ class FinishStateExistsTests(RestrictionsTestsBase):
 
     def test_more_then_one_finish(self):
         self.kb += self.finish
-        self.kb += facts.Finish(uid='finish_2', type='finish', result=1)
+        self.kb += facts.Finish(uid='finish_2', result=1)
         self.restriction.validate(self.kb)
 
 
@@ -73,7 +73,7 @@ class AllStatesHasJumpsTests(RestrictionsTestsBase):
         super(AllStatesHasJumpsTests, self).setUp()
         self.kb += [facts.Start(uid='start', type='test', is_entry=True),
                     facts.State(uid='state_1'),
-                    facts.Finish(uid='finish_1', type='finish', result=0),
+                    facts.Finish(uid='finish_1', result=0),
                     facts.Jump(state_from='start', state_to='state_1'),
                     facts.Jump(state_from='state_1', state_to='finish_1')]
         self.restriction = restrictions.AllStatesHasJumps()
@@ -149,8 +149,8 @@ class ConnectedStateJumpGraphTests(RestrictionsTestsBase):
         self.kb += [facts.Start(uid='start', type='test', is_entry=True),
                     facts.State(uid='state_1'),
                     facts.Start(uid='start_2', type='test', is_entry=True),
-                    facts.Finish(uid='finish_1', type='finish', result=0),
-                    facts.Finish(uid='finish_2', type='finish', result=0),
+                    facts.Finish(uid='finish_1', result=0),
+                    facts.Finish(uid='finish_2', result=0),
                     facts.Jump(state_from='start', state_to='state_1'),
                     facts.Jump(state_from='state_1', state_to='start_2'),
                     facts.Jump(state_from='state_1', state_to='finish_1'),
@@ -176,7 +176,7 @@ class NoCirclesInStateJumpGraphTests(RestrictionsTestsBase):
                     facts.State(uid='state_1'),
                     facts.State(uid='state_2'),
                     facts.Start(uid='start_3', type='test', is_entry=True),
-                    facts.Finish(uid='finish_1', type='finish', result=0),
+                    facts.Finish(uid='finish_1', result=0),
                     facts.Jump(state_from='start', state_to='state_1'),
                     facts.Jump(state_from='state_1', state_to='state_2'),
                     facts.Jump(state_from='state_2', state_to='start_3'),
@@ -199,8 +199,8 @@ class MultipleJumpsFromNormalStateTests(RestrictionsTestsBase):
         self.kb += [facts.Start(uid='start', type='test', is_entry=True),
                     facts.Choice(uid='state_1'),
                     facts.State(uid='state_2'),
-                    facts.Finish(uid='finish_1', type='finish', result=0),
-                    facts.Finish(uid='finish_2', type='finish', result=0),
+                    facts.Finish(uid='finish_1', result=0),
+                    facts.Finish(uid='finish_2', result=0),
                     facts.Jump(state_from='start', state_to='state_1'),
                     facts.Option(state_from='state_1', state_to='state_2', type='opt_1'),
                     facts.Option(state_from='state_1', state_to='finish_1', type='opt_2'),
@@ -223,8 +223,8 @@ class ChoicesConsistencyTests(RestrictionsTestsBase):
         self.kb += [facts.Start(uid='start', type='test', is_entry=True),
                     facts.Choice(uid='state_1'),
                     facts.State(uid='state_2'),
-                    facts.Finish(uid='finish_1', type='finish', result=0),
-                    facts.Finish(uid='finish_2', type='finish', result=0),
+                    facts.Finish(uid='finish_1', result=0),
+                    facts.Finish(uid='finish_2', result=0),
                     facts.Jump(state_from='start', state_to='state_1'),
                     facts.Option(state_from='state_1', state_to='state_2', type='opt_1'),
                     facts.Option(state_from='state_1', state_to='finish_1', type='opt_2'),
