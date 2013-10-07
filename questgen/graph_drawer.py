@@ -167,15 +167,8 @@ class Drawer(object):
 
     def draw(self, path):
 
-        # gv.setv(self.graph, 'rankdir', 'LR')
-        # gv.setv(self.graph, 'splines', 'ortho')
-        # gv.setv(self.graph, 'concentrate', 'true') # merge edges
-
         for state in self.kb.filter(facts.State):
             self.add_node(state)
-
-        # for event in self.kb.filter(facts.Event):
-        #     self.add_node(event)
 
         for jump in self.kb.filter(facts.Jump):
             self.add_edge(jump)
@@ -201,48 +194,18 @@ class Drawer(object):
         for subgraph in subgraphs:
             subgraph.find_real_children()
 
-        # if len(subgraphs) > 1:
-        #     print subgraphs[0].children
-        #     print subgraphs[1].children
-
         SubGraph.draw_hierarchy(subgraphs, self.graph, self.nodes)
 
-        # for event in self.kb.filter(facts.Event):
-        #     subgraph_uid = 'cluster_' + event.uid
+        # #####################
+        # # layouyt finish nodes
+        # ####################
 
-        #     subgraph = gv.graph(self.graph, subgraph_uid)
-        #     gv.setv(subgraph, 'label', event.uid)
-        #     gv.setv(subgraph, 'rank', 'same')
-        #     gv.setv(subgraph, 'shape', 'box')
-        #     gv.setv(subgraph, 'bgcolor', HEAD_COLORS.EVENT_SUBGRAPH)
+        # subgraph = gv.graph(self.graph, 'finish_nodes')
+        # gv.setv(subgraph, 'rank', 'same')
 
-        #     self.nodes[subgraph_uid] = subgraph
-        #     self.subgraphs[subgraph_uid] = subgraph
-
-        #     for node_uid in event.members:
-        #         gv.node(subgraph, node_uid)
-
-        # for subquest in self.kb.filter(facts.SubQuest):
-        #     subgraph_uid = 'cluster_' + subquest.uid
-
-        #     subgraph = gv.graph(self.graph, subgraph_uid)
-
-        #     self.nodes[subgraph_uid] = subgraph
-        #     self.subgraphs[subgraph_uid] = subgraph
-
-        #     for node_uid in subquest.members:
-        #         if node_uid in self.nodes:
-        #             # print node_uid
-        #             gv.node(subgraph, node_uid)
-        #         if isinstance(self.kb[node_uid], facts.Event):
-        #             # print 'cluster_'+node_uid
-        #             gv.graph(subgraph, 'cluster_'+node_uid)
-
-        #     gv.setv(subgraph, 'label', subquest.uid)
-        #     # gv.setv(subgraph, 'rank', 'same')
-        #     gv.setv(subgraph, 'shape', 'box')
-        #     gv.setv(subgraph, 'bgcolor', HEAD_COLORS.SUBQUEST_SUBGRAPH)
-
+        # for finish in self.kb.filter(facts.Finish):
+        #     if finish.uid.startswith('[ns-0]'):
+        #         gv.node(subgraph, finish.uid)
 
         gv.layout(self.graph, 'dot');
         # gv.render(self.graph, 'dot')

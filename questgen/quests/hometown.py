@@ -62,8 +62,7 @@ class Hometown(QuestBetween2):
                               type='finish',
                               result=RESULTS.SUCCESSED,
                               description=u'завершить посещение города',
-                              actions=[facts.Message(type='finish'),
-                                       facts.GivePower(object=receiver_position.uid, power=1)])
+                              actions=[facts.GivePower(object=receiver_position.uid, power=1)])
 
         line = [ start,
 

@@ -34,30 +34,34 @@ class CollectDebt(QuestBetween2):
 
         choose_method = facts.Choice(uid=ns+'choose_method',
                                      description=u'Выбрать метод получения долга',
-                                     require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)])
+                                     require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)],
+                                     actions=[facts.Message(type='move_to_receiver')])
 
 
         attack = facts.State(uid=ns+'attack',
                             description=u'сражение с подручными должника',
-                            actions=[facts.Fight(uid='fight_1')])
+                            require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)],
+                            actions=[facts.Message(type='attack'),
+                                     facts.Fight(uid='attack')])
 
         finish_attack = facts.Finish(uid=ns+'finish_attack',
                                      type='finish_attack',
                                      result=RESULTS.SUCCESSED,
                                      description=u'долг выбит',
-                                     actions=[facts.Message(type='finish_attack'),
-                                              facts.GivePower(object=initiator.uid, power=1),
+                                     require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
+                                     actions=[facts.GivePower(object=initiator.uid, power=1),
                                               facts.GivePower(object=receiver.uid, power=-1)])
 
         help = facts.State(uid=ns+'help',
-                           description=u'помочь должнику')
+                           description=u'помочь должнику',
+                           require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)])
 
         finish_help = facts.Finish(uid=ns+'finish_help',
                                    type='finish_help',
                                    result=RESULTS.SUCCESSED,
                                    description=u'помощь оказана',
-                                   actions=[facts.Message(type='finish_help'),
-                                            facts.GivePower(object=initiator.uid, power=1),
+                                   require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
+                                   actions=[facts.GivePower(object=initiator.uid, power=1),
                                             facts.GivePower(object=receiver.uid, power=1)])
 
         help_quest = selector._qb.create_quest_from_person(selector, initiator=receiver, tags=('can_continue',))
@@ -65,12 +69,12 @@ class CollectDebt(QuestBetween2):
 
         for help_fact in help_quest:
             if isinstance(help_fact, facts.Start):
-                help_extra.append(facts.Jump(state_from=help.uid, state_to=help_fact.uid))
+                help_extra.append(facts.Jump(state_from=help.uid, state_to=help_fact.uid, start_actions=[facts.Message(type='before_help')]))
             elif isinstance(help_fact, facts.Finish):
                 if help_fact.result == RESULTS.SUCCESSED:
-                    help_extra.append(facts.Jump(state_from=help_fact.uid, state_to=finish_help.uid))
+                    help_extra.append(facts.Jump(state_from=help_fact.uid, state_to=finish_help.uid, start_actions=[facts.Message(type='after_successed_help')]))
                 else:
-                    help_extra.append(facts.Jump(state_from=help_fact.uid, state_to=attack.uid))
+                    help_extra.append(facts.Jump(state_from=help_fact.uid, state_to=attack.uid, start_actions=[facts.Message(type='after_failed_help')]))
 
         subquest = facts.SubQuest(uid=ns+'help_subquest',
                                   members = [f.uid for f in itertools.chain(help_quest, help_extra) if isinstance(f, (facts.State, facts.Jump, facts.OptionsLink))])

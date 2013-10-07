@@ -42,7 +42,9 @@ class Fact(object):
 
     @classmethod
     def deserialize(cls, data, fact_classes):
-        obj = cls(**data['attributes'])
+        attributes = copy.copy(cls._attributes)
+        attributes.update(data['attributes'])
+        obj = cls(**attributes)
         for attribute in cls._serializable:
             if attribute not in data['attributes']:
                 continue

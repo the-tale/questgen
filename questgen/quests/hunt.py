@@ -88,8 +88,7 @@ class Hunt(QuestBetween2):
                            result=RESULTS.SUCCESSED,
                            description=u'Продать добычу',
                            require=[LocatedIn(object=hero.uid, place=receiver_position.uid)],
-                           actions=[Message(type='sell_prey'),
-                                    GivePower(object=receiver_position.uid, power=1)])
+                           actions=[GivePower(object=receiver_position.uid, power=1)])
 
         facts = [ start,
                   start_hunting,

@@ -57,8 +57,7 @@ class Delivery(QuestBetween2):
                                  result=RESULTS.SUCCESSED,
                                  description=u'Доставить посылку получателю',
                                  require=[LocatedIn(object=hero.uid, place=receiver_position.uid)],
-                                 actions=[Message(type='finish_delivery'),
-                                          GivePower(object=initiator.uid, power=1),
+                                 actions=[GivePower(object=initiator.uid, power=1),
                                           GivePower(object=receiver.uid, power=1)])
 
         finish_steal = Finish(uid=ns+'finish_steal',
@@ -66,8 +65,7 @@ class Delivery(QuestBetween2):
                                  result=RESULTS.FAILED,
                                  description=u'Доставить посылку скупщику',
                                  require=[LocatedIn(object=hero.uid, place=antagonist_position.uid)],
-                                 actions=[Message(type='finish_delivery'),
-                                          GivePower(object=initiator.uid, power=-1),
+                                 actions=[GivePower(object=initiator.uid, power=-1),
                                           GivePower(object=receiver.uid, power=-1),
                                           GivePower(object=antagonist.uid, power=1)])
 

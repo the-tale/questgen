@@ -20,9 +20,17 @@ class Machine(object):
             self.knowledge_base += facts.Pointer()
         return self.knowledge_base[facts.Pointer.UID]
 
+    def _has_jumps(self, fact):
+        return bool([jump for jump in self.knowledge_base.filter(facts.Jump) if jump.state_from == fact.uid])
+
     @property
     def is_processed(self): # TODO: tests
-        return self.current_state.uid in self.knowledge_base and isinstance(self.current_state, facts.Finish)
+        finish = self.current_state
+
+        if not isinstance(finish, facts.Finish):
+            return False
+
+        return not self._has_jumps(finish)
 
     @property
     def current_state(self):
@@ -57,7 +65,7 @@ class Machine(object):
         else:
             next_jump = None
 
-            if isinstance(self.current_state, facts.Finish):
+            if not self._has_jumps(self.current_state):
                 raise exceptions.NoJumpsFromLastStateError(state=self.current_state)
 
             next_jump = self.get_next_jump(self.current_state)
@@ -71,9 +79,8 @@ class Machine(object):
         self.knowledge_base += new_pointer
 
 
-
     def can_do_step(self):
-        if self.current_state and isinstance(self.current_state, facts.Finish):
+        if self.is_processed:
             return False
 
         if self.pointer.jump is None:
@@ -121,7 +128,11 @@ class Machine(object):
         if current_state is None:
             current_state = self.get_start_state()
 
-        while not isinstance(current_state, facts.Finish):
+        first_step = True
+
+        while not isinstance(current_state, facts.Finish) and (first_step or not isinstance(current_state, facts.Start)):
+
+            first_step = False
 
             if isinstance(current_state, facts.Choice):
                 options = [option for option in self.knowledge_base.filter(facts.Option) if option.state_from == current_state.uid]

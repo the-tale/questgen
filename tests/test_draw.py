@@ -14,13 +14,14 @@ from questgen.quests.search_smith import SearchSmith
 from questgen.quests.delivery import Delivery
 from questgen.quests.caravan import Caravan
 from questgen.quests.collect_debt import CollectDebt
+from questgen.quests.simple import Simple
 
 from questgen.relations import PROFESSION
 
-QUESTS = [Spying, Hunt, Hometown, SearchSmith, Delivery, Caravan, CollectDebt]
+QUESTS = [Spying, Hunt, Hometown, SearchSmith, Delivery, Caravan, CollectDebt, Simple]
 
 qb = QuestsBase()
-qb += [Spying]
+qb += [Simple]
 
 for Quest in QUESTS:
 

@@ -19,7 +19,7 @@
 <polygon fill="#dddddd" stroke="none" points="9,-540 9,-553 182,-553 182,-540 9,-540"/>
 <text text-anchor="start" x="10" y="-545" font-family="Times,serif" font-size="10.00">hero </text>
 <text text-anchor="start" x="31" y="-545" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
-<text text-anchor="start" x="86" y="-545" font-family="Times,serif" font-size="10.00"> place_3</text>
+<text text-anchor="start" x="86" y="-545" font-family="Times,serif" font-size="10.00"> place_2</text>
 <polygon fill="#ffffff" stroke="none" points="9,-527 9,-540 182,-540 182,-527 9,-527"/>
 <text text-anchor="start" x="10" y="-532" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
 <text text-anchor="start" x="62" y="-532" font-family="Times,serif" font-size="10.00"> finish_defence</text>
@@ -30,7 +30,7 @@
 <text text-anchor="start" x="156" y="-519" font-family="Times,serif" font-size="10.00"> 1.00</text>
 <polygon fill="#ffffff" stroke="none" points="9,-501 9,-514 182,-514 182,-501 9,-501"/>
 <text text-anchor="start" x="10" y="-506" font-family="Times,serif" font-weight="bold" font-size="10.00">увеличить влияние </text>
-<text text-anchor="start" x="98" y="-506" font-family="Times,serif" font-size="10.00">  person_3 </text>
+<text text-anchor="start" x="98" y="-506" font-family="Times,serif" font-size="10.00">  person_2 </text>
 <text text-anchor="start" x="143" y="-506" font-family="Times,serif" font-weight="bold" font-size="10.00">на </text>
 <text text-anchor="start" x="156" y="-506" font-family="Times,serif" font-size="10.00"> 1.00</text>
 <polygon fill="none" stroke="black" points="8,-500.5 8,-581.5 238,-581.5 238,-500.5 8,-500.5"/>
@@ -114,7 +114,7 @@
 <polygon fill="#eeffee" stroke="none" points="293,-727 293,-740 508,-740 508,-727 293,-727"/>
 <text text-anchor="start" x="294" y="-732" font-family="Times,serif" font-size="10.00">hero </text>
 <text text-anchor="start" x="315" y="-732" font-family="Times,serif" font-weight="bold" font-size="10.00">отправить в </text>
-<text text-anchor="start" x="373" y="-732" font-family="Times,serif" font-size="10.00"> place_3 </text>
+<text text-anchor="start" x="373" y="-732" font-family="Times,serif" font-size="10.00"> place_2 </text>
 <text text-anchor="start" x="410" y="-732" font-family="Times,serif" font-weight="bold" font-size="10.00">и пройти </text>
 <text text-anchor="start" x="452" y="-732" font-family="Times,serif" font-size="10.00"> 50.0%</text>
 <text text-anchor="start" x="481" y="-732" font-family="Times,serif" font-weight="bold" font-size="10.00"> пути</text>
@@ -183,7 +183,7 @@
 <polygon fill="#dddddd" stroke="none" points="290,-57 290,-70 463,-70 463,-57 290,-57"/>
 <text text-anchor="start" x="291" y="-62" font-family="Times,serif" font-size="10.00">hero </text>
 <text text-anchor="start" x="312" y="-62" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
-<text text-anchor="start" x="367" y="-62" font-family="Times,serif" font-size="10.00"> place_4</text>
+<text text-anchor="start" x="367" y="-62" font-family="Times,serif" font-size="10.00"> place_5</text>
 <polygon fill="#ffffff" stroke="none" points="290,-44 290,-57 463,-57 463,-44 290,-44"/>
 <text text-anchor="start" x="291" y="-49" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
 <text text-anchor="start" x="343" y="-49" font-family="Times,serif" font-size="10.00"> finish_attack</text>
@@ -194,12 +194,12 @@
 <text text-anchor="start" x="437" y="-36" font-family="Times,serif" font-size="10.00"> &#45;1.00</text>
 <polygon fill="#ffffff" stroke="none" points="290,-18 290,-31 463,-31 463,-18 290,-18"/>
 <text text-anchor="start" x="291" y="-23" font-family="Times,serif" font-weight="bold" font-size="10.00">увеличить влияние </text>
-<text text-anchor="start" x="379" y="-23" font-family="Times,serif" font-size="10.00">  person_3 </text>
+<text text-anchor="start" x="379" y="-23" font-family="Times,serif" font-size="10.00">  person_2 </text>
 <text text-anchor="start" x="424" y="-23" font-family="Times,serif" font-weight="bold" font-size="10.00">на </text>
 <text text-anchor="start" x="437" y="-23" font-family="Times,serif" font-size="10.00"> &#45;1.00</text>
 <polygon fill="#ffffff" stroke="none" points="290,-5 290,-18 463,-18 463,-5 290,-5"/>
 <text text-anchor="start" x="291" y="-10" font-family="Times,serif" font-weight="bold" font-size="10.00">увеличить влияние </text>
-<text text-anchor="start" x="379" y="-10" font-family="Times,serif" font-size="10.00">  place_4 </text>
+<text text-anchor="start" x="379" y="-10" font-family="Times,serif" font-size="10.00">  place_5 </text>
 <text text-anchor="start" x="419" y="-10" font-family="Times,serif" font-weight="bold" font-size="10.00">на </text>
 <text text-anchor="start" x="432" y="-10" font-family="Times,serif" font-size="10.00"> 1.00</text>
 <polygon fill="none" stroke="black" points="289,-4 289,-98 511,-98 511,-4 289,-4"/>
@@ -230,7 +230,7 @@
 <polygon fill="#eeffee" stroke="none" points="272,-1131 272,-1144 487,-1144 487,-1131 272,-1131"/>
 <text text-anchor="start" x="273" y="-1136" font-family="Times,serif" font-size="10.00">hero </text>
 <text text-anchor="start" x="294" y="-1136" font-family="Times,serif" font-weight="bold" font-size="10.00">отправить в </text>
-<text text-anchor="start" x="352" y="-1136" font-family="Times,serif" font-size="10.00"> place_3 </text>
+<text text-anchor="start" x="352" y="-1136" font-family="Times,serif" font-size="10.00"> place_2 </text>
 <text text-anchor="start" x="389" y="-1136" font-family="Times,serif" font-weight="bold" font-size="10.00">и пройти </text>
 <text text-anchor="start" x="431" y="-1136" font-family="Times,serif" font-size="10.00"> 30.0%</text>
 <text text-anchor="start" x="460" y="-1136" font-family="Times,serif" font-weight="bold" font-size="10.00"> пути</text>
@@ -249,7 +249,7 @@
 <polygon fill="#eeffee" stroke="none" points="16,-727 16,-740 231,-740 231,-727 16,-727"/>
 <text text-anchor="start" x="17" y="-732" font-family="Times,serif" font-size="10.00">hero </text>
 <text text-anchor="start" x="38" y="-732" font-family="Times,serif" font-weight="bold" font-size="10.00">отправить в </text>
-<text text-anchor="start" x="96" y="-732" font-family="Times,serif" font-size="10.00"> place_3 </text>
+<text text-anchor="start" x="96" y="-732" font-family="Times,serif" font-size="10.00"> place_2 </text>
 <text text-anchor="start" x="133" y="-732" font-family="Times,serif" font-weight="bold" font-size="10.00">и пройти </text>
 <text text-anchor="start" x="175" y="-732" font-family="Times,serif" font-size="10.00"> 60.0%</text>
 <text text-anchor="start" x="204" y="-732" font-family="Times,serif" font-weight="bold" font-size="10.00"> пути</text>
