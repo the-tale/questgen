@@ -8,13 +8,8 @@ class Spying(QuestBetween2):
     TYPE = 'spying'
     TAGS = ('can_start', 'can_continue')
 
-    # normal - normal quest
-    # special - special quest
-    # can_start - can be first quest in tree
-    # can_continue - can be not first quest in tree
-
     @classmethod
-    def construct(cls, selector, initiator, initiator_position, receiver, receiver_position):
+    def construct(cls, nesting, selector, initiator, initiator_position, receiver, receiver_position):
 
         hero = selector.heroes()[0]
 
@@ -22,7 +17,7 @@ class Spying(QuestBetween2):
 
         start = facts.Start(uid=ns+'start',
                       type=cls.TYPE,
-                      is_entry=selector.is_first_quest,
+                      nesting=nesting,
                       description=u'Начало: задание на шпионаж',
                       require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid),
                                facts.LocatedIn(object=receiver.uid, place=receiver_position.uid)],
@@ -55,6 +50,7 @@ class Spying(QuestBetween2):
 
         report_data = facts.Finish(uid=ns+'report_data',
                              result=RESULTS.SUCCESSED,
+                             nesting=nesting,
                              description=u'Сообщить сообранную информацию',
                              require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
                              actions=[facts.GiveReward(object=hero.uid, type='report_data'),
@@ -63,6 +59,7 @@ class Spying(QuestBetween2):
 
         open_up_finish = facts.Finish(uid=ns+'open_up_finish',
                                 result=RESULTS.FAILED,
+                                nesting=nesting,
                                 description=u'Завершить задание и остатсья в городе цели',
                                 require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)],
                                 actions=[facts.GiveReward(object=hero.uid, type='open_up_finish'),
@@ -71,11 +68,12 @@ class Spying(QuestBetween2):
 
         open_up_lying = facts.Finish(uid=ns+'open_up_lying',
                                result=RESULTS.SUCCESSED,
+                               nesting=nesting,
                                description=u'Вернуться к заказчику и сообщить ложную информацию',
                                require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
                                actions=[facts.GiveReward(object=hero.uid, type='open_up_lying'),
-                                        facts.GivePower(object=initiator.uid, power=-1),
-                                        facts.GivePower(object=receiver.uid, power=1)])
+                                        facts.GivePower(object=initiator.uid, power=-1.5),
+                                        facts.GivePower(object=receiver.uid, power=1.5)])
 
         start_spying__spying_middle = facts.Option(state_from=start_spying.uid, state_to=spying_middle.uid, type='spy', start_actions=[facts.Message(type='start_spying'),])
         start_spying__open_up = facts.Option(state_from=start_spying.uid, state_to=open_up.uid, type='open_up', start_actions=[facts.Message(type='start_open_up'),])
@@ -106,7 +104,6 @@ class Spying(QuestBetween2):
                   facts.Jump(state_from=open_up.uid, state_to=open_up_finish.uid),
                   facts.Jump(state_from=open_up.uid, state_to=open_up_lying.uid, start_actions=[facts.Message(type='move_to_report_lie'),]),
 
-                  facts.OptionsLink(options=(start_spying__open_up.uid, spying_middle__open_up.uid)),
                   facts.OptionsLink(options=(start_spying__spying_middle.uid, spying_middle__continue_spying.uid)),
 
                   facts.Event(uid=ns+'open_up_variants', description=u'Варианты окончания раскрытия', members=(open_up_finish.uid, open_up_lying.uid))

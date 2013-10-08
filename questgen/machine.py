@@ -30,7 +30,7 @@ class Machine(object):
         if not isinstance(finish, facts.Finish):
             return False
 
-        return not self._has_jumps(finish)
+        return finish.is_external
 
     @property
     def current_state(self):

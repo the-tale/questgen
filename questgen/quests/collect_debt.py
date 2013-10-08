@@ -3,19 +3,15 @@ import itertools
 
 from questgen.quests.base_quest import QuestBetween2, ROLES, RESULTS
 from questgen import facts
+from questgen import logic
 
 
 class CollectDebt(QuestBetween2):
     TYPE = 'collect_debt'
-    TAGS = ('can_start', )
-
-    # normal - normal quest
-    # special - special quest
-    # can_start - can be first quest in tree
-    # can_continue - can be not first quest in tree
+    TAGS = ('can_start', 'has_subquests') # can_continue can not be used, since quest has no FAILED finish
 
     @classmethod
-    def construct(cls, selector, initiator, initiator_position, receiver, receiver_position):
+    def construct(cls, nesting, selector, initiator, initiator_position, receiver, receiver_position):
 
         hero = selector.heroes()[0]
 
@@ -23,7 +19,7 @@ class CollectDebt(QuestBetween2):
 
         start = facts.Start(uid=ns+'start',
                             type=cls.TYPE,
-                            is_entry=selector.is_first_quest,
+                            nesting=nesting,
                             description=u'Начало: выбить долг',
                             require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid),
                                      facts.LocatedIn(object=receiver.uid, place=receiver_position.uid)],
@@ -46,6 +42,7 @@ class CollectDebt(QuestBetween2):
 
         finish_attack = facts.Finish(uid=ns+'finish_attack',
                                      result=RESULTS.SUCCESSED,
+                                     nesting=nesting,
                                      description=u'долг выбит',
                                      require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
                                      actions=[facts.GiveReward(object=hero.uid, type='finish_attack'),
@@ -58,16 +55,17 @@ class CollectDebt(QuestBetween2):
 
         finish_help = facts.Finish(uid=ns+'finish_help',
                                    result=RESULTS.SUCCESSED,
+                                   nesting=nesting,
                                    description=u'помощь оказана',
                                    require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
                                    actions=[facts.GiveReward(object=hero.uid, type='finish_help'),
                                             facts.GivePower(object=initiator.uid, power=1),
                                             facts.GivePower(object=receiver.uid, power=1)])
 
-        help_quest = selector._qb.create_quest_from_person(selector, initiator=receiver, tags=('can_continue',))
+        help_quest = selector.create_quest_from_person(nesting=nesting+1, initiator=receiver, tags=('can_continue',))
         help_extra = []
 
-        for help_fact in help_quest:
+        for help_fact in logic.filter_subquest(help_quest, nesting):
             if isinstance(help_fact, facts.Start):
                 help_extra.append(facts.Jump(state_from=help.uid, state_to=help_fact.uid, start_actions=[facts.Message(type='before_help')]))
             elif isinstance(help_fact, facts.Finish):
@@ -76,8 +74,7 @@ class CollectDebt(QuestBetween2):
                 else:
                     help_extra.append(facts.Jump(state_from=help_fact.uid, state_to=attack.uid, start_actions=[facts.Message(type='after_failed_help')]))
 
-        subquest = facts.SubQuest(uid=ns+'help_subquest',
-                                  members = [f.uid for f in itertools.chain(help_quest, help_extra) if isinstance(f, (facts.State, facts.Jump, facts.OptionsLink))])
+        subquest = facts.SubQuest(uid=ns+'help_subquest', members=logic.get_subquest_members(itertools.chain(help_quest, help_extra)))
 
         line = [ start,
 

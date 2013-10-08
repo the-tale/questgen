@@ -14,11 +14,12 @@ class Hometown(QuestBetween2):
         return selector._kb[selector.preferences_hometown().place]
 
     @classmethod
-    def construct_from_place(cls, selector, start_place):
+    def construct_from_place(cls, nesting, selector, start_place):
 
         hometown = cls.get_hometown(selector)
 
-        return cls.construct(selector,
+        return cls.construct(nesting=nesting,
+                             selector=selector,
                              initiator=None,
                              initiator_position=start_place,
                              receiver=None,
@@ -26,7 +27,7 @@ class Hometown(QuestBetween2):
 
 
     @classmethod
-    def construct(cls, selector, initiator, initiator_position, receiver, receiver_position):
+    def construct(cls, nesting, selector, initiator, initiator_position, receiver, receiver_position):
 
         hero = selector.heroes()[0]
 
@@ -34,7 +35,7 @@ class Hometown(QuestBetween2):
 
         start = facts.Start(uid=ns+'start',
                             type=cls.TYPE,
-                            is_entry=selector.is_first_quest,
+                            nesting=nesting,
                             description=u'Начало: посетить родной города',
                             require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
                             actions=[facts.Message(type='intro')])
@@ -60,6 +61,7 @@ class Hometown(QuestBetween2):
 
         finish = facts.Finish(uid=ns+'finish',
                               result=RESULTS.SUCCESSED,
+                              nesting=nesting,
                               description=u'завершить посещение города',
                               actions=[facts.GiveReward(object=hero.uid, type='finish'),
                                        facts.GivePower(object=receiver_position.uid, power=1)])

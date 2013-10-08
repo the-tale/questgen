@@ -22,7 +22,7 @@
 <polygon fill="#dddddd" stroke="none" points="227,-60 227,-73 422,-73 422,-60 227,-60"/>
 <text text-anchor="start" x="228" y="-65" font-family="Times,serif" font-size="10.00">hero </text>
 <text text-anchor="start" x="249" y="-65" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
-<text text-anchor="start" x="304" y="-65" font-family="Times,serif" font-size="10.00"> place_4</text>
+<text text-anchor="start" x="304" y="-65" font-family="Times,serif" font-size="10.00"> place_7</text>
 <polygon fill="#ffffff" stroke="none" points="227,-47 227,-60 422,-60 422,-47 227,-47"/>
 <text text-anchor="start" x="228" y="-52" font-family="Times,serif" font-weight="bold" font-size="10.00">выдать награду </text>
 <text text-anchor="start" x="303" y="-52" font-family="Times,serif" font-size="10.00">  hero </text>
@@ -35,72 +35,72 @@
 <text text-anchor="start" x="374" y="-39" font-family="Times,serif" font-size="10.00"> &#45;1.00</text>
 <polygon fill="#ffffff" stroke="none" points="227,-21 227,-34 422,-34 422,-21 227,-21"/>
 <text text-anchor="start" x="228" y="-26" font-family="Times,serif" font-weight="bold" font-size="10.00">увеличить влияние </text>
-<text text-anchor="start" x="316" y="-26" font-family="Times,serif" font-size="10.00">  person_4 </text>
+<text text-anchor="start" x="316" y="-26" font-family="Times,serif" font-size="10.00">  person_7 </text>
 <text text-anchor="start" x="361" y="-26" font-family="Times,serif" font-weight="bold" font-size="10.00">на </text>
 <text text-anchor="start" x="374" y="-26" font-family="Times,serif" font-size="10.00"> 1.00</text>
 <polygon fill="none" stroke="black" points="225.5,-20.5 225.5,-101.5 422.5,-101.5 422.5,-20.5 225.5,-20.5"/>
 </g>
 <!-- [ns&#45;0]start_spying -->
 <g id="node2" class="node"><title>[ns&#45;0]start_spying</title>
-<polygon fill="#ddddff" stroke="none" points="172.5,-563.5 172.5,-618.5 341.5,-618.5 341.5,-563.5 172.5,-563.5"/>
-<text text-anchor="start" x="175" y="-608.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]start_spying</text>
-<text text-anchor="start" x="175" y="-594" font-family="Times,serif" font-size="10.00">Прибытие в город цели</text>
-<polygon fill="#ccccee" stroke="none" points="174,-577 174,-590 341,-590 341,-577 174,-577"/>
-<text text-anchor="start" x="175" y="-582" font-family="Times,serif" font-size="10.00">hero </text>
-<text text-anchor="start" x="196" y="-582" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
-<text text-anchor="start" x="251" y="-582" font-family="Times,serif" font-size="10.00"> place_4</text>
-<polygon fill="#eeeeff" stroke="none" points="174,-564 174,-577 341,-577 341,-564 174,-564"/>
-<text text-anchor="start" x="175" y="-569" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
-<text text-anchor="start" x="227" y="-569" font-family="Times,serif" font-size="10.00"> arrived_to_target</text>
-<polygon fill="none" stroke="black" points="172.5,-563.5 172.5,-618.5 341.5,-618.5 341.5,-563.5 172.5,-563.5"/>
+<polygon fill="#ddddff" stroke="none" points="154.5,-563.5 154.5,-618.5 323.5,-618.5 323.5,-563.5 154.5,-563.5"/>
+<text text-anchor="start" x="157" y="-608.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]start_spying</text>
+<text text-anchor="start" x="157" y="-594" font-family="Times,serif" font-size="10.00">Прибытие в город цели</text>
+<polygon fill="#ccccee" stroke="none" points="156,-577 156,-590 323,-590 323,-577 156,-577"/>
+<text text-anchor="start" x="157" y="-582" font-family="Times,serif" font-size="10.00">hero </text>
+<text text-anchor="start" x="178" y="-582" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
+<text text-anchor="start" x="233" y="-582" font-family="Times,serif" font-size="10.00"> place_7</text>
+<polygon fill="#eeeeff" stroke="none" points="156,-564 156,-577 323,-577 323,-564 156,-564"/>
+<text text-anchor="start" x="157" y="-569" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
+<text text-anchor="start" x="209" y="-569" font-family="Times,serif" font-size="10.00"> arrived_to_target</text>
+<polygon fill="none" stroke="black" points="154.5,-563.5 154.5,-618.5 323.5,-618.5 323.5,-563.5 154.5,-563.5"/>
 </g>
 <!-- #option([ns&#45;0]start_spying, [ns&#45;0]spying_middle) -->
 <g id="node10" class="node"><title>#option([ns&#45;0]start_spying, [ns&#45;0]spying_middle)</title>
-<polygon fill="#ffffff" stroke="none" points="142,-504 142,-518 250,-518 250,-504 142,-504"/>
-<text text-anchor="start" x="143" y="-508.5" font-family="Times,serif" font-size="10.00">spy</text>
-<polygon fill="#eeeeee" stroke="none" points="142,-491 142,-504 250,-504 250,-491 142,-491"/>
-<text text-anchor="start" x="143" y="-496" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
-<text text-anchor="start" x="195" y="-496" font-family="Times,serif" font-size="10.00"> start_spying</text>
+<polygon fill="#ffffff" stroke="none" points="124,-504 124,-518 232,-518 232,-504 124,-504"/>
+<text text-anchor="start" x="125" y="-508.5" font-family="Times,serif" font-size="10.00">spy</text>
+<polygon fill="#eeeeee" stroke="none" points="124,-491 124,-504 232,-504 232,-491 124,-491"/>
+<text text-anchor="start" x="125" y="-496" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
+<text text-anchor="start" x="177" y="-496" font-family="Times,serif" font-size="10.00"> start_spying</text>
 </g>
 <!-- [ns&#45;0]start_spying&#45;&gt;#option([ns&#45;0]start_spying, [ns&#45;0]spying_middle) -->
-<g id="edge4" class="edge"><title>[ns&#45;0]start_spying:[ns&#45;0]start_spying&#45;&gt;#option([ns&#45;0]start_spying, [ns&#45;0]spying_middle):#option([ns&#45;0]start_spying, [ns&#45;0]spying_middle)</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M237.699,-563.422C226.809,-548.426 213.707,-530.383 205.132,-518.576"/>
+<g id="edge5" class="edge"><title>[ns&#45;0]start_spying:[ns&#45;0]start_spying&#45;&gt;#option([ns&#45;0]start_spying, [ns&#45;0]spying_middle):#option([ns&#45;0]start_spying, [ns&#45;0]spying_middle)</title>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M219.699,-563.422C208.809,-548.426 195.707,-530.383 187.132,-518.576"/>
 </g>
 <!-- #option([ns&#45;0]start_spying, [ns&#45;0]open_up) -->
 <g id="node14" class="node"><title>#option([ns&#45;0]start_spying, [ns&#45;0]open_up)</title>
-<polygon fill="#ffffff" stroke="none" points="305,-346 305,-360 421,-360 421,-346 305,-346"/>
-<text text-anchor="start" x="306" y="-350.5" font-family="Times,serif" font-size="10.00">open_up</text>
-<polygon fill="#eeeeee" stroke="none" points="305,-333 305,-346 421,-346 421,-333 305,-333"/>
-<text text-anchor="start" x="306" y="-338" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
-<text text-anchor="start" x="358" y="-338" font-family="Times,serif" font-size="10.00"> start_open_up</text>
+<polygon fill="#ffffff" stroke="none" points="266,-504 266,-518 382,-518 382,-504 266,-504"/>
+<text text-anchor="start" x="267" y="-508.5" font-family="Times,serif" font-size="10.00">open_up</text>
+<polygon fill="#eeeeee" stroke="none" points="266,-491 266,-504 382,-504 382,-491 266,-491"/>
+<text text-anchor="start" x="267" y="-496" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
+<text text-anchor="start" x="319" y="-496" font-family="Times,serif" font-size="10.00"> start_open_up</text>
 </g>
 <!-- [ns&#45;0]start_spying&#45;&gt;#option([ns&#45;0]start_spying, [ns&#45;0]open_up) -->
-<g id="edge12" class="edge"><title>[ns&#45;0]start_spying:[ns&#45;0]start_spying&#45;&gt;#option([ns&#45;0]start_spying, [ns&#45;0]open_up):#option([ns&#45;0]start_spying, [ns&#45;0]open_up)</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M277.941,-563.426C298.008,-536.592 327.596,-493.189 344,-451 356.059,-419.986 360.586,-380.679 362.188,-360.784"/>
+<g id="edge13" class="edge"><title>[ns&#45;0]start_spying:[ns&#45;0]start_spying&#45;&gt;#option([ns&#45;0]start_spying, [ns&#45;0]open_up):#option([ns&#45;0]start_spying, [ns&#45;0]open_up)</title>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M265.895,-563.422C281.069,-548.426 299.327,-530.383 311.275,-518.576"/>
 </g>
 <!-- [ns&#45;0]start -->
 <g id="node3" class="node"><title>[ns&#45;0]start</title>
-<polygon fill="#eeeeee" stroke="none" points="189.5,-663 189.5,-731 324.5,-731 324.5,-663 189.5,-663"/>
-<text text-anchor="start" x="192" y="-721.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]start</text>
-<text text-anchor="start" x="277" y="-721.5" font-family="Times,serif" font-weight="bold" font-size="10.00">spying</text>
-<text text-anchor="start" x="192" y="-707" font-family="Times,serif" font-size="10.00">Начало: задание на шпионаж</text>
-<polygon fill="#dddddd" stroke="none" points="191,-690 191,-703 324,-703 324,-690 191,-690"/>
-<text text-anchor="start" x="192" y="-695" font-family="Times,serif" font-size="10.00">hero </text>
-<text text-anchor="start" x="213" y="-695" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
-<text text-anchor="start" x="268" y="-695" font-family="Times,serif" font-size="10.00"> place_1</text>
-<polygon fill="#dddddd" stroke="none" points="191,-677 191,-690 324,-690 324,-677 191,-677"/>
-<text text-anchor="start" x="192" y="-682" font-family="Times,serif" font-size="10.00">person_4 </text>
-<text text-anchor="start" x="232" y="-682" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
-<text text-anchor="start" x="287" y="-682" font-family="Times,serif" font-size="10.00"> place_4</text>
-<polygon fill="#ffffff" stroke="none" points="191,-664 191,-677 324,-677 324,-664 191,-664"/>
-<text text-anchor="start" x="192" y="-669" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
-<text text-anchor="start" x="244" y="-669" font-family="Times,serif" font-size="10.00"> intro</text>
-<polygon fill="none" stroke="black" points="189.5,-663 189.5,-731 324.5,-731 324.5,-663 189.5,-663"/>
+<polygon fill="#eeeeee" stroke="none" points="171.5,-663 171.5,-731 306.5,-731 306.5,-663 171.5,-663"/>
+<text text-anchor="start" x="174" y="-721.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]start</text>
+<text text-anchor="start" x="259" y="-721.5" font-family="Times,serif" font-weight="bold" font-size="10.00">spying</text>
+<text text-anchor="start" x="174" y="-707" font-family="Times,serif" font-size="10.00">Начало: задание на шпионаж</text>
+<polygon fill="#dddddd" stroke="none" points="173,-690 173,-703 306,-703 306,-690 173,-690"/>
+<text text-anchor="start" x="174" y="-695" font-family="Times,serif" font-size="10.00">hero </text>
+<text text-anchor="start" x="195" y="-695" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
+<text text-anchor="start" x="250" y="-695" font-family="Times,serif" font-size="10.00"> place_1</text>
+<polygon fill="#dddddd" stroke="none" points="173,-677 173,-690 306,-690 306,-677 173,-677"/>
+<text text-anchor="start" x="174" y="-682" font-family="Times,serif" font-size="10.00">person_7 </text>
+<text text-anchor="start" x="214" y="-682" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
+<text text-anchor="start" x="269" y="-682" font-family="Times,serif" font-size="10.00"> place_7</text>
+<polygon fill="#ffffff" stroke="none" points="173,-664 173,-677 306,-677 306,-664 173,-664"/>
+<text text-anchor="start" x="174" y="-669" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
+<text text-anchor="start" x="226" y="-669" font-family="Times,serif" font-size="10.00"> intro</text>
+<polygon fill="none" stroke="black" points="171.5,-663 171.5,-731 306.5,-731 306.5,-663 171.5,-663"/>
 </g>
 <!-- [ns&#45;0]start&#45;&gt;[ns&#45;0]start_spying -->
-<g id="edge3" class="edge"><title>[ns&#45;0]start:[ns&#45;0]start&#45;&gt;[ns&#45;0]start_spying:[ns&#45;0]start_spying</title>
-<path fill="none" stroke="black" d="M257,-662.808C257,-651.996 257,-639.931 257,-628.867"/>
-<polygon fill="black" stroke="black" points="260.5,-628.639 257,-618.639 253.5,-628.639 260.5,-628.639"/>
+<g id="edge4" class="edge"><title>[ns&#45;0]start:[ns&#45;0]start&#45;&gt;[ns&#45;0]start_spying:[ns&#45;0]start_spying</title>
+<path fill="none" stroke="black" d="M239,-662.808C239,-651.996 239,-639.931 239,-628.867"/>
+<polygon fill="black" stroke="black" points="242.5,-628.639 239,-618.639 235.5,-628.639 242.5,-628.639"/>
 </g>
 <!-- [ns&#45;0]open_up_lying -->
 <g id="node4" class="node"><title>[ns&#45;0]open_up_lying</title>
@@ -121,12 +121,12 @@
 <text text-anchor="start" x="459" y="-39" font-family="Times,serif" font-weight="bold" font-size="10.00">увеличить влияние </text>
 <text text-anchor="start" x="547" y="-39" font-family="Times,serif" font-size="10.00">  person_1 </text>
 <text text-anchor="start" x="592" y="-39" font-family="Times,serif" font-weight="bold" font-size="10.00">на </text>
-<text text-anchor="start" x="605" y="-39" font-family="Times,serif" font-size="10.00"> &#45;1.00</text>
+<text text-anchor="start" x="605" y="-39" font-family="Times,serif" font-size="10.00"> &#45;1.50</text>
 <polygon fill="#ffffff" stroke="none" points="458,-21 458,-34 705,-34 705,-21 458,-21"/>
 <text text-anchor="start" x="459" y="-26" font-family="Times,serif" font-weight="bold" font-size="10.00">увеличить влияние </text>
-<text text-anchor="start" x="547" y="-26" font-family="Times,serif" font-size="10.00">  person_4 </text>
+<text text-anchor="start" x="547" y="-26" font-family="Times,serif" font-size="10.00">  person_7 </text>
 <text text-anchor="start" x="592" y="-26" font-family="Times,serif" font-weight="bold" font-size="10.00">на </text>
-<text text-anchor="start" x="605" y="-26" font-family="Times,serif" font-size="10.00"> 1.00</text>
+<text text-anchor="start" x="605" y="-26" font-family="Times,serif" font-size="10.00"> 1.50</text>
 <polygon fill="none" stroke="black" points="456.5,-20.5 456.5,-101.5 705.5,-101.5 705.5,-20.5 456.5,-20.5"/>
 </g>
 <!-- [ns&#45;0]report_data -->
@@ -151,7 +151,7 @@
 <text text-anchor="start" x="161" y="-39" font-family="Times,serif" font-size="10.00"> 1.00</text>
 <polygon fill="#ffffff" stroke="none" points="14,-21 14,-34 191,-34 191,-21 14,-21"/>
 <text text-anchor="start" x="15" y="-26" font-family="Times,serif" font-weight="bold" font-size="10.00">увеличить влияние </text>
-<text text-anchor="start" x="103" y="-26" font-family="Times,serif" font-size="10.00">  person_4 </text>
+<text text-anchor="start" x="103" y="-26" font-family="Times,serif" font-size="10.00">  person_7 </text>
 <text text-anchor="start" x="148" y="-26" font-family="Times,serif" font-weight="bold" font-size="10.00">на </text>
 <text text-anchor="start" x="161" y="-26" font-family="Times,serif" font-size="10.00"> &#45;1.00</text>
 <polygon fill="none" stroke="black" points="12.5,-20.5 12.5,-101.5 191.5,-101.5 191.5,-20.5 12.5,-20.5"/>
@@ -164,12 +164,12 @@
 <polygon fill="#cceecc" stroke="none" points="9,-248 9,-261 196,-261 196,-248 9,-248"/>
 <text text-anchor="start" x="10" y="-253" font-family="Times,serif" font-size="10.00">hero </text>
 <text text-anchor="start" x="31" y="-253" font-family="Times,serif" font-weight="bold" font-size="10.00">находится около</text>
-<text text-anchor="start" x="107" y="-253" font-family="Times,serif" font-size="10.00"> place_4</text>
+<text text-anchor="start" x="107" y="-253" font-family="Times,serif" font-size="10.00"> place_7</text>
 <polygon fill="#eeffee" stroke="none" points="9,-235 9,-248 196,-248 196,-235 9,-235"/>
 <text text-anchor="start" x="10" y="-240" font-family="Times,serif" font-weight="bold" font-size="10.00">отправить </text>
 <text text-anchor="start" x="60" y="-240" font-family="Times,serif" font-size="10.00"> hero</text>
 <text text-anchor="start" x="81" y="-240" font-family="Times,serif" font-weight="bold" font-size="10.00">бродить около</text>
-<text text-anchor="start" x="147" y="-240" font-family="Times,serif" font-size="10.00"> place_4</text>
+<text text-anchor="start" x="147" y="-240" font-family="Times,serif" font-size="10.00"> place_7</text>
 <polygon fill="#eeffee" stroke="none" points="9,-222 9,-235 196,-235 196,-222 9,-222"/>
 <text text-anchor="start" x="10" y="-227" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
 <text text-anchor="start" x="62" y="-227" font-family="Times,serif" font-size="10.00"> continue_spying</text>
@@ -182,20 +182,20 @@
 <text text-anchor="start" x="82" y="-161.5" font-family="Times,serif" font-size="10.00"> move_to_report_data</text>
 </g>
 <!-- [ns&#45;0]continue_spying&#45;&gt;#jump([ns&#45;0]continue_spying, [ns&#45;0]report_data) -->
-<g id="edge10" class="edge"><title>[ns&#45;0]continue_spying:[ns&#45;0]continue_spying&#45;&gt;#jump([ns&#45;0]continue_spying, [ns&#45;0]report_data):#jump([ns&#45;0]continue_spying, [ns&#45;0]report_data)</title>
+<g id="edge11" class="edge"><title>[ns&#45;0]continue_spying:[ns&#45;0]continue_spying&#45;&gt;#jump([ns&#45;0]continue_spying, [ns&#45;0]report_data):#jump([ns&#45;0]continue_spying, [ns&#45;0]report_data)</title>
 <path fill="none" stroke="black" d="M102,-220.998C102,-202.336 102,-180.703 102,-170.268"/>
 </g>
 <!-- [ns&#45;0]spying_middle -->
 <g id="node7" class="node"><title>[ns&#45;0]spying_middle</title>
-<polygon fill="#ddddff" stroke="none" points="107,-405 107,-447 285,-447 285,-405 107,-405"/>
-<text text-anchor="start" x="109" y="-437.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]spying_middle</text>
-<text text-anchor="start" x="109" y="-423" font-family="Times,serif" font-size="10.00">Шпионаж</text>
-<polygon fill="#eeeeff" stroke="none" points="108,-406 108,-419 284,-419 284,-406 108,-406"/>
-<text text-anchor="start" x="109" y="-411" font-family="Times,serif" font-weight="bold" font-size="10.00">отправить </text>
-<text text-anchor="start" x="159" y="-411" font-family="Times,serif" font-size="10.00"> hero</text>
-<text text-anchor="start" x="180" y="-411" font-family="Times,serif" font-weight="bold" font-size="10.00">бродить около</text>
-<text text-anchor="start" x="246" y="-411" font-family="Times,serif" font-size="10.00"> place_4</text>
-<polygon fill="none" stroke="black" points="107,-405 107,-447 285,-447 285,-405 107,-405"/>
+<polygon fill="#ddddff" stroke="none" points="89,-405 89,-447 267,-447 267,-405 89,-405"/>
+<text text-anchor="start" x="91" y="-437.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]spying_middle</text>
+<text text-anchor="start" x="91" y="-423" font-family="Times,serif" font-size="10.00">Шпионаж</text>
+<polygon fill="#eeeeff" stroke="none" points="90,-406 90,-419 266,-419 266,-406 90,-406"/>
+<text text-anchor="start" x="91" y="-411" font-family="Times,serif" font-weight="bold" font-size="10.00">отправить </text>
+<text text-anchor="start" x="141" y="-411" font-family="Times,serif" font-size="10.00"> hero</text>
+<text text-anchor="start" x="162" y="-411" font-family="Times,serif" font-weight="bold" font-size="10.00">бродить около</text>
+<text text-anchor="start" x="228" y="-411" font-family="Times,serif" font-size="10.00"> place_7</text>
+<polygon fill="none" stroke="black" points="89,-405 89,-447 267,-447 267,-405 89,-405"/>
 </g>
 <!-- #option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying) -->
 <g id="node9" class="node"><title>#option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying)</title>
@@ -203,105 +203,92 @@
 <text text-anchor="start" x="94" y="-344.5" font-family="Times,serif" font-size="10.00">spy</text>
 </g>
 <!-- [ns&#45;0]spying_middle&#45;&gt;#option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying) -->
-<g id="edge1" class="edge"><title>[ns&#45;0]spying_middle:[ns&#45;0]spying_middle&#45;&gt;#option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying):#option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying)</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M171.303,-404.769C150.85,-388.015 123.062,-365.253 109.742,-354.342"/>
+<g id="edge2" class="edge"><title>[ns&#45;0]spying_middle:[ns&#45;0]spying_middle&#45;&gt;#option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying):#option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying)</title>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M158.032,-404.769C141.496,-388.015 119.029,-365.253 108.26,-354.342"/>
 </g>
 <!-- #option([ns&#45;0]spying_middle, [ns&#45;0]open_up) -->
 <g id="node11" class="node"><title>#option([ns&#45;0]spying_middle, [ns&#45;0]open_up)</title>
-<polygon fill="#ffffff" stroke="none" points="155,-346 155,-360 271,-360 271,-346 155,-346"/>
-<text text-anchor="start" x="156" y="-350.5" font-family="Times,serif" font-size="10.00">open_up</text>
-<polygon fill="#eeeeee" stroke="none" points="155,-333 155,-346 271,-346 271,-333 155,-333"/>
-<text text-anchor="start" x="156" y="-338" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
-<text text-anchor="start" x="208" y="-338" font-family="Times,serif" font-size="10.00"> start_open_up</text>
+<polygon fill="#ffffff" stroke="none" points="164,-346 164,-360 280,-360 280,-346 164,-346"/>
+<text text-anchor="start" x="165" y="-350.5" font-family="Times,serif" font-size="10.00">open_up</text>
+<polygon fill="#eeeeee" stroke="none" points="164,-333 164,-346 280,-346 280,-333 164,-333"/>
+<text text-anchor="start" x="165" y="-338" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
+<text text-anchor="start" x="217" y="-338" font-family="Times,serif" font-size="10.00"> start_open_up</text>
 </g>
 <!-- [ns&#45;0]spying_middle&#45;&gt;#option([ns&#45;0]spying_middle, [ns&#45;0]open_up) -->
-<g id="edge6" class="edge"><title>[ns&#45;0]spying_middle:[ns&#45;0]spying_middle&#45;&gt;#option([ns&#45;0]spying_middle, [ns&#45;0]open_up):#option([ns&#45;0]spying_middle, [ns&#45;0]open_up)</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M200.467,-404.769C203.536,-390.867 207.519,-372.828 210.162,-360.856"/>
+<g id="edge7" class="edge"><title>[ns&#45;0]spying_middle:[ns&#45;0]spying_middle&#45;&gt;#option([ns&#45;0]spying_middle, [ns&#45;0]open_up):#option([ns&#45;0]spying_middle, [ns&#45;0]open_up)</title>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M189.56,-404.769C197.505,-390.867 207.813,-372.828 214.654,-360.856"/>
 </g>
 <!-- [ns&#45;0]open_up -->
 <g id="node8" class="node"><title>[ns&#45;0]open_up</title>
-<polygon fill="#ddffdd" stroke="none" points="301.5,-227.5 301.5,-282.5 424.5,-282.5 424.5,-227.5 301.5,-227.5"/>
-<text text-anchor="start" x="304" y="-272.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]open_up</text>
-<text text-anchor="start" x="304" y="-258" font-family="Times,serif" font-size="10.00">Раскрыться</text>
-<polygon fill="#cceecc" stroke="none" points="303,-241 303,-254 424,-254 424,-241 303,-241"/>
-<text text-anchor="start" x="304" y="-246" font-family="Times,serif" font-size="10.00">hero </text>
-<text text-anchor="start" x="325" y="-246" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
-<text text-anchor="start" x="380" y="-246" font-family="Times,serif" font-size="10.00"> place_4</text>
-<polygon fill="#eeffee" stroke="none" points="303,-228 303,-241 424,-241 424,-228 303,-228"/>
-<text text-anchor="start" x="304" y="-233" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
-<text text-anchor="start" x="356" y="-233" font-family="Times,serif" font-size="10.00"> open_up</text>
-<polygon fill="none" stroke="black" points="301.5,-227.5 301.5,-282.5 424.5,-282.5 424.5,-227.5 301.5,-227.5"/>
+<polygon fill="#ddffdd" stroke="none" points="262.5,-227.5 262.5,-282.5 385.5,-282.5 385.5,-227.5 262.5,-227.5"/>
+<text text-anchor="start" x="265" y="-272.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]open_up</text>
+<text text-anchor="start" x="265" y="-258" font-family="Times,serif" font-size="10.00">Раскрыться</text>
+<polygon fill="#cceecc" stroke="none" points="264,-241 264,-254 385,-254 385,-241 264,-241"/>
+<text text-anchor="start" x="265" y="-246" font-family="Times,serif" font-size="10.00">hero </text>
+<text text-anchor="start" x="286" y="-246" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
+<text text-anchor="start" x="341" y="-246" font-family="Times,serif" font-size="10.00"> place_7</text>
+<polygon fill="#eeffee" stroke="none" points="264,-228 264,-241 385,-241 385,-228 264,-228"/>
+<text text-anchor="start" x="265" y="-233" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
+<text text-anchor="start" x="317" y="-233" font-family="Times,serif" font-size="10.00"> open_up</text>
+<polygon fill="none" stroke="black" points="262.5,-227.5 262.5,-282.5 385.5,-282.5 385.5,-227.5 262.5,-227.5"/>
 </g>
 <!-- [ns&#45;0]open_up&#45;&gt;[ns&#45;0]open_up_finish -->
-<g id="edge14" class="edge"><title>[ns&#45;0]open_up:[ns&#45;0]open_up&#45;&gt;[ns&#45;0]open_up_finish:[ns&#45;0]open_up_finish</title>
-<path fill="none" stroke="black" d="M357.577,-227.303C351.532,-197.541 341.621,-148.749 334.13,-111.871"/>
-<polygon fill="black" stroke="black" points="337.507,-110.915 332.087,-101.812 330.647,-112.308 337.507,-110.915"/>
+<g id="edge1" class="edge"><title>[ns&#45;0]open_up:[ns&#45;0]open_up&#45;&gt;[ns&#45;0]open_up_finish:[ns&#45;0]open_up_finish</title>
+<path fill="none" stroke="black" d="M324,-227.303C324,-197.541 324,-148.749 324,-111.871"/>
+<polygon fill="black" stroke="black" points="327.5,-111.812 324,-101.812 320.5,-111.812 327.5,-111.812"/>
 </g>
 <!-- #jump([ns&#45;0]open_up, [ns&#45;0]open_up_lying) -->
 <g id="node12" class="node"><title>#jump([ns&#45;0]open_up, [ns&#45;0]open_up_lying)</title>
-<polygon fill="#eeeeee" stroke="none" points="455,-156 455,-170 594,-170 594,-156 455,-156"/>
-<text text-anchor="start" x="456" y="-161.5" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
-<text text-anchor="start" x="508" y="-161.5" font-family="Times,serif" font-size="10.00"> move_to_report_lie</text>
+<polygon fill="#eeeeee" stroke="none" points="436,-156 436,-170 575,-170 575,-156 436,-156"/>
+<text text-anchor="start" x="437" y="-161.5" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
+<text text-anchor="start" x="489" y="-161.5" font-family="Times,serif" font-size="10.00"> move_to_report_lie</text>
 </g>
 <!-- [ns&#45;0]open_up&#45;&gt;#jump([ns&#45;0]open_up, [ns&#45;0]open_up_lying) -->
-<g id="edge8" class="edge"><title>[ns&#45;0]open_up:[ns&#45;0]open_up&#45;&gt;#jump([ns&#45;0]open_up, [ns&#45;0]open_up_lying):#jump([ns&#45;0]open_up, [ns&#45;0]open_up_lying)</title>
-<path fill="none" stroke="black" d="M410.435,-227.484C446.238,-207.469 492.604,-181.55 513.257,-170.005"/>
+<g id="edge9" class="edge"><title>[ns&#45;0]open_up:[ns&#45;0]open_up&#45;&gt;#jump([ns&#45;0]open_up, [ns&#45;0]open_up_lying):#jump([ns&#45;0]open_up, [ns&#45;0]open_up_lying)</title>
+<path fill="none" stroke="black" d="M377.327,-227.484C417.578,-207.469 469.704,-181.55 492.922,-170.005"/>
 </g>
 <!-- #option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying)&#45;&gt;[ns&#45;0]continue_spying -->
-<g id="edge2" class="edge"><title>#option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying):#option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying)&#45;&gt;[ns&#45;0]continue_spying:[ns&#45;0]continue_spying</title>
+<g id="edge3" class="edge"><title>#option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying):#option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying)&#45;&gt;[ns&#45;0]continue_spying:[ns&#45;0]continue_spying</title>
 <path fill="none" stroke="black" stroke-dasharray="1,5" d="M102,-339.814C102,-331.344 102,-315.386 102,-299.649"/>
 <polygon fill="black" stroke="black" points="105.5,-299.421 102,-289.421 98.5001,-299.421 105.5,-299.421"/>
 </g>
 <!-- #option([ns&#45;0]start_spying, [ns&#45;0]spying_middle)&#45;&gt;[ns&#45;0]spying_middle -->
-<g id="edge5" class="edge"><title>#option([ns&#45;0]start_spying, [ns&#45;0]spying_middle):#option([ns&#45;0]start_spying, [ns&#45;0]spying_middle)&#45;&gt;[ns&#45;0]spying_middle:[ns&#45;0]spying_middle</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M196,-491.285C196,-482.035 196,-469.108 196,-457.271"/>
-<polygon fill="black" stroke="black" points="199.5,-457.269 196,-447.269 192.5,-457.269 199.5,-457.269"/>
+<g id="edge6" class="edge"><title>#option([ns&#45;0]start_spying, [ns&#45;0]spying_middle):#option([ns&#45;0]start_spying, [ns&#45;0]spying_middle)&#45;&gt;[ns&#45;0]spying_middle:[ns&#45;0]spying_middle</title>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M178,-491.285C178,-482.035 178,-469.108 178,-457.271"/>
+<polygon fill="black" stroke="black" points="181.5,-457.269 178,-447.269 174.5,-457.269 181.5,-457.269"/>
 </g>
 <!-- #option([ns&#45;0]spying_middle, [ns&#45;0]open_up)&#45;&gt;[ns&#45;0]open_up -->
-<g id="edge7" class="edge"><title>#option([ns&#45;0]spying_middle, [ns&#45;0]open_up):#option([ns&#45;0]spying_middle, [ns&#45;0]open_up)&#45;&gt;[ns&#45;0]open_up:[ns&#45;0]open_up</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M233.857,-333.486C253.457,-321.726 283.62,-303.628 309.867,-287.88"/>
-<polygon fill="black" stroke="black" points="311.823,-290.788 318.598,-282.641 308.222,-284.785 311.823,-290.788"/>
+<g id="edge8" class="edge"><title>#option([ns&#45;0]spying_middle, [ns&#45;0]open_up):#option([ns&#45;0]spying_middle, [ns&#45;0]open_up)&#45;&gt;[ns&#45;0]open_up:[ns&#45;0]open_up</title>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M236.183,-333.486C248.999,-322.177 268.459,-305.007 285.805,-289.701"/>
+<polygon fill="black" stroke="black" points="288.412,-292.068 293.595,-282.828 283.781,-286.82 288.412,-292.068"/>
 </g>
 <!-- #jump([ns&#45;0]open_up, [ns&#45;0]open_up_lying)&#45;&gt;[ns&#45;0]open_up_lying -->
-<g id="edge9" class="edge"><title>#jump([ns&#45;0]open_up, [ns&#45;0]open_up_lying):#jump([ns&#45;0]open_up, [ns&#45;0]open_up_lying)&#45;&gt;[ns&#45;0]open_up_lying:[ns&#45;0]open_up_lying</title>
-<path fill="none" stroke="black" d="M527.566,-155.745C532.844,-146.485 543.217,-128.287 553.43,-110.368"/>
-<polygon fill="black" stroke="black" points="556.497,-112.056 558.408,-101.635 550.415,-108.589 556.497,-112.056"/>
+<g id="edge10" class="edge"><title>#jump([ns&#45;0]open_up, [ns&#45;0]open_up_lying):#jump([ns&#45;0]open_up, [ns&#45;0]open_up_lying)&#45;&gt;[ns&#45;0]open_up_lying:[ns&#45;0]open_up_lying</title>
+<path fill="none" stroke="black" d="M509.754,-155.745C516.856,-146.4 530.874,-127.955 544.611,-109.88"/>
+<polygon fill="black" stroke="black" points="547.613,-111.714 550.878,-101.635 542.04,-107.479 547.613,-111.714"/>
 </g>
 <!-- #jump([ns&#45;0]continue_spying, [ns&#45;0]report_data)&#45;&gt;[ns&#45;0]report_data -->
-<g id="edge11" class="edge"><title>#jump([ns&#45;0]continue_spying, [ns&#45;0]report_data):#jump([ns&#45;0]continue_spying, [ns&#45;0]report_data)&#45;&gt;[ns&#45;0]report_data:[ns&#45;0]report_data</title>
+<g id="edge12" class="edge"><title>#jump([ns&#45;0]continue_spying, [ns&#45;0]report_data):#jump([ns&#45;0]continue_spying, [ns&#45;0]report_data)&#45;&gt;[ns&#45;0]report_data:[ns&#45;0]report_data</title>
 <path fill="none" stroke="black" d="M102,-155.745C102,-146.737 102,-129.273 102,-111.835"/>
 <polygon fill="black" stroke="black" points="105.5,-111.635 102,-101.635 98.5001,-111.635 105.5,-111.635"/>
 </g>
 <!-- #option([ns&#45;0]start_spying, [ns&#45;0]open_up)&#45;&gt;[ns&#45;0]open_up -->
-<g id="edge13" class="edge"><title>#option([ns&#45;0]start_spying, [ns&#45;0]open_up):#option([ns&#45;0]start_spying, [ns&#45;0]open_up)&#45;&gt;[ns&#45;0]open_up:[ns&#45;0]open_up</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M363,-333.486C363,-322.992 363,-307.451 363,-293.037"/>
-<polygon fill="black" stroke="black" points="366.5,-292.828 363,-282.828 359.5,-292.828 366.5,-292.828"/>
-</g>
-<!-- #options_link(#option([ns&#45;0]start_spying, [ns&#45;0]open_up),#option([ns&#45;0]spying_middle, [ns&#45;0]open_up)) -->
-<g id="node15" class="node"><title>#options_link(#option([ns&#45;0]start_spying, [ns&#45;0]open_up),#option([ns&#45;0]spying_middle, [ns&#45;0]open_up))</title>
-<ellipse fill="#ffaaaa" stroke="black" cx="323" cy="-426" rx="12" ry="12"/>
-<text text-anchor="middle" x="323" y="-423.5" font-family="Times,serif" font-size="10.00">link</text>
-</g>
-<!-- #options_link(#option([ns&#45;0]start_spying, [ns&#45;0]open_up),#option([ns&#45;0]spying_middle, [ns&#45;0]open_up))&#45;&gt;#option([ns&#45;0]spying_middle, [ns&#45;0]open_up) -->
-<g id="edge16" class="edge"><title>#options_link(#option([ns&#45;0]start_spying, [ns&#45;0]open_up),#option([ns&#45;0]spying_middle, [ns&#45;0]open_up))&#45;&gt;#option([ns&#45;0]spying_middle, [ns&#45;0]open_up):#option([ns&#45;0]spying_middle, [ns&#45;0]open_up)</title>
-<path fill="none" stroke="#ffaaaa" d="M315.812,-415.977C311.757,-411.206 306.426,-405.437 301,-401 281.395,-384.968 256.464,-370.415 238.147,-360.632"/>
-</g>
-<!-- #options_link(#option([ns&#45;0]start_spying, [ns&#45;0]open_up),#option([ns&#45;0]spying_middle, [ns&#45;0]open_up))&#45;&gt;#option([ns&#45;0]start_spying, [ns&#45;0]open_up) -->
-<g id="edge15" class="edge"><title>#options_link(#option([ns&#45;0]start_spying, [ns&#45;0]open_up),#option([ns&#45;0]spying_middle, [ns&#45;0]open_up))&#45;&gt;#option([ns&#45;0]start_spying, [ns&#45;0]open_up):#option([ns&#45;0]start_spying, [ns&#45;0]open_up)</title>
-<path fill="none" stroke="#ffaaaa" d="M328.229,-414.934C335.472,-400.992 348.553,-375.811 356.441,-360.626"/>
+<g id="edge14" class="edge"><title>#option([ns&#45;0]start_spying, [ns&#45;0]open_up):#option([ns&#45;0]start_spying, [ns&#45;0]open_up)&#45;&gt;[ns&#45;0]open_up:[ns&#45;0]open_up</title>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M324,-491.361C324,-455.103 324,-349.728 324,-293.071"/>
+<polygon fill="black" stroke="black" points="327.5,-292.756 324,-282.756 320.5,-292.756 327.5,-292.756"/>
 </g>
 <!-- #options_link(#option([ns&#45;0]start_spying, [ns&#45;0]spying_middle),#option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying)) -->
-<g id="node16" class="node"><title>#options_link(#option([ns&#45;0]start_spying, [ns&#45;0]spying_middle),#option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying))</title>
-<ellipse fill="#ffaaaa" stroke="black" cx="103" cy="-591" rx="12" ry="12"/>
-<text text-anchor="middle" x="103" y="-588.5" font-family="Times,serif" font-size="10.00">link</text>
+<g id="node15" class="node"><title>#options_link(#option([ns&#45;0]start_spying, [ns&#45;0]spying_middle),#option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying))</title>
+<ellipse fill="#ffaaaa" stroke="black" cx="85" cy="-591" rx="12" ry="12"/>
+<text text-anchor="middle" x="85" y="-588.5" font-family="Times,serif" font-size="10.00">link</text>
 </g>
 <!-- #options_link(#option([ns&#45;0]start_spying, [ns&#45;0]spying_middle),#option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying))&#45;&gt;#option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying) -->
-<g id="edge18" class="edge"><title>#options_link(#option([ns&#45;0]start_spying, [ns&#45;0]spying_middle),#option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying))&#45;&gt;#option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying):#option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying)</title>
-<path fill="none" stroke="#ffaaaa" d="M100.845,-578.893C95.4774,-549.684 82.4725,-468.334 90,-401 91.9286,-383.748 97.2841,-363.916 100.144,-354.125"/>
+<g id="edge16" class="edge"><title>#options_link(#option([ns&#45;0]start_spying, [ns&#45;0]spying_middle),#option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying))&#45;&gt;#option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying):#option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying)</title>
+<path fill="none" stroke="#ffaaaa" d="M81.8476,-579.114C73.8615,-549.776 54.6595,-466.837 72,-401 76.9012,-382.391 89.9965,-363.454 97.1576,-354.061"/>
 </g>
 <!-- #options_link(#option([ns&#45;0]start_spying, [ns&#45;0]spying_middle),#option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying))&#45;&gt;#option([ns&#45;0]start_spying, [ns&#45;0]spying_middle) -->
-<g id="edge17" class="edge"><title>#options_link(#option([ns&#45;0]start_spying, [ns&#45;0]spying_middle),#option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying))&#45;&gt;#option([ns&#45;0]start_spying, [ns&#45;0]spying_middle):#option([ns&#45;0]start_spying, [ns&#45;0]spying_middle)</title>
-<path fill="none" stroke="#ffaaaa" d="M111.583,-582.248C127.681,-567.708 162.539,-536.223 182.052,-518.598"/>
+<g id="edge15" class="edge"><title>#options_link(#option([ns&#45;0]start_spying, [ns&#45;0]spying_middle),#option([ns&#45;0]spying_middle, [ns&#45;0]continue_spying))&#45;&gt;#option([ns&#45;0]start_spying, [ns&#45;0]spying_middle):#option([ns&#45;0]start_spying, [ns&#45;0]spying_middle)</title>
+<path fill="none" stroke="#ffaaaa" d="M93.5825,-582.248C109.681,-567.708 144.539,-536.223 164.052,-518.598"/>
 </g>
 </g>
 </svg>

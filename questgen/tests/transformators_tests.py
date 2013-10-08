@@ -28,16 +28,16 @@ class ActivateEventsTests(TransformatorsTestsBase):
         super(ActivateEventsTests, self).setUp()
 
     def test_no_events(self):
-        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
-                       facts.Finish(uid='st_finish', result=0),
+        facts_list = [ facts.Start(uid='start', type='test', nesting=0),
+                       facts.Finish(uid='st_finish', result=0, nesting=0),
                        facts.Jump(state_from='start', state_to='st_finish') ]
         self.kb += facts_list
         transformators.activate_events(self.kb)
         self.check_in_knowledge_base(self.kb, facts_list)
 
     def test_no_tag(self):
-        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
-                       facts.Finish(uid='st_finish', result=0),
+        facts_list = [ facts.Start(uid='start', type='test', nesting=0),
+                       facts.Finish(uid='st_finish', result=0, nesting=0),
                        facts.Jump(state_from='start', state_to='st_finish'),
                        facts.Event(uid='event_tag', members=()) ]
         self.kb += facts_list
@@ -45,8 +45,8 @@ class ActivateEventsTests(TransformatorsTestsBase):
         self.check_in_knowledge_base(self.kb, facts_list)
 
     def test_simple_tagged_jump(self):
-        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
-                       facts.Finish(uid='st_finish', result=0),
+        facts_list = [ facts.Start(uid='start', type='test', nesting=0),
+                       facts.Finish(uid='st_finish', result=0, nesting=0),
                        facts.Jump(state_from='start', state_to='st_finish'),
                        facts.Event(uid='event_tag', members=('st_finish', )) ]
         self.kb += facts_list
@@ -54,10 +54,10 @@ class ActivateEventsTests(TransformatorsTestsBase):
         self.check_in_knowledge_base(self.kb, facts_list)
 
     def test_multiple_tagged_jump(self):
-        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+        facts_list = [ facts.Start(uid='start', type='test', nesting=0),
                        facts.Event(uid='event_tag', members=('st_finish_1', 'st_finish_2')) ]
-        finishes = [ facts.Finish(uid='st_finish_1', result=0),
-                     facts.Finish(uid='st_finish_2', result=0),]
+        finishes = [ facts.Finish(uid='st_finish_1', result=0, nesting=0),
+                     facts.Finish(uid='st_finish_2', result=0, nesting=0),]
         self.kb += facts_list
         self.kb += finishes
 
@@ -68,14 +68,14 @@ class ActivateEventsTests(TransformatorsTestsBase):
                          ('st_finish_2' in self.kb and 'st_finish_1' not in self.kb) )
 
     def test_multiple_events(self):
-        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+        facts_list = [ facts.Start(uid='start', type='test', nesting=0),
                        facts.Event(uid='event_tag', members=('st_finish_1', 'st_finish_2')),
                        facts.Event(uid='event_2_tag', members=('st_finish_3', 'st_finish_4'))]
 
-        finishes = [ facts.Finish(uid='st_finish_1', result=0),
-                     facts.Finish(uid='st_finish_2', result=0),
-                     facts.Finish(uid='st_finish_3', result=0),
-                     facts.Finish(uid='st_finish_4', result=0) ]
+        finishes = [ facts.Finish(uid='st_finish_1', result=0, nesting=0),
+                     facts.Finish(uid='st_finish_2', result=0, nesting=0),
+                     facts.Finish(uid='st_finish_3', result=0, nesting=0),
+                     facts.Finish(uid='st_finish_4', result=0, nesting=0) ]
 
         self.kb += facts_list
         self.kb += finishes
@@ -97,16 +97,16 @@ class RemoveBrokenStatesTests(TransformatorsTestsBase):
 
 
     def test_no_broken_states(self):
-        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
-                       facts.Finish(uid='st_finish', result=0),
+        facts_list = [ facts.Start(uid='start', type='test', nesting=0),
+                       facts.Finish(uid='st_finish', result=0, nesting=0),
                        facts.Jump(state_from='start', state_to='st_finish') ]
         self.kb += facts_list
         transformators.activate_events(self.kb)
         self.check_in_knowledge_base(self.kb, facts_list)
 
     def test_single_broken_state(self):
-        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
-                       facts.Finish(uid='st_finish', result=0),
+        facts_list = [ facts.Start(uid='start', type='test', nesting=0),
+                       facts.Finish(uid='st_finish', result=0, nesting=0),
                        facts.Jump(state_from='start', state_to='st_finish') ]
         self.kb += facts_list
 
@@ -118,12 +118,12 @@ class RemoveBrokenStatesTests(TransformatorsTestsBase):
         self.assertFalse(broken_state.uid in self.kb)
 
     def test_single_broken_start(self):
-        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
-                       facts.Finish(uid='st_finish', result=0),
+        facts_list = [ facts.Start(uid='start', type='test', nesting=0),
+                       facts.Finish(uid='st_finish', result=0, nesting=0),
                        facts.Jump(state_from='start', state_to='st_finish') ]
         self.kb += facts_list
 
-        broken_facts = [ facts.Start(uid='start_broken', type='test', is_entry=False),
+        broken_facts = [ facts.Start(uid='start_broken', type='test', nesting=1),
                          facts.Jump(state_from='start_broken', state_to='st_finish') ]
 
         self.kb += broken_facts
@@ -133,9 +133,25 @@ class RemoveBrokenStatesTests(TransformatorsTestsBase):
         self.check_in_knowledge_base(self.kb, facts_list)
         self.check_not_in_knowledge_base(self.kb, broken_facts)
 
+    def test_single_broken_finish(self):
+        facts_list = [ facts.Start(uid='start', type='test', nesting=0),
+                       facts.Finish(uid='st_finish', result=0, nesting=0),
+                       facts.Jump(state_from='start', state_to='st_finish') ]
+        self.kb += facts_list
+
+        broken_facts = [ facts.Finish(uid='finish_broken', result=0, nesting=1),
+                         facts.Jump(state_from='start', state_to='finish_broken') ]
+
+        self.kb += broken_facts
+
+        transformators.remove_broken_states(self.kb)
+
+        self.check_in_knowledge_base(self.kb, facts_list)
+        self.check_not_in_knowledge_base(self.kb, broken_facts)
+
     def test_broken_jumps(self):
-        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
-                       facts.Finish(uid='st_finish', result=0),
+        facts_list = [ facts.Start(uid='start', type='test', nesting=0),
+                       facts.Finish(uid='st_finish', result=0, nesting=0),
                        facts.Jump(state_from='start', state_to='st_finish') ]
         self.kb += facts_list
 
@@ -150,9 +166,41 @@ class RemoveBrokenStatesTests(TransformatorsTestsBase):
         self.assertFalse(broken_jump_from.uid in self.kb)
         self.assertFalse(broken_jump_to.uid in self.kb)
 
+    def test_broken_linked_options(self):
+        choice_1 = facts.Choice(uid='choice_1')
+        choice_2 = facts.Choice(uid='choice_2')
+
+        o_1_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='o')
+        o_1_f1 = facts.Option(state_from=choice_1.uid, state_to='st_finish_1', type='o')
+        o_2_f1 = facts.Option(state_from=choice_2.uid, state_to='st_finish_1', type='o')
+        o_2_f2 = facts.Option(state_from=choice_2.uid, state_to='st_finish_2', type='o')
+
+        facts_list = [ facts.Start(uid='start', type='test', nesting=0),
+                       facts.Jump(state_from='start', state_to=choice_1.uid),
+                       choice_1,
+                       o_1_f1,
+                       facts.Finish(uid='st_finish_1', result=0, nesting=0)]
+
+        self.kb += facts_list
+
+        broken = [choice_2,
+                  o_1_2,
+                  o_2_f1,
+                  o_2_f2,
+                  facts.Finish(uid='st_finish_2', result=0, nesting=1)]
+
+        self.kb += broken
+
+        self.kb += [facts.OptionsLink(options=[o_1_2.uid, o_2_f2.uid])]
+
+        transformators.remove_broken_states(self.kb)
+
+        self.check_in_knowledge_base(self.kb, facts_list)
+        self.check_not_in_knowledge_base(self.kb, broken)
+
     def test_broken_path(self):
-        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
-                       facts.Finish(uid='st_finish', result=0),
+        facts_list = [ facts.Start(uid='start', type='test', nesting=0),
+                       facts.Finish(uid='st_finish', result=0, nesting=0),
                        facts.Jump(state_from='start', state_to='st_finish') ]
         self.kb += facts_list
 
@@ -169,8 +217,8 @@ class RemoveBrokenStatesTests(TransformatorsTestsBase):
         self.check_not_in_knowledge_base(self.kb, broken_path)
 
     def test_finish_at_not_finish_state(self):
-        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
-                       facts.Finish(uid='st_finish', result=0),
+        facts_list = [ facts.Start(uid='start', type='test', nesting=0),
+                       facts.Finish(uid='st_finish', result=0, nesting=0),
                        facts.Jump(state_from='start', state_to='st_finish') ]
         self.kb += facts_list
 
@@ -191,18 +239,18 @@ class RemoveRestrictedStatesTests(TransformatorsTestsBase):
         super(RemoveRestrictedStatesTests, self).setUp()
 
     def test_no_restricted_states(self):
-        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
-                  facts.Finish(uid='st_finish', result=0),
+        facts_list = [ facts.Start(uid='start', type='test', nesting=0),
+                  facts.Finish(uid='st_finish', result=0, nesting=0),
                   facts.Jump(state_from='start', state_to='st_finish') ]
         self.kb += facts_list
         transformators.remove_restricted_states(self.kb)
         self.check_in_knowledge_base(self.kb, facts_list)
 
     def test_has_restricted_states(self):
-        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+        facts_list = [ facts.Start(uid='start', type='test', nesting=0),
                   facts.Person(uid='person_1'),
                   facts.Person(uid='person_2'),
-                  facts.Finish(uid='st_finish', actions=[facts.GivePower(object='person_1', power=1), facts.GivePower(object='person_2', power=-1)], result=0),
+                  facts.Finish(uid='st_finish', actions=[facts.GivePower(object='person_1', power=1), facts.GivePower(object='person_2', power=-1)], result=0, nesting=0),
                   facts.Jump(state_from='start', state_to='st_finish'),
                   facts.OnlyGoodBranches(object='person_1'),
                   facts.OnlyBadBranches(object='person_2')]
@@ -211,43 +259,43 @@ class RemoveRestrictedStatesTests(TransformatorsTestsBase):
         self.check_in_knowledge_base(self.kb, facts_list)
 
     def test_only_good_branches__person(self):
-        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+        facts_list = [ facts.Start(uid='start', type='test', nesting=0),
                   facts.Jump(state_from='start', state_to='st_finish'),
                   facts.Person(uid='person'),
                   facts.OnlyGoodBranches(object='person')]
         self.kb += facts_list
-        self.kb += facts.Finish(uid='st_finish', actions=[facts.GivePower(object='person', power=-1)], result=0),
+        self.kb += facts.Finish(uid='st_finish', actions=[facts.GivePower(object='person', power=-1)], result=0, nesting=0),
         transformators.remove_restricted_states(self.kb)
         self.check_in_knowledge_base(self.kb, facts_list)
 
     def test_only_bad_branches__person(self):
-        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+        facts_list = [ facts.Start(uid='start', type='test', nesting=0),
                   facts.Jump(state_from='start', state_to='st_finish'),
                   facts.Person(uid='person'),
                   facts.OnlyBadBranches(object='person')]
         self.kb += facts_list
-        self.kb += facts.Finish(uid='st_finish', actions=[facts.GivePower(object='person', power=1)], result=0),
+        self.kb += facts.Finish(uid='st_finish', actions=[facts.GivePower(object='person', power=1)], result=0, nesting=0),
         transformators.remove_restricted_states(self.kb)
         self.check_in_knowledge_base(self.kb, facts_list)
 
 
     def test_only_good_branches__place(self):
-        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+        facts_list = [ facts.Start(uid='start', type='test', nesting=0),
                   facts.Jump(state_from='start', state_to='st_finish'),
                   facts.Place(uid='place'),
                   facts.OnlyGoodBranches(object='place')]
         self.kb += facts_list
-        self.kb += facts.Finish(uid='st_finish', actions=[facts.GivePower(object='place', power=-1)], result=0),
+        self.kb += facts.Finish(uid='st_finish', actions=[facts.GivePower(object='place', power=-1)], result=0, nesting=0),
         transformators.remove_restricted_states(self.kb)
         self.check_in_knowledge_base(self.kb, facts_list)
 
     def test_only_bad_branches__place(self):
-        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
+        facts_list = [ facts.Start(uid='start', type='test', nesting=0),
                   facts.Jump(state_from='start', state_to='st_finish'),
                   facts.Place(uid='place'),
                   facts.OnlyBadBranches(object='place')]
         self.kb += facts_list
-        self.kb += facts.Finish(uid='st_finish', actions=[facts.GivePower(object='place', power=1)], result=0),
+        self.kb += facts.Finish(uid='st_finish', actions=[facts.GivePower(object='place', power=1)], result=0, nesting=0),
         transformators.remove_restricted_states(self.kb)
         self.check_in_knowledge_base(self.kb, facts_list)
 
@@ -260,8 +308,8 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
         super(DetermineDefaultChoicesTests, self).setUp()
 
     def test_no_choices(self):
-        facts_list = [ facts.Start(uid='start', type='test', is_entry=True),
-                  facts.Finish(uid='st_finish', result=0),
+        facts_list = [ facts.Start(uid='start', type='test', nesting=0),
+                  facts.Finish(uid='st_finish', result=0, nesting=0),
                   facts.Jump(state_from='start', state_to='st_finish') ]
         self.kb += facts_list
         transformators.determine_default_choices(self.kb)
@@ -269,10 +317,10 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
         self.assertEqual(len(list(self.kb.filter(facts.OptionsLink))), 0)
 
     def test_one_choice(self):
-        start = facts.Start(uid='start', type='test', is_entry=True)
+        start = facts.Start(uid='start', type='test', nesting=0)
         choice_1 = facts.Choice(uid='choice_1')
-        finish_1 = facts.Finish(uid='finish_1', result=0)
-        finish_2 = facts.Finish(uid='finish_2', result=0)
+        finish_1 = facts.Finish(uid='finish_1', result=0, nesting=0)
+        finish_2 = facts.Finish(uid='finish_2', result=0, nesting=0)
 
         facts_list = [ start,
                   choice_1,
@@ -288,11 +336,11 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
         self.assertEqual(len(set([path.choice for path in self.kb.filter(facts.ChoicePath)])), 1)
 
     def test_two_choices(self):
-        start = facts.Start(uid='start', type='test', is_entry=True)
+        start = facts.Start(uid='start', type='test', nesting=0)
         choice_1 = facts.Choice(uid='choice_1')
         choice_2 = facts.Choice(uid='choice_2')
-        finish_1 = facts.Finish(uid='finish_1', result=0)
-        finish_2 = facts.Finish(uid='finish_2', result=0)
+        finish_1 = facts.Finish(uid='finish_1', result=0, nesting=0)
+        finish_2 = facts.Finish(uid='finish_2', result=0, nesting=0)
 
         option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
         option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
@@ -320,11 +368,11 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
 
 
     def test_linked_choices(self):
-        start = facts.Start(uid='start', type='test', is_entry=True)
+        start = facts.Start(uid='start', type='test', nesting=0)
         choice_1 = facts.Choice(uid='choice_1')
         choice_2 = facts.Choice(uid='choice_2')
-        finish_1 = facts.Finish(uid='finish_1', result=0)
-        finish_2 = facts.Finish(uid='finish_2', result=0)
+        finish_1 = facts.Finish(uid='finish_1', result=0, nesting=0)
+        finish_2 = facts.Finish(uid='finish_2', result=0, nesting=0)
 
         option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
         option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
@@ -356,11 +404,11 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
         self.assertTrue(chosen_options == set([option_1.uid, option_2_1.uid]) or chosen_options == set([option_2.uid, option_2_2.uid]) )
 
     def test_linked_choices__option_with_two_links(self):
-        start = facts.Start(uid='start', type='test', is_entry=True)
+        start = facts.Start(uid='start', type='test', nesting=0)
         choice_1 = facts.Choice(uid='choice_1')
         choice_2 = facts.Choice(uid='choice_2')
-        finish_1 = facts.Finish(uid='finish_1', result=0)
-        finish_2 = facts.Finish(uid='finish_2', result=0)
+        finish_1 = facts.Finish(uid='finish_1', result=0, nesting=0)
+        finish_2 = facts.Finish(uid='finish_2', result=0, nesting=0)
 
         option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
         option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
@@ -388,18 +436,15 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
         self.assertEqual(len(list(self.kb.filter(facts.ChoicePath))), 0)
 
     def test_linked_choices__linked_option_with_processed_choice(self):
-        # exception raised when first processed choice_1 and choice is option_2
-        # since it is random behaviour, we can test ony random exception raising
-
         is_raised = False
 
         for i in xrange(100):
             kb = KnowledgeBase()
-            start = facts.Start(uid='start', type='test', is_entry=True)
+            start = facts.Start(uid='start', type='test', nesting=0)
             choice_1 = facts.Choice(uid='choice_1')
             choice_2 = facts.Choice(uid='choice_2')
-            finish_1 = facts.Finish(uid='finish_1', result=0)
-            finish_2 = facts.Finish(uid='finish_2', result=0)
+            finish_1 = facts.Finish(uid='finish_1', result=0, nesting=0)
+            finish_2 = facts.Finish(uid='finish_2', result=0, nesting=0)
 
             option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
             option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
@@ -408,17 +453,18 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
             option_2_2 = facts.Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2')
 
             facts_list = [ start,
-                      choice_1,
-                      choice_2,
-                      finish_1,
-                      finish_2,
+                           facts.Jump(state_from=start.uid, state_to=choice_1.uid),
+                           choice_1,
+                           choice_2,
+                           finish_1,
+                           finish_2,
 
-                      option_1,
-                      option_2,
-                      option_2_1,
-                      option_2_2,
+                           option_1,
+                           option_2,
+                           option_2_1,
+                           option_2_2,
 
-                      facts.OptionsLink(options=(option_2.uid, option_2_2.uid))]
+                           facts.OptionsLink(options=(option_2.uid, option_2_2.uid))]
 
             kb += facts_list
 
@@ -431,7 +477,7 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
                 self.assertEqual([path.option for path in kb.filter(facts.ChoicePath)], [option_2_1.uid])
                 break
 
-        self.assertTrue(is_raised)
+        self.assertFalse(is_raised)
 
 class ChangeChoiceTests(TransformatorsTestsBase):
 
@@ -439,11 +485,11 @@ class ChangeChoiceTests(TransformatorsTestsBase):
         super(ChangeChoiceTests, self).setUp()
 
     def test_single_choice(self):
-        start = facts.Start(uid='start', type='test', is_entry=True)
+        start = facts.Start(uid='start', type='test', nesting=0)
         choice_1 = facts.Choice(uid='choice_1')
         choice_2 = facts.Choice(uid='choice_2')
-        finish_1 = facts.Finish(uid='finish_1', result=0)
-        finish_2 = facts.Finish(uid='finish_2', result=0)
+        finish_1 = facts.Finish(uid='finish_1', result=0, nesting=0)
+        finish_2 = facts.Finish(uid='finish_2', result=0, nesting=0)
 
         option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
         option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
@@ -484,11 +530,11 @@ class ChangeChoiceTests(TransformatorsTestsBase):
 
 
     def test_linked_choices(self):
-        start = facts.Start(uid='start', type='test', is_entry=True)
+        start = facts.Start(uid='start', type='test', nesting=0)
         choice_1 = facts.Choice(uid='choice_1')
         choice_2 = facts.Choice(uid='choice_2')
-        finish_1 = facts.Finish(uid='finish_1', result=0)
-        finish_2 = facts.Finish(uid='finish_2', result=0)
+        finish_1 = facts.Finish(uid='finish_1', result=0, nesting=0)
+        finish_2 = facts.Finish(uid='finish_2', result=0, nesting=0)
 
         option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
         option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')

@@ -14,10 +14,10 @@ class MachineTests(unittest.TestCase):
     def setUp(self):
         self.kb = KnowledgeBase()
 
-        self.start = Start(uid='start', type='test', is_entry=True)
+        self.start = Start(uid='start', type='test', nesting=0)
         self.state_1 = State(uid='state_1')
         self.state_2 = State(uid='state_2')
-        self.finish_1 = Finish(uid='finish_1', result=0)
+        self.finish_1 = Finish(uid='finish_1', result=0, nesting=0)
 
         self.kb += [ self.start, self.state_1, self.state_2, self.finish_1]
 
@@ -93,7 +93,7 @@ class MachineTests(unittest.TestCase):
         self.assertFalse(self.machine.can_do_step())
 
     def test_can_do_step__success(self):
-        state_3 = State(uid='state_3', require=[Start(uid='start', type='test', is_entry=True)])
+        state_3 = State(uid='state_3', require=[Start(uid='start', type='test', nesting=0)])
         jump_3 = Jump(state_from=self.start.uid, state_to=state_3.uid)
         self.kb += [ state_3, jump_3]
 
@@ -253,8 +253,8 @@ class MachineTests(unittest.TestCase):
         self.assertEqual(self.machine.pointer.state, choice.uid)
 
     def test_get_start_state(self):
-        start_2 = Start(uid='s2', type='test', is_entry=True)
-        start_3 = Start(uid='start_3', type='test', is_entry=True)
+        start_2 = Start(uid='s2', type='test', nesting=0)
+        start_3 = Start(uid='start_3', type='test', nesting=0)
 
 
         self.kb += [ start_2,
@@ -263,3 +263,115 @@ class MachineTests(unittest.TestCase):
                      Jump(state_from=start_3.uid, state_to=self.start.uid) ]
 
         self.assertEqual(self.machine.get_start_state().uid, start_3.uid)
+
+    def test_get_nearest_choice__no_choice(self):
+        self.kb += Jump(state_from=self.start.uid, state_to=self.finish_1.uid)
+        self.assertEqual(self.machine.get_nearest_choice(), (None, None, None))
+
+    def test_get_nearest_choice__choice(self):
+        choice = Choice(uid='choice')
+        option_1 = Option(state_from=choice.uid, state_to=self.state_1.uid, type='opt_1')
+        option_2 = Option(state_from=choice.uid, state_to=self.state_2.uid, type='opt_2')
+        path = ChoicePath(choice=choice.uid, option=option_2.uid, default=True)
+        self.kb += (choice,
+                    option_1,
+                    option_2,
+                    path,
+                    Jump(state_from=self.start.uid, state_to=choice.uid)    )
+
+        choice_, options_, path_ = self.machine.get_nearest_choice()
+        self.assertEqual(choice_.uid, choice.uid)
+        self.assertEqual(set(o.uid for o in options_), set([option_1.uid, option_2.uid]))
+        self.assertEqual([p.uid for p in path_], [path.uid])
+
+    def test_get_nearest_choice__2_choices(self):
+        choice_1 = Choice(uid='choice_1')
+
+        choice_2 = Choice(uid='choice_2')
+        option_2_1 = Option(state_from=choice_2.uid, state_to=self.state_1.uid, type='opt_2_1')
+        option_2_2 = Option(state_from=choice_2.uid, state_to=self.state_2.uid, type='opt_2_2')
+        path_2 = ChoicePath(choice=choice_2.uid, option=option_2_2.uid, default=True)
+
+        option_1_1 = Option(state_from=choice_1.uid, state_to=self.state_1.uid, type='opt_1_1')
+        option_1_2 = Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_1_2')
+        path_1 = ChoicePath(choice=choice_1.uid, option=option_1_2.uid, default=True)
+
+        self.kb += (choice_1,
+                    option_1_1,
+                    option_1_2,
+                    path_1,
+
+                    choice_2,
+                    option_2_1,
+                    option_2_2,
+                    path_2,
+                    Jump(state_from=self.start.uid, state_to=choice_1.uid),
+            )
+
+        choice_, options_, path_ = self.machine.get_nearest_choice()
+        self.assertEqual(choice_.uid, choice_1.uid)
+        self.assertEqual(set(o.uid for o in options_), set([option_1_1.uid, option_1_2.uid]))
+        self.assertEqual([p.uid for p in path_], [path_1.uid])
+
+    def test_get_nearest_choice__2_choices__second_choice(self):
+        choice_1 = Choice(uid='choice_1')
+
+        choice_2 = Choice(uid='choice_2')
+        option_2_1 = Option(state_from=choice_2.uid, state_to=self.state_1.uid, type='opt_2_1')
+        option_2_2 = Option(state_from=choice_2.uid, state_to=self.state_2.uid, type='opt_2_2')
+        path_2 = ChoicePath(choice=choice_2.uid, option=option_2_2.uid, default=True)
+
+        option_1_1 = Option(state_from=choice_1.uid, state_to=self.state_1.uid, type='opt_1_1')
+        option_1_2 = Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_1_2')
+        path_1 = ChoicePath(choice=choice_1.uid, option=option_1_2.uid, default=True)
+
+        self.kb += (choice_1,
+                    option_1_1,
+                    option_1_2,
+                    path_1,
+
+                    choice_2,
+                    option_2_1,
+                    option_2_2,
+                    path_2,
+                    Jump(state_from=self.start.uid, state_to=choice_1.uid),
+
+                    Pointer(state=choice_2.uid)
+            )
+
+        choice_, options_, path_ = self.machine.get_nearest_choice()
+        self.assertEqual(choice_.uid, choice_2.uid)
+        self.assertEqual(set(o.uid for o in options_), set([option_2_1.uid, option_2_2.uid]))
+        self.assertEqual([p.uid for p in path_], [path_2.uid])
+
+    def test_get_nearest_choice__choice_after_finish(self):
+        choice = Choice(uid='choice')
+        option_1 = Option(state_from=choice.uid, state_to=self.state_1.uid, type='opt_1')
+        option_2 = Option(state_from=choice.uid, state_to=self.state_2.uid, type='opt_2')
+        path = ChoicePath(choice=choice.uid, option=option_2.uid, default=True)
+        self.kb += (choice,
+                    option_1,
+                    option_2,
+                    path,
+                    Jump(state_from=self.start.uid, state_to=self.finish_1.uid),
+                    Jump(state_from=self.finish_1.uid, state_to=choice.uid))
+
+        choice_, options_, path_ = self.machine.get_nearest_choice()
+        self.assertEqual(self.machine.get_nearest_choice(), (None, None, None))
+
+    def test_get_nearest_choice__choice_after_start(self):
+        choice = Choice(uid='choice')
+        option_1 = Option(state_from=choice.uid, state_to=self.state_1.uid, type='opt_1')
+        option_2 = Option(state_from=choice.uid, state_to=self.state_2.uid, type='opt_2')
+        path = ChoicePath(choice=choice.uid, option=option_2.uid, default=True)
+        start_2 = Start(uid='start_2', type='test', nesting=0)
+        self.kb += (choice,
+                    option_1,
+                    option_2,
+                    path,
+                    start_2,
+                    Jump(state_from=self.start.uid, state_to=start_2.uid),
+                    Jump(state_from=start_2.uid, state_to=choice.uid))
+
+        choice_, options_, path_ = self.machine.get_nearest_choice()
+        self.assertEqual(self.machine.get_nearest_choice(), (None, None, None))

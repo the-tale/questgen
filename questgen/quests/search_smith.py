@@ -11,12 +11,13 @@ class SearchSmith(QuestBetween2):
     TAGS = ('can_start', )
 
     @classmethod
-    def construct_from_place(cls, selector, start_place):
+    def construct_from_place(cls, nesting, selector, start_place):
 
         receiver = selector.new_person(professions=(PROFESSION.BLACKSMITH,))
         receiver_position = selector.place_for(objects=(receiver.uid,))
 
-        return cls.construct(selector,
+        return cls.construct(nesting=nesting,
+                             selector=selector,
                              initiator=None,
                              initiator_position=start_place,
                              receiver=receiver,
@@ -24,7 +25,7 @@ class SearchSmith(QuestBetween2):
 
 
     @classmethod
-    def construct(cls, selector, initiator, initiator_position, receiver, receiver_position):
+    def construct(cls, nesting, selector, initiator, initiator_position, receiver, receiver_position):
 
         hero = selector.heroes()[0]
 
@@ -32,7 +33,7 @@ class SearchSmith(QuestBetween2):
 
         start = facts.Start(uid=ns+'start',
                             type=cls.TYPE,
-                            is_entry=selector.is_first_quest,
+                            nesting=nesting,
                             description=u'Начало: посещение кузнеца',
                             require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
                             actions=[facts.Message(type='intro')])
@@ -49,8 +50,9 @@ class SearchSmith(QuestBetween2):
 
         finish = facts.Finish(uid=ns+'finish',
                               result=RESULTS.SUCCESSED,
+                              nesting=nesting,
                               description=u'завершить задание',
-                              actions=[facts.GivePower(object=receiver_position.uid, power=1)])
+                              actions=[facts.GivePower(object=receiver.uid, power=1)])
 
         line = [ start,
 

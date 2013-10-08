@@ -151,12 +151,18 @@ class Mob(Actor):
 
 
 class Start(State):
-    _attributes = dict(type=None, is_entry=False, **State._attributes)
-    _required = tuple(['type', 'is_entry'] + list(State._required))
+    _attributes = dict(type=None, nesting=False, **State._attributes)
+    _required = tuple(['type', 'nesting'] + list(State._required))
+
+    @property
+    def is_external(self): return self.nesting == 0
 
 class Finish(State):
-    _attributes = dict(result=None, **State._attributes)
-    _required = tuple(['result'] + list(State._required))
+    _attributes = dict(result=None, nesting=False, **State._attributes)
+    _required = tuple(['result', 'nesting'] + list(State._required))
+
+    @property
+    def is_external(self): return self.nesting == 0
 
 class Choice(State): pass
 

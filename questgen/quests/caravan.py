@@ -8,13 +8,8 @@ class Caravan(QuestBetween2):
     TYPE = 'caravan'
     TAGS = ('can_start', 'can_continue')
 
-    # normal - normal quest
-    # special - special quest
-    # can_start - can be first quest in tree
-    # can_continue - can be not first quest in tree
-
     @classmethod
-    def construct(cls, selector, initiator, initiator_position, receiver, receiver_position):
+    def construct(cls, nesting, selector, initiator, initiator_position, receiver, receiver_position):
 
         hero = selector.heroes()[0]
 
@@ -24,7 +19,7 @@ class Caravan(QuestBetween2):
 
         start = facts.Start(uid=ns+'start',
                             type=cls.TYPE,
-                            is_entry=selector.is_first_quest,
+                            nesting=nesting,
                             description=u'Начало: караван',
                             require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
                             actions=[facts.Message(type='intro')])
@@ -56,6 +51,7 @@ class Caravan(QuestBetween2):
 
         finish_defence = facts.Finish(uid=ns+'finish_defence',
                                       result=RESULTS.SUCCESSED,
+                                      nesting=nesting,
                                       description=u'Караван приходит в точку назначения',
                                       require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)],
                                       actions=[facts.GiveReward(object=hero.uid, type='finish_defence'),
@@ -87,6 +83,7 @@ class Caravan(QuestBetween2):
 
         finish_attack = facts.Finish(uid=ns+'finish_attack',
                                      result=RESULTS.FAILED,
+                                     nesting=nesting,
                                      description=u'Продать товар на чёрном рынке',
                                      require=[facts.LocatedIn(object=hero.uid, place=black_market.uid)],
                                      actions=[facts.GiveReward(object=hero.uid, type='finish_attack'),
@@ -155,7 +152,6 @@ class Caravan(QuestBetween2):
                  finish_attack,
 
                  facts.OptionsLink(options=(caravan_choice__first_defence.uid, first_defence__second_moving.uid)),
-                 facts.OptionsLink(options=(caravan_choice__move_to_attack.uid, first_defence__move_to_attack.uid)),
                 ]
 
         line.extend(participants)

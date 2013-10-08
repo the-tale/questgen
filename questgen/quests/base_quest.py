@@ -23,27 +23,32 @@ class BaseQuest(object):
 class QuestBetween2(BaseQuest):
 
     @classmethod
-    def construct_from_nothing(cls, selector):
-        return cls.construct_from_place(selector=selector, start_place=selector.new_place())
+    def construct_from_nothing(cls, nesting, selector):
+        return cls.construct_from_place(nesting=nesting, selector=selector, start_place=selector.new_place())
 
     @classmethod
-    def construct_from_place(cls, selector, start_place):
-        return cls.construct_between_2(selector,
+    def construct_from_place(cls, nesting, selector, start_place):
+        return cls.construct_between_2(nesting=nesting,
+                                       selector=selector,
                                        initiator=selector.person_from(places=(start_place.uid, )),
                                        receiver=selector.new_person())
 
     @classmethod
-    def construct_from_person(cls, selector, initiator):
-        return cls.construct_between_2(selector, initiator, receiver=selector.new_person())
+    def construct_from_person(cls, nesting, selector, initiator):
+        return cls.construct_between_2(nesting=nesting,
+                                       selector=selector,
+                                       initiator=initiator,
+                                       receiver=selector.new_person())
 
     @classmethod
-    def construct_between_2(cls, selector, initiator, receiver):
-        return cls.construct( selector,
+    def construct_between_2(cls, nesting, selector, initiator, receiver):
+        return cls.construct( nesting=nesting,
+                              selector=selector,
                               initiator=initiator,
                               initiator_position=selector.place_for(objects=(initiator.uid,)),
                               receiver=receiver,
                               receiver_position=selector.place_for(objects=(receiver.uid,)))
 
     @classmethod
-    def construct(cls, selector, initiator, initiator_position, receiver, receiver_position):
+    def construct(cls, nesting, selector, initiator, initiator_position, receiver, receiver_position):
         raise NotImplementedError

@@ -27,7 +27,7 @@ class SimpleQuestTests(unittest.TestCase):
 
         # quest
         self.kb += [ Start(uid='start',
-                           is_entry=True,
+                           nesting=0,
                            type='simple_test',
                            require=(LocatedIn(object='person_from', place='place_from'),
                                     LocatedIn(object='person_to', place='place_to'),
@@ -38,6 +38,7 @@ class SimpleQuestTests(unittest.TestCase):
 
                      Finish(uid='st_finish',
                             result=0,
+                            nesting=0,
                             require=(LocatedIn(object='hero', place='place_to'),)),
 
                      Jump(state_from='start', state_to='st_throught_place'),

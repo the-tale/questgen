@@ -24,7 +24,7 @@ class HEAD_COLORS(object):
     EVENT_SUBGRAPH = '#ffffdd'
     EVENT = '#eeeecc'
 
-    SUBQUEST_SUBGRAPH = '#ddffff'
+    SUBQUEST_SUBGRAPH = '#%02xffff'
 
     LINK = '#ffaaaa'
 
@@ -66,21 +66,21 @@ class SubGraph(object):
         for subgraph in graphs:
             if subgraph.parents:
                 continue
-            subgraph.draw(graph, nodes)
+            subgraph.draw(graph, nodes, nesting=0)
 
-    def draw(self, graph, nodes):
+    def draw(self, graph, nodes, nesting):
         subgraph = gv.graph(graph, self.uid)
         gv.setv(subgraph, 'label', self.uid)
         # gv.setv(subgraph, 'rank', 'same')
         gv.setv(subgraph, 'shape', 'box')
-        gv.setv(subgraph, 'bgcolor', self.color)
+        gv.setv(subgraph, 'bgcolor', self.color % (150+nesting*25) if '%' in self.color else self.color)
 
         for node_uid in self.members:
             if node_uid in nodes:
                 gv.node(subgraph, node_uid)
 
         for child in self.children:
-            child.draw(subgraph, nodes)
+            child.draw(subgraph, nodes, nesting=nesting+1)
 
 
 class Drawer(object):
@@ -296,6 +296,8 @@ class Drawer(object):
             return self.create_action_label_for_fight(action)
         elif isinstance(action, facts.DoNothing):
             return self.create_action_label_for_donothing(action)
+        elif isinstance(action, facts.UpgradeEquipment):
+            return self.create_action_label_for_upgrade_equipment(action)
 
     def create_label_for_event(self, event):
         return table(tr(td(i(event.uid))),
@@ -350,6 +352,9 @@ class Drawer(object):
 
     def create_action_label_for_donothing(self, donothing):
         return u'<b>заняться </b>&nbsp; %s' % donothing.type
+
+    def create_action_label_for_upgrade_equipment(self, donothing):
+        return u'<b>обновить экипировку</b>'
 
 
 def b(data): return u'<b>%s</b>' % data

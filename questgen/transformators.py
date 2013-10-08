@@ -28,6 +28,7 @@ def activate_events(knowledge_base):
 def determine_default_choices(knowledge_base):
     processed_choices = set()
     linked_options = {}
+    restricted_options = set() # options, that can not be used as default
 
     for link in knowledge_base.filter(facts.OptionsLink):
         for option_uid in link.options:
@@ -41,12 +42,19 @@ def determine_default_choices(knowledge_base):
 
         processed_choices.add(choice.uid)
 
-        options_choices = [option for option in knowledge_base.filter(facts.Option) if option.state_from == choice.uid]
+        options_choices = [option
+                           for option in knowledge_base.filter(facts.Option)
+                           if option.state_from == choice.uid and option.uid not in restricted_options]
+
         default_option = random.choice(options_choices)
 
         if default_option.uid in linked_options:
             for linked_option_uid in linked_options[default_option.uid].options:
                 if linked_option_uid == default_option.uid:
+                    continue
+
+                # option can be removed by other transformations
+                if linked_option_uid not in knowledge_base:
                     continue
 
                 linked_choice_uid = knowledge_base[linked_option_uid].state_from
@@ -57,6 +65,15 @@ def determine_default_choices(knowledge_base):
                 processed_choices.add(linked_choice_uid)
 
                 knowledge_base += facts.ChoicePath(choice=linked_choice_uid, option=linked_option_uid, default=True)
+
+        # if add all options linked to unused to restricted_options
+        for unused_option in options_choices:
+            if unused_option.uid == default_option.uid:
+                continue
+            if unused_option.uid not in linked_options:
+                continue
+            for linked_option_uid in linked_options[unused_option.uid].options:
+                restricted_options.add(linked_option_uid)
 
         knowledge_base += facts.ChoicePath(choice=choice.uid, option=default_option.uid, default=True)
 
@@ -87,27 +104,42 @@ def change_choice(knowledge_base, new_option_uid, default):
 
 def remove_broken_states(knowledge_base):
 
+    # print '------------'
+    # print [s.uid for s in knowledge_base.filter(facts.State)]
+    # print '------------'
+
     while True:
-        states_to_remove = []
+        states_to_remove = set()
 
         for state in knowledge_base.filter(facts.State):
-            if isinstance(state, facts.Start) and state.is_entry:
+            if isinstance(state, facts.Start) and state.is_external:
                 pass
             elif not filter(lambda jump: jump.state_to == state.uid, knowledge_base.filter(facts.Jump)):
-                states_to_remove.append(state)
-            elif isinstance(state, facts.Finish):
+                states_to_remove.add(state)
+            elif isinstance(state, facts.Finish) and state.is_external:
                 pass
             elif not filter(lambda jump: jump.state_from == state.uid, knowledge_base.filter(facts.Jump)):
-                states_to_remove.append(state)
+                states_to_remove.add(state)
 
+        # print 'remove states', [s.uid for s in states_to_remove]
         knowledge_base -= states_to_remove
 
-        jumps_to_remove = []
+        jumps_to_remove = set()
 
         for jump in knowledge_base.filter(facts.Jump):
-            if (jump.state_from not in knowledge_base or
-                jump.state_to not in knowledge_base):
-                jumps_to_remove.append(jump)
+            if jump.state_from in knowledge_base and jump.state_to in knowledge_base:
+                continue
+
+            # print 'remove jump', jump.uid, (jump.state_from in knowledge_base), (jump.state_to in knowledge_base)
+            jumps_to_remove.add(jump)
+
+            if isinstance(jump, facts.Option):
+                links = [l for l in knowledge_base.filter(facts.OptionsLink) if jump.uid in l.options]
+                if links:
+                    for link in links:
+                        for option_uid in link.options:
+                            # print 'remove linked jump', option_uid
+                            jumps_to_remove.add(knowledge_base[option_uid])
 
         knowledge_base -= jumps_to_remove
 

@@ -12,7 +12,11 @@ class Selector(object):
         self._kb = kb
         self._qb = qb
         self.reset()
+
+    def reset(self):
+        self._reserved = set()
         self._is_first_quest = True
+        self._excluded_quests = set()
 
     @property
     def is_first_quest(self):
@@ -76,12 +80,15 @@ class Selector(object):
 
         return place
 
-    def new_person(self, professions=None):
+    def new_person(self, candidates=None, professions=None):
         locations = self._locations(restrict_places=True, restrict_objects=True)
         persons = (self._kb[location.object] for location in locations if isinstance(self._kb[location.object], facts.Person))
 
         if professions is not None:
             persons = (person for person in persons if person.profession in professions)
+
+        if candidates is not None:
+            persons = (person for person in persons if person.uid in candidates)
 
         persons = list(persons)
 
@@ -119,5 +126,49 @@ class Selector(object):
         except StopIteration:
             raise exceptions.NoFactSelectedError(method='preferences_hometown', arguments={})
 
-    def reset(self):
-        self._reserved = set()
+    def preferences_enemy(self):
+        try:
+            return self._kb.filter(facts.PreferenceEnemy).next()
+        except StopIteration:
+            raise exceptions.NoFactSelectedError(method='preferences_enemy', arguments={})
+
+    def preferences_friend(self):
+        try:
+            return self._kb.filter(facts.PreferenceFriend).next()
+        except StopIteration:
+            raise exceptions.NoFactSelectedError(method='preferences_friend', arguments={})
+
+
+    def create_quest_from_place(self, nesting, initiator_position, **kwargs):
+        excluded = set(kwargs.get('excluded', []))
+        excluded |= self._excluded_quests
+        kwargs['excluded'] = excluded
+
+        quest_class = self._qb.quest_from_place(**kwargs)
+        if 'has_subquests' in quest_class.TAGS:
+            self._excluded_quests.add(quest_class.TYPE)
+
+        return quest_class.construct_from_place(nesting=nesting, selector=self, start_place=initiator_position)
+
+    def create_quest_from_person(self, nesting, initiator, **kwargs):
+        excluded = set(kwargs.get('excluded', []))
+        excluded |= self._excluded_quests
+        kwargs['excluded'] = excluded
+
+        quest_class = self._qb.quest_from_person(**kwargs)
+        if 'has_subquests' in quest_class.TAGS:
+            self._excluded_quests.add(quest_class.TYPE)
+
+        return quest_class.construct_from_person(nesting=nesting, selector=self, initiator=initiator)
+
+    def create_quest_between_2(self, nesting, initiator, receiver, **kwargs):
+        excluded = set(kwargs.get('excluded', []))
+        excluded |= self._excluded_quests
+        kwargs['excluded'] = excluded
+
+        quest_class = self._qb.quest_between_2(**kwargs)
+
+        if 'has_subquests' in quest_class.TAGS:
+            self._excluded_quests.add(quest_class.TYPE)
+
+        return quest_class.construct_between_2(nesting=nesting, selector=self, initiator=initiator, receiver=receiver)

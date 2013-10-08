@@ -31,11 +31,12 @@ class Hunt(QuestBetween2):
         return selector._kb[selector.preferences_mob().mob]
 
     @classmethod
-    def construct_from_place(cls, selector, start_place):
+    def construct_from_place(cls, nesting, selector, start_place):
 
         mob = cls.get_mob(selector)
 
-        return cls.construct(selector,
+        return cls.construct(nesting=nesting,
+                             selector=selector,
                              initiator=None,
                              initiator_position=start_place,
                              receiver=None,
@@ -43,7 +44,7 @@ class Hunt(QuestBetween2):
 
 
     @classmethod
-    def construct(cls, selector, initiator, initiator_position, receiver, receiver_position):
+    def construct(cls, nesting, selector, initiator, initiator_position, receiver, receiver_position):
 
         mob = cls.get_mob(selector)
 
@@ -53,7 +54,7 @@ class Hunt(QuestBetween2):
 
         start = Start(uid=ns+'start',
                       type=cls.TYPE,
-                      is_entry=selector.is_first_quest,
+                      nesting=nesting,
                       description=u'Начало: задание на охоту',
                       require=[LocatedIn(object=hero.uid, place=initiator_position.uid)],
                       actions=[Message(type='intro')])
@@ -86,6 +87,7 @@ class Hunt(QuestBetween2):
 
         sell_prey = Finish(uid=ns+'sell_prey',
                            result=RESULTS.SUCCESSED,
+                           nesting=nesting,
                            description=u'Продать добычу',
                            require=[LocatedIn(object=hero.uid, place=receiver_position.uid)],
                            actions=[GiveReward(object=hero.uid, type='sell_prey'),

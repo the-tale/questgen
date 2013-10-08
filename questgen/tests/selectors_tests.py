@@ -134,3 +134,17 @@ class SelectordsTests(unittest.TestCase):
 
     def test_preferences_hometown__not_found(self):
         self.assertRaises(exceptions.NoFactSelectedError, self.selector.preferences_hometown)
+
+    def test_preferences_friend(self):
+        self.kb += facts.PreferenceFriend(object='hero', person='person_1')
+        self.assertEqual(self.selector.preferences_friend(), facts.PreferenceFriend(object='hero', person='person_1'))
+
+    def test_preferences_friend__not_found(self):
+        self.assertRaises(exceptions.NoFactSelectedError, self.selector.preferences_friend)
+
+    def test_preferences_enemy(self):
+        self.kb += facts.PreferenceEnemy(object='hero', person='person_1')
+        self.assertEqual(self.selector.preferences_enemy(), facts.PreferenceEnemy(object='hero', person='person_1'))
+
+    def test_preferences_enemy__not_found(self):
+        self.assertRaises(exceptions.NoFactSelectedError, self.selector.preferences_enemy)

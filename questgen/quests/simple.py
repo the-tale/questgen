@@ -10,20 +10,22 @@ class Simple(QuestBetween2):
     TAGS = ('can_start', 'can_continue')
 
     @classmethod
-    def construct(cls, selector, initiator, initiator_position, receiver, receiver_position):
+    def construct(cls, nesting, selector, initiator, initiator_position, receiver, receiver_position):
 
         ns = selector._kb.get_next_ns()
 
         start = facts.Start(uid=ns+'start',
                             type=cls.TYPE,
-                            is_entry=selector.is_first_quest,
+                            nesting=nesting,
                             description=u'Начало: самый простой квест')
 
         finish_successed = facts.Finish(uid=ns+'finish_successed',
+                                        nesting=nesting,
                                         result=RESULTS.SUCCESSED,
                                         description=u'завершить задание удачно')
 
         finish_failed = facts.Finish(uid=ns+'finish_failed',
+                                     nesting=nesting,
                                      result=RESULTS.FAILED,
                                      description=u'завершить задание плохо')
 

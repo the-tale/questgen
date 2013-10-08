@@ -29,11 +29,6 @@ class FactsTests(unittest.TestCase):
         self.assertRaises(exceptions.WrongChangeAttributeError,
                           fact_1.change, xxx='yyy')
 
-    # def test_wrong_option_uid(self):
-    #     self.assertRaises(exceptions.OptionUIDWithoutChoicePart,
-    #                       Option, uid='choice_option', choice='choice', state_from='rt_nh', state_to='ht_spying')
-
-
 
     def test_uid_not_setupped(self):
         self.assertRaises(exceptions.UIDDidNotSetupped, Fact)
