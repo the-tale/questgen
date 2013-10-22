@@ -30,7 +30,7 @@ class Caravan(QuestBetween2):
 
         first_moving = facts.State(uid=ns+'first_moving',
                                     description=u'двигаемся с караваном',
-                                    actions=(facts.MoveIn(object=hero.uid, place=receiver_position.uid, percents=0.3), ))
+                                    actions=(facts.MoveIn(object=hero.uid, place=receiver_position.uid, percents=0.2), ))
 
         caravan_choice = facts.Choice(uid=ns+'caravan_choice',
                                       description=u'Решение: защитить или ограбить')
@@ -42,7 +42,7 @@ class Caravan(QuestBetween2):
 
         second_moving = facts.State(uid=ns+'second_moving',
                                     description=u'двигаемся с караваном',
-                                    actions=(facts.MoveIn(object=hero.uid, place=receiver_position.uid, percents=0.6), ))
+                                    actions=(facts.MoveIn(object=hero.uid, place=receiver_position.uid, percents=0.5), ))
 
         second_defence = facts.State(uid=ns+'second_defence',
                                      description=u'вторая защита',
@@ -60,7 +60,7 @@ class Caravan(QuestBetween2):
 
         move_to_attack = facts.State(uid=ns+'move_to_attack',
                                     description=u'ведём караван в засаду',
-                                    actions=(facts.MoveIn(object=hero.uid, place=receiver_position.uid, percents=0.5), ))
+                                    actions=(facts.MoveIn(object=hero.uid, place=receiver_position.uid, percents=0.3), ))
 
         attack = facts.State(uid=ns+'attack',
                              description=u'нападение',
