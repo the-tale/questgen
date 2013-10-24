@@ -80,8 +80,9 @@ class Selector(object):
 
         return place
 
-    def new_person(self, candidates=None, professions=None):
-        locations = self._locations(restrict_places=True, restrict_objects=True)
+    def new_person(self, first_initiator, candidates=None, professions=None, places=None, restrict_places=True, restrict_persons=True):
+        locations = self._locations(places=places, restrict_places=restrict_places, restrict_objects=restrict_persons)
+
         persons = (self._kb[location.object] for location in locations if isinstance(self._kb[location.object], facts.Person))
 
         if professions is not None:
@@ -90,26 +91,16 @@ class Selector(object):
         if candidates is not None:
             persons = (person for person in persons if person.uid in candidates)
 
+        if first_initiator:
+            not_initiators = set(restriction.person for restriction in self._kb.filter(facts.NotFirstInitiator))
+            persons = (person for person in persons if person.uid not in not_initiators)
+
         persons = list(persons)
 
         if not persons:
             raise exceptions.NoFactSelectedError(method='new_person', arguments=None)
 
         person = random.choice(persons)
-        self._reserved.add(person.uid)
-
-        return person
-
-    def person_from(self, places):
-        locations = self._locations(places=places, restrict_places=False, restrict_objects=False)
-
-        persons = list(location.object for location in locations if isinstance(self._kb[location.object], facts.Person))
-
-        if not persons:
-            raise exceptions.NoFactSelectedError(method='person_from', arguments={'places': places})
-
-        person = self._kb[random.choice(persons)]
-
         self._reserved.add(person.uid)
 
         return person

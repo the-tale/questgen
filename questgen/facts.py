@@ -342,20 +342,27 @@ class MoveIn(Condition):
 
 class OnlyGoodBranches(Restriction):
     _references = ('object',)
-    _attributes = dict(object=None, **Action._attributes)
-    _required = tuple(['object'] + list(Action._required))
+    _attributes = dict(object=None, **Restriction._attributes)
+    _required = tuple(['object'] + list(Restriction._required))
 
     def update_uid(self):
         self.uid = '#only_good_branches(%s)' % self.object
 
 class OnlyBadBranches(Restriction):
     _references = ('object',)
-    _attributes = dict(object=None, **Action._attributes)
-    _required = tuple(['object'] + list(Action._required))
+    _attributes = dict(object=None, **Restriction._attributes)
+    _required = tuple(['object'] + list(Restriction._required))
 
     def update_uid(self):
         self.uid = '#only_bad_branches(%s)' % self.object
 
+class NotFirstInitiator(Restriction):
+    _references = ('person',)
+    _attributes = dict(person=None, **Restriction._attributes)
+    _required = tuple(['person'] + list(Restriction._required))
+
+    def update_uid(self):
+        self.uid = '#not_first_initiator(%s)' % self.person
 
 
 FACTS = {fact_class.fact_class(): fact_class

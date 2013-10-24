@@ -30,15 +30,15 @@ class QuestBetween2(BaseQuest):
     def construct_from_place(cls, nesting, selector, start_place):
         return cls.construct_between_2(nesting=nesting,
                                        selector=selector,
-                                       initiator=selector.person_from(places=(start_place.uid, )),
-                                       receiver=selector.new_person())
+                                       initiator=selector.new_person(first_initiator=(nesting==0), restrict_places=False, places=(start_place.uid, )),
+                                       receiver=selector.new_person(first_initiator=False))
 
     @classmethod
     def construct_from_person(cls, nesting, selector, initiator):
         return cls.construct_between_2(nesting=nesting,
                                        selector=selector,
                                        initiator=initiator,
-                                       receiver=selector.new_person())
+                                       receiver=selector.new_person(first_initiator=False))
 
     @classmethod
     def construct_between_2(cls, nesting, selector, initiator, receiver):

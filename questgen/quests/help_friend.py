@@ -23,7 +23,7 @@ class HelpFriend(QuestBetween2):
                              selector=selector,
                              initiator=None,
                              initiator_position=start_place,
-                             receiver=selector.new_person(candidates=(friend.uid, )),
+                             receiver=selector.new_person(first_initiator=False, candidates=(friend.uid, )),
                              receiver_position=selector.place_for(objects=(friend.uid,)))
 
     @classmethod

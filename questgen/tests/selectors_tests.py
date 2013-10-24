@@ -80,9 +80,9 @@ class SelectordsTests(unittest.TestCase):
 
     def test_new_person(self):
         for i in xrange(100):
-            persons = [self.selector.new_person().uid,
-                      self.selector.new_person().uid,
-                      self.selector.new_person().uid,]
+            persons = [self.selector.new_person(first_initiator=False).uid,
+                      self.selector.new_person(first_initiator=False).uid,
+                      self.selector.new_person(first_initiator=False).uid,]
 
             self.assertEqual(set(persons), set(['person_1', 'person_2', 'person_3']))
 
@@ -90,8 +90,8 @@ class SelectordsTests(unittest.TestCase):
 
     def test_new_person__profession(self):
         for i in xrange(100):
-            persons = [self.selector.new_person(professions=(0, 2)).uid,
-                      self.selector.new_person(professions=(0, 2)).uid]
+            persons = [self.selector.new_person(first_initiator=False, professions=(0, 2)).uid,
+                      self.selector.new_person(first_initiator=False, professions=(0, 2)).uid]
 
             self.assertEqual(set(persons), set(['person_1', 'person_3']))
 
@@ -99,26 +99,58 @@ class SelectordsTests(unittest.TestCase):
 
 
     def test_new_person__not_found_exception(self):
-        self.selector.new_person()
-        self.selector.new_person()
-        self.selector.new_person()
+        self.selector.new_person(first_initiator=False)
+        self.selector.new_person(first_initiator=False)
+        self.selector.new_person(first_initiator=False)
 
-        self.assertRaises(exceptions.NoFactSelectedError, self.selector.new_person)
+        self.assertRaises(exceptions.NoFactSelectedError, self.selector.new_person, first_initiator=False)
 
 
-    def test_person_from(self):
+    def test_new_person__not_first_initiator(self):
+        for_initiator = set()
+        for_continuator = set()
+
+        self.kb += facts.NotFirstInitiator(person='person_2')
+
+        for i in xrange(100):
+            for_initiator.add(self.selector.new_person(first_initiator=True).uid)
+            for_continuator.add(self.selector.new_person(first_initiator=False).uid)
+
+            self.selector.reset()
+
+        self.assertEqual(set(for_initiator), set(['person_1', 'person_3']))
+        self.assertEqual(set(for_continuator), set(['person_1', 'person_2', 'person_3']))
+
+
+    def test_new_person__from_place(self):
         self.assertEqual(self.selector._reserved, set())
 
-        self.assertEqual(self.selector.person_from(places=['place_1']).uid, 'person_1')
-        self.assertEqual(self.selector.person_from(places=['place_2']).uid, 'person_2')
-        self.assertEqual(self.selector.person_from(places=['place_2']).uid, 'person_2')
-        self.assertEqual(self.selector.person_from(places=['place_3']).uid, 'person_3')
+        self.assertEqual(self.selector.new_person(first_initiator=False, restrict_places=False, places=['place_1']).uid, 'person_1')
+        self.assertEqual(self.selector.new_person(first_initiator=False, restrict_places=False, places=['place_2']).uid, 'person_2')
+        self.assertRaises(exceptions.NoFactSelectedError, self.selector.new_person, first_initiator=False, restrict_places=False, places=['place_2'])
+        self.assertEqual(self.selector.new_person(first_initiator=False, restrict_places=False, restrict_persons=False, places=['place_2']).uid, 'person_2')
+        self.assertEqual(self.selector.new_person(first_initiator=False, restrict_places=False, places=['place_3']).uid, 'person_3')
 
         self.assertEqual(self.selector._reserved, set(['person_1', 'person_2', 'person_3']))
 
-    def test_person_from__no_person(self):
-        self.assertRaises(exceptions.NoFactSelectedError, self.selector.person_from, places=['place_666'])
+    def test_new_person__from_place__no_person(self):
+        self.assertRaises(exceptions.NoFactSelectedError, self.selector.new_person, first_initiator=False, restrict_places=False, places=['place_666'])
         self.assertEqual(self.selector._reserved, set())
+
+
+    def test_new_person__from_place__not_first_initiator(self):
+        for_initiator = set()
+        for_continuator = set()
+
+        self.kb += facts.NotFirstInitiator(person='person_2')
+
+        for i in xrange(100):
+            for_initiator.add(self.selector.new_person(first_initiator=True, restrict_places=False, places=['place_1', 'place_2', 'place_3']).uid)
+            for_continuator.add(self.selector.new_person(first_initiator=False, restrict_places=False, places=['place_1', 'place_2', 'place_3']).uid)
+            self.selector.reset()
+
+        self.assertEqual(set(for_initiator), set(['person_1', 'person_3']))
+        self.assertEqual(set(for_continuator), set(['person_1', 'person_2', 'person_3']))
 
 
     def test_preferences_mob(self):

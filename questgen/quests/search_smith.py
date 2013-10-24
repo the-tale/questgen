@@ -13,7 +13,7 @@ class SearchSmith(QuestBetween2):
     @classmethod
     def construct_from_place(cls, nesting, selector, start_place):
 
-        receiver = selector.new_person(professions=(PROFESSION.BLACKSMITH,))
+        receiver = selector.new_person(first_initiator=False, professions=(PROFESSION.BLACKSMITH,))
         receiver_position = selector.place_for(objects=(receiver.uid,))
 
         return cls.construct(nesting=nesting,

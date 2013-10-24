@@ -15,7 +15,7 @@ class Delivery(QuestBetween2):
 
         ns = selector._kb.get_next_ns()
 
-        antagonist = selector.new_person()
+        antagonist = selector.new_person(first_initiator=False)
         antagonist_position = selector.place_for(objects=(antagonist.uid,))
 
         start = facts.Start(uid=ns+'start',
