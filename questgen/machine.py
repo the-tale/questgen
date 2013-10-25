@@ -118,6 +118,10 @@ class Machine(object):
             defaults = [default for default in self.knowledge_base.filter(facts.ChoicePath) if default.choice == state.uid]
             return [self.knowledge_base[default.option] for default in defaults]
 
+        if isinstance(state, facts.Question):
+            condition = all(requirement.check(self.knowledge_base) for requirement in state.condition)
+            return [answer for answer in self.knowledge_base.filter(facts.Answer) if answer.state_from == state.uid and answer.condition == condition]
+
         return [jump
                 for jump in self.knowledge_base.filter(facts.Jump)
                 if jump.state_from == state.uid]
@@ -130,7 +134,7 @@ class Machine(object):
 
         first_step = True
 
-        while not isinstance(current_state, facts.Finish) and (first_step or not isinstance(current_state, facts.Start)):
+        while not isinstance(current_state, (facts.Finish, facts.Question)) and (first_step or not isinstance(current_state, facts.Start)):
 
             first_step = False
 

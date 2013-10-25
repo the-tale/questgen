@@ -81,9 +81,8 @@ class ReferencesIntegrity(Restriction):
 
                 uid = getattr(fact, reference)
                 if uid is not None and uid not in knowledge_base:
-                    raise self.Error(fact=fact,
-                                     attribute=reference,
-                                     uid=uid)
+                    raise self.Error(fact=fact, attribute=reference, uid=uid)
+
 
 class ConnectedStateJumpGraph(Restriction):
     class Error(exceptions.RollBackError):
@@ -152,7 +151,7 @@ class MultipleJumpsFromNormalState(Restriction):
         wrong_states = []
 
         for state in knowledge_base.filter(facts.State):
-            if isinstance(state, facts.Choice):
+            if isinstance(state, (facts.Choice, facts.Question)):
                continue
 
             jumps = list(jump for jump in knowledge_base.filter(facts.Jump) if jump.state_from == state.uid)
@@ -187,3 +186,76 @@ class ChoicesConsistency(Restriction):
                continue
 
             raise self.JumpLikeOptionError(jump=jump)
+
+
+
+class QuestionsConsistency(Restriction):
+    class AnswerLikeJumpError(exceptions.RollBackError):
+        MSG = u'Answer not connected to question state: %(answer)r'
+
+    class JumpLikeAnswerError(exceptions.RollBackError):
+        MSG = u'Jump connected to Question state: %(jump)r'
+
+    class WrongAnswersNumber(exceptions.RollBackError):
+        MSG = u'%(question)r must has 2 answers: false & true'
+
+    class WrongAnswersStructure(exceptions.RollBackError):
+        MSG = u'%(question)r must has 2 answers: false & true'
+
+    def validate(self, knowledge_base):
+
+        for answer in knowledge_base.filter(facts.Answer):
+            if isinstance(knowledge_base[answer.state_from], facts.Question):
+               continue
+
+            raise self.AnswerLikeJumpError(answer=answer)
+
+        for jump in knowledge_base.filter(facts.Jump):
+            if not isinstance(knowledge_base[jump.state_from], facts.Question):
+               continue
+
+            if isinstance(jump, facts.Answer):
+               continue
+
+            raise self.JumpLikeAnswerError(jump=jump)
+
+        for question in knowledge_base.filter(facts.Question):
+
+            answers = [answer for answer in knowledge_base.filter(facts.Answer) if answer.state_from == question.uid]
+
+            if len(answers) != 2:
+                raise self.WrongAnswersNumber(question=question)
+
+            if ( (answers[0].condition and not answers[1].condition) or
+                 (not answers[0].condition and answers[1].condition) ):
+                continue
+
+            raise self.WrongAnswersStructure(question=question)
+
+
+class FinishResultsConsistency(Restriction):
+    class ParticipantNotInResults(exceptions.RollBackError):
+        MSG = u'no result for participant "%(participant)r"'
+
+    class ParticipantNotExists(exceptions.RollBackError):
+        MSG = u'no participant for object "%(object)r"'
+
+    def validate(self, knowledge_base):
+
+        for finish in knowledge_base.filter(facts.Finish):
+            start = knowledge_base[finish.start]
+
+            participants = set()
+
+            for participant in knowledge_base.filter(facts.QuestParticipant):
+                if participant.start != start.uid:
+                    continue
+
+                if participant.participant not in finish.results:
+                    raise self.ParticipantNotInResults(participant=participant)
+
+                participants.add(participant.participant)
+
+            for object_uid in finish.results:
+                if object_uid not in participants:
+                    raise self.ParticipantNotExists(object=object_uid)

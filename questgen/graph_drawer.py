@@ -10,16 +10,19 @@ class HEAD_COLORS(object):
     STATE = '#ddffdd'
     FINISH = '#eeeeee'
     CHOICE = '#ddddff'
+    QUESTION = '#ffdddd'
 
     START_REQUIREMENTS = '#dddddd'
     STATE_REQUIREMENTS = '#cceecc'
     FINISH_REQUIREMENTS = '#dddddd'
     CHOICE_REQUIREMENTS = '#ccccee'
+    QUESTION_REQUIREMENTS = '#eecccc'
 
     START_ACTIONS = '#ffffff'
     STATE_ACTIONS = '#eeffee'
     FINISH_ACTIONS = '#ffffff'
     CHOICE_ACTIONS = '#eeeeff'
+    QUESTION_ACTIONS = '#ffeeee'
 
     EVENT_SUBGRAPH = '#ffffdd'
     EVENT = '#eeeecc'
@@ -130,6 +133,9 @@ class Drawer(object):
             gv.setv(edge_1, 'style', 'dotted')
             gv.setv(edge_2, 'style', 'dotted')
 
+        if isinstance(jump, facts.Answer):
+            pass
+
     def _add_empty_edge(self, jump):
         edge = gv.edge(self.nodes[jump.state_from], self.nodes[jump.state_to])
         gv.setv(edge, 'headport', jump.state_to)
@@ -139,7 +145,7 @@ class Drawer(object):
 
 
     def add_edge(self, jump):
-        if hasattr(jump, 'type') or jump.start_actions or jump.end_actions:
+        if hasattr(jump, 'type') or hasattr(jump, 'condition') or jump.start_actions or jump.end_actions:
             self._add_edge(jump)
         else:
             self._add_empty_edge(jump)
@@ -196,17 +202,6 @@ class Drawer(object):
 
         SubGraph.draw_hierarchy(subgraphs, self.graph, self.nodes)
 
-        # #####################
-        # # layouyt finish nodes
-        # ####################
-
-        # subgraph = gv.graph(self.graph, 'finish_nodes')
-        # gv.setv(subgraph, 'rank', 'same')
-
-        # for finish in self.kb.filter(facts.Finish):
-        #     if finish.uid.startswith('[ns-0]'):
-        #         gv.node(subgraph, finish.uid)
-
         gv.layout(self.graph, 'dot');
         # gv.render(self.graph, 'dot')
         gv.render(self.graph, path[path.rfind('.')+1:], path)
@@ -220,6 +215,8 @@ class Drawer(object):
             return self.create_label_for_finish(fact)
         if isinstance(fact, facts.Choice):
             return self.create_label_for_choice(fact)
+        if isinstance(fact, facts.Question):
+            return self.create_label_for_question(fact)
         if isinstance(fact, facts.State):
             return self.create_label_for_state(fact)
         if isinstance(fact, facts.Event):
@@ -240,11 +237,17 @@ class Drawer(object):
                                            requirements_bgcolor=HEAD_COLORS.FINISH_REQUIREMENTS,
                                            actions_bgcolor=HEAD_COLORS.FINISH_ACTIONS)
 
-    def create_label_for_choice(self, finish):
-        return self.create_label_for_state(finish,
+    def create_label_for_choice(self, choice):
+        return self.create_label_for_state(choice,
                                            bgcolor=HEAD_COLORS.CHOICE,
                                            requirements_bgcolor=HEAD_COLORS.CHOICE_REQUIREMENTS,
                                            actions_bgcolor=HEAD_COLORS.CHOICE_ACTIONS)
+
+    def create_label_for_question(self, question):
+        return self.create_label_for_state(question,
+                                           bgcolor=HEAD_COLORS.QUESTION,
+                                           requirements_bgcolor=HEAD_COLORS.QUESTION_REQUIREMENTS,
+                                           actions_bgcolor=HEAD_COLORS.QUESTION_ACTIONS)
 
     def create_label_for_state(self,
                                state,
@@ -256,12 +259,15 @@ class Drawer(object):
 
         for requirement in state.require:
             if isinstance(requirement, facts.LocatedIn):
-                trs.append(tr(td(self.create_label_for_located_in(requirement), bgcolor=requirements_bgcolor, colspan=2)))
-            elif isinstance(requirement, facts.LocatedNear):
-                trs.append(tr(td(self.create_label_for_located_near(requirement), bgcolor=requirements_bgcolor, colspan=2)))
+                trs.append(tr(td(self.create_label_for_requirement(requirement), bgcolor=requirements_bgcolor, colspan=2)))
 
         for action in state.actions:
             trs.append(tr(td(self.create_label_for_action(action), bgcolor=actions_bgcolor, colspan=2)))
+
+        if hasattr(state, 'condition'):
+            trs.append(tr(td(u'<b>условия:</b>', bgcolor=bgcolor, colspan=2)))
+            for condition in state.condition:
+                trs.append(tr(td(u'<b>если </b>'), td(self.create_label_for_requirement(condition), bgcolor=bgcolor)))
 
         colspan = 1
 
@@ -271,15 +277,27 @@ class Drawer(object):
             head.append(td(b(state.type), align='center'))
             colspan += 1
 
-        if hasattr(state, 'result'):
-            head.append(td(b(state.result), align='center'))
-            colspan += 1
+        if hasattr(state, 'results'):
+            trs.append(tr(td(u'<b>результаты:</b>', bgcolor=bgcolor, colspan=2)))
+            results_order = sorted(state.results.keys())
+            for object_uid in results_order:
+                trs.append(tr(td(u'<b>%s</b>' % object_uid), td(state.results[object_uid])))
 
         return table(tr(*head),
                      tr(td(state.description, colspan=colspan)),
                      *trs,
                      bgcolor=bgcolor,
                      port=state.uid)
+
+    def create_label_for_requirement(self, requirement):
+        if isinstance(requirement, facts.LocatedIn):
+            return self.create_label_for_located_in(requirement)
+        elif isinstance(requirement, facts.LocatedNear):
+            return self.create_label_for_located_near(requirement)
+        elif isinstance(requirement, facts.HasMoney):
+            return self.create_label_for_has_money(requirement)
+        elif isinstance(requirement, facts.IsAlive):
+            return self.create_label_for_is_alive(requirement)
 
     def create_label_for_action(self, action):
         if isinstance(action, facts.Message):
@@ -311,6 +329,9 @@ class Drawer(object):
         if hasattr(jump, 'type'):
             trs.append(tr(td(jump.type, bgcolor=HEAD_COLORS.JUMP)))
 
+        if hasattr(jump, 'condition'):
+            trs.append(tr(td(u'ИСТИНА' if jump.condition else u'ЛОЖЬ', bgcolor=HEAD_COLORS.JUMP)))
+
         for action in jump.start_actions:
             trs.append(tr(td(self.create_label_for_action(action), bgcolor=HEAD_COLORS.JUMP_ACTIONS_START)))
 
@@ -324,6 +345,12 @@ class Drawer(object):
 
     def create_label_for_located_near(self, requirement):
         return u'%s <b>находится около</b>&nbsp;%s' % (requirement.object, requirement.place)
+
+    def create_label_for_has_money(self, requirement):
+        return u'%s <b>имеет </b>&nbsp;%s <b>монет</b>' % (requirement.object, requirement.money)
+
+    def create_label_for_is_alive(self, requirement):
+        return u'%s <b>жив</b>' % (requirement.object)
 
 
     def create_action_label_for_move_near(self, requirement):
@@ -348,13 +375,25 @@ class Drawer(object):
         return u'<b>выдать награду </b>&nbsp; %s <b>типа </b> %s' % (give_reward.object, give_reward.type)
 
     def create_action_label_for_fight(self, fight):
-        return u'<b>сразиться с</b>&nbsp; %s' % fight.mob
+        if fight.mob:
+            return u'<b>сразиться с</b>&nbsp; %s' % fight.mob
+
+
+        if fight.mercenary:
+            return u'<b>сразиться с наёмником</b>'
+
+        if not fight.mercenary:
+            return u'<b>сразиться с кем-нибудь, кроме  наёмника</b>'
+
+        return u'<b>сразиться с кем-нибудь</b>'
 
     def create_action_label_for_donothing(self, donothing):
         return u'<b>заняться </b>&nbsp; %s' % donothing.type
 
-    def create_action_label_for_upgrade_equipment(self, donothing):
-        return u'<b>обновить экипировку</b>'
+    def create_action_label_for_upgrade_equipment(self, upgrade):
+        if upgrade.cost is not None:
+            return u'<b>обновить экипировку за </b>&nbsp;%d <b>монет</b>' % upgrade.cost
+        return u'<b>обновить экипировку бесплатно</b>'
 
 
 def b(data): return u'<b>%s</b>' % data

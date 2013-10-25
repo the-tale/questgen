@@ -37,7 +37,8 @@ class SimpleQuestTests(unittest.TestCase):
                            require=(LocatedIn(object='hero', place='place_thought'),)),
 
                      Finish(uid='st_finish',
-                            result=0,
+                            start='start',
+                            results={},
                             nesting=0,
                             require=(LocatedIn(object='hero', place='place_to'),)),
 

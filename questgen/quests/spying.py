@@ -49,31 +49,37 @@ class Spying(QuestBetween2):
 
 
         report_data = facts.Finish(uid=ns+'report_data',
-                             result=RESULTS.SUCCESSED,
-                             nesting=nesting,
-                             description=u'Сообщить сообранную информацию',
-                             require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
-                             actions=[facts.GiveReward(object=hero.uid, type='report_data'),
-                                      facts.GivePower(object=initiator.uid, power=1),
-                                      facts.GivePower(object=receiver.uid, power=-1)])
+                                   start=start.uid,
+                                   results={initiator.uid: RESULTS.SUCCESSED,
+                                            receiver.uid: RESULTS.FAILED},
+                                   nesting=nesting,
+                                   description=u'Сообщить сообранную информацию',
+                                   require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
+                                   actions=[facts.GiveReward(object=hero.uid, type='report_data'),
+                                            facts.GivePower(object=initiator.uid, power=1),
+                                            facts.GivePower(object=receiver.uid, power=-1)])
 
         open_up_finish = facts.Finish(uid=ns+'open_up_finish',
-                                result=RESULTS.FAILED,
-                                nesting=nesting,
-                                description=u'Завершить задание и остатсья в городе цели',
-                                require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)],
-                                actions=[facts.GiveReward(object=hero.uid, type='open_up_finish'),
-                                         facts.GivePower(object=initiator.uid, power=-1),
-                                         facts.GivePower(object=receiver.uid, power=1)])
+                                      start=start.uid,
+                                      results={initiator.uid: RESULTS.FAILED,
+                                               receiver.uid: RESULTS.SUCCESSED},
+                                      nesting=nesting,
+                                      description=u'Завершить задание и остатсья в городе цели',
+                                      require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)],
+                                      actions=[facts.GiveReward(object=hero.uid, type='open_up_finish'),
+                                               facts.GivePower(object=initiator.uid, power=-1),
+                                               facts.GivePower(object=receiver.uid, power=1)])
 
         open_up_lying = facts.Finish(uid=ns+'open_up_lying',
-                               result=RESULTS.SUCCESSED,
-                               nesting=nesting,
-                               description=u'Вернуться к заказчику и сообщить ложную информацию',
-                               require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
-                               actions=[facts.GiveReward(object=hero.uid, type='open_up_lying'),
-                                        facts.GivePower(object=initiator.uid, power=-1.5),
-                                        facts.GivePower(object=receiver.uid, power=1.5)])
+                                     start=start.uid,
+                                     results={initiator.uid: RESULTS.FAILED,
+                                              receiver.uid: RESULTS.SUCCESSED},
+                                     nesting=nesting,
+                                     description=u'Вернуться к заказчику и сообщить ложную информацию',
+                                     require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
+                                     actions=[facts.GiveReward(object=hero.uid, type='open_up_lying'),
+                                              facts.GivePower(object=initiator.uid, power=-1.5),
+                                              facts.GivePower(object=receiver.uid, power=1.5)])
 
         start_spying__spying_middle = facts.Option(state_from=start_spying.uid, state_to=spying_middle.uid, type='spy', start_actions=[facts.Message(type='start_spying'),])
         start_spying__open_up = facts.Option(state_from=start_spying.uid, state_to=open_up.uid, type='open_up', start_actions=[facts.Message(type='start_open_up'),])

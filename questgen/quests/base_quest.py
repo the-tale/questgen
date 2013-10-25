@@ -12,6 +12,7 @@ class ROLES(object):
 
 class RESULTS(object):
     SUCCESSED = 'successed'
+    NEUTRAL = 'neutral'
     FAILED = 'failed'
 
 

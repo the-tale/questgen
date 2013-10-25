@@ -4,6 +4,7 @@ import random
 
 from questgen import facts
 from questgen import exceptions
+from questgen.quests.base_quest import RESULTS
 
 
 def activate_events(knowledge_base):
@@ -151,19 +152,23 @@ def remove_restricted_states(knowledge_base):
 
     states_to_remove = set()
 
-    for restriction_fact in knowledge_base.filter(facts.OnlyGoodBranches):
-        for state in knowledge_base.filter(facts.State):
-            for action in state.actions:
-                if isinstance(action, facts.GivePower):
-                    if action.object == restriction_fact.object and action.power < 0:
-                        states_to_remove.add(state)
+    for finish in knowledge_base.filter(facts.Finish):
 
-    for restriction_fact in knowledge_base.filter(facts.OnlyBadBranches):
-        for state in knowledge_base.filter(facts.State):
-            for action in state.actions:
-                if isinstance(action, facts.GivePower):
-                    if action.object == restriction_fact.object and action.power > 0:
-                        states_to_remove.add(state)
+        for restriction_fact in knowledge_base.filter(facts.OnlyGoodBranches):
+            if finish.results.get(restriction_fact.object) != RESULTS.SUCCESSED:
+                states_to_remove.add(finish)
+
+        for restriction_fact in knowledge_base.filter(facts.OnlyBadBranches):
+            if finish.results.get(restriction_fact.object) != RESULTS.FAILED:
+                states_to_remove.add(finish)
+
+        for restriction_fact in knowledge_base.filter(facts.ExceptBadBranches):
+            if finish.results.get(restriction_fact.object) == RESULTS.FAILED:
+                states_to_remove.add(finish)
+
+        for restriction_fact in knowledge_base.filter(facts.ExceptGoodBranches):
+            if finish.results.get(restriction_fact.object) == RESULTS.SUCCESSED:
+                states_to_remove.add(finish)
 
     knowledge_base -= states_to_remove
 

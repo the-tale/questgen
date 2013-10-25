@@ -1,5 +1,4 @@
 # coding: utf-8
-import itertools
 
 from questgen.quests.base_quest import QuestBetween2, ROLES, RESULTS
 from questgen import facts
@@ -47,7 +46,8 @@ class HelpFriend(QuestBetween2):
                               require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)])
 
         finish_meeting = facts.Finish(uid=ns+'finish_meeting',
-                                      result=RESULTS.SUCCESSED,
+                                      start=start.uid,
+                                      results={receiver.uid: RESULTS.SUCCESSED},
                                       nesting=nesting,
                                       description=u'соратнику оказана помощь',
                                       require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)],
@@ -61,10 +61,10 @@ class HelpFriend(QuestBetween2):
             if isinstance(help_fact, facts.Start):
                 help_extra.append(facts.Jump(state_from=meeting.uid, state_to=help_fact.uid, start_actions=[facts.Message(type='before_help')]))
             elif isinstance(help_fact, facts.Finish):
-                if help_fact.result == RESULTS.SUCCESSED:
+                if help_fact.results[receiver.uid] == RESULTS.SUCCESSED:
                     help_extra.append(facts.Jump(state_from=help_fact.uid, state_to=finish_meeting.uid, start_actions=[facts.Message(type='after_help')]))
 
-        subquest = facts.SubQuest(uid=ns+'help_subquest', members=logic.get_subquest_members(itertools.chain(help_quest, help_extra)))
+        subquest = facts.SubQuest(uid=ns+'help_subquest', members=logic.get_subquest_members(help_quest))
 
         line = [ start,
 

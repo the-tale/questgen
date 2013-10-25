@@ -60,7 +60,8 @@ class Hometown(QuestBetween2):
         actions = random.sample(action_choices, 3)
 
         finish = facts.Finish(uid=ns+'finish',
-                              result=RESULTS.SUCCESSED,
+                              start=start.uid,
+                              results={ receiver_position.uid: RESULTS.SUCCESSED},
                               nesting=nesting,
                               description=u'завершить посещение города',
                               actions=[facts.GiveReward(object=hero.uid, type='finish'),

@@ -129,6 +129,11 @@ class Selector(object):
         except StopIteration:
             raise exceptions.NoFactSelectedError(method='preferences_friend', arguments={})
 
+    def upgrade_equipment_cost(self):
+        try:
+            return self._kb.filter(facts.UpgradeEquipmentCost).next()
+        except StopIteration:
+            raise exceptions.NoFactSelectedError(method='upgrade_equipment_cost', arguments={})
 
     def create_quest_from_place(self, nesting, initiator_position, **kwargs):
         excluded = set(kwargs.get('excluded', []))

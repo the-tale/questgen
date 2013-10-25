@@ -28,7 +28,6 @@ class QuestsBase(object):
         return self
 
     def _available_quests(self, excluded=None, allowed=None, tags=None):
-
         quests = self._quests.itervalues()
 
         if excluded is not None:
@@ -36,7 +35,6 @@ class QuestsBase(object):
 
         if allowed is not None:
             quests = (quest for quest in quests if quest.TYPE in allowed)
-
 
         if tags is not None:
             for tag in tags:

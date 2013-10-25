@@ -158,11 +158,16 @@ class Start(State):
     def is_external(self): return self.nesting == 0
 
 class Finish(State):
-    _attributes = dict(result=None, nesting=False, **State._attributes)
-    _required = tuple(['result', 'nesting'] + list(State._required))
+    _attributes = dict(nesting=False, results=None, start=None, **State._attributes)
+    _required = tuple(['nesting', 'results', 'start'] + list(State._required))
 
     @property
     def is_external(self): return self.nesting == 0
+
+
+#############
+# Choice
+#############
 
 class Choice(State): pass
 
@@ -173,8 +178,8 @@ class Option(Jump):
         self.uid='#option(%s, %s)' % (self.state_from, self.state_to)
 
 class OptionsLink(Fact):
-    _attributes = dict(options=(), **Condition._attributes)
-    _required = tuple(['options'] + list(Condition._required))
+    _attributes = dict(options=(), **Fact._attributes)
+    _required = tuple(['options'] + list(Fact._required))
 
     def update_uid(self):
         self.uid='#options_link(%s)' % ','.join(self.options)
@@ -182,12 +187,32 @@ class OptionsLink(Fact):
 
 class ChoicePath(Fact):
     _references = ('choice', 'option')
-    _attributes = dict(choice=None, option=None, default=None, **Condition._attributes)
-    _required = tuple(['choice', 'option', 'default'] + list(Condition._required))
+    _attributes = dict(choice=None, option=None, default=None, **Fact._attributes)
+    _required = tuple(['choice', 'option', 'default'] + list(Fact._required))
 
     def update_uid(self):
         self.uid = '#choice_path(%s, %s, %s)' % (self.choice, self.option, self.default)
 
+#############
+# Question
+#############
+
+class Question(State):
+    _attributes = dict(condition=None, **State._attributes)
+    _required = tuple(['condition'] + list(State._required))
+
+
+class Answer(Jump):
+    _attributes = dict(condition=None, **Jump._attributes)
+    _required = tuple(['condition'] + list(Jump._required))
+
+    def update_uid(self):
+        self.uid='#answer_%s(%s, %s)' % (self.condition, self.state_from, self.state_to)
+
+
+#############
+# Conditions
+#############
 
 class LocatedIn(Condition):
     _references = ('object', 'place')
@@ -211,6 +236,30 @@ class LocatedNear(Condition):
 
     def update_uid(self):
         self.uid = '#located_near(%s, %s)' % (self.object, self.place)
+
+
+class HasMoney(Condition):
+    _references = ('object',)
+    _attributes = dict(object=None, money=None, **Condition._attributes)
+    _required = tuple(['object', 'money'] + list(Condition._required))
+
+    def update_uid(self):
+        self.uid = '#has_money(%s)' % self.object
+
+    def check(self, knowledge_base):
+        if self.uid not in knowledge_base:
+            return False
+
+        return self.money >= knowledge_base[self.uid].money
+
+
+class IsAlive(Condition):
+    _references = ('object',)
+    _attributes = dict(object=None, **Condition._attributes)
+    _required = tuple(['object'] + list(Condition._required))
+
+    def update_uid(self):
+        self.uid = '#is_alive(%s)' % self.object
 
 
 class Preference(Condition):
@@ -305,7 +354,7 @@ class GiveReward(Action):
         self.uid = '#give_reward(%s, %s)' % (self.object, self.type)
 
 class Fight(Action):
-    _attributes = dict(mob=None, **Action._attributes)
+    _attributes = dict(mercenary=None, mob=None, **Action._attributes)
 
 
 class DoNothing(Action):
@@ -316,8 +365,18 @@ class DoNothing(Action):
         self.uid = '#donothing(%s)' % (self.type,)
 
 class UpgradeEquipment(Action):
+    _attributes = dict(cost=None, **Action._attributes)
+    _required = ['cost'] + list(Action._required)
     def update_uid(self):
-        self.uid = '#upgrade_equipment()'
+        self.uid = '#upgrade_equipment(cost=%s)' % self.cost
+
+class UpgradeEquipmentCost(Fact):
+    _attributes = dict(money=None, **Fact._attributes)
+    _required = ['money'] + list(Fact._required)
+
+    def update_uid(self):
+        self.uid = '#upgrade_equipment_cost(%s)' % self.money
+
 
 class MoveNear(Condition):
     _references = ('object', 'place')
@@ -349,6 +408,22 @@ class OnlyGoodBranches(Restriction):
         self.uid = '#only_good_branches(%s)' % self.object
 
 class OnlyBadBranches(Restriction):
+    _references = ('object',)
+    _attributes = dict(object=None, **Restriction._attributes)
+    _required = tuple(['object'] + list(Restriction._required))
+
+    def update_uid(self):
+        self.uid = '#only_bad_branches(%s)' % self.object
+
+class ExceptGoodBranches(Restriction):
+    _references = ('object',)
+    _attributes = dict(object=None, **Restriction._attributes)
+    _required = tuple(['object'] + list(Restriction._required))
+
+    def update_uid(self):
+        self.uid = '#only_good_branches(%s)' % self.object
+
+class ExceptBadBranches(Restriction):
     _references = ('object',)
     _attributes = dict(object=None, **Restriction._attributes)
     _required = tuple(['object'] + list(Restriction._required))

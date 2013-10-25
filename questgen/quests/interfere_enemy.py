@@ -1,6 +1,4 @@
 # coding: utf-8
-import itertools
-
 from questgen.quests.base_quest import QuestBetween2, ROLES, RESULTS
 from questgen import facts
 from questgen import logic
@@ -48,7 +46,9 @@ class InterfereEnemy(QuestBetween2):
                         facts.QuestParticipant(start=start.uid, participant=antagonist_position.uid, role=ROLES.ANTAGONIST_POSITION) ]
 
         finish = facts.Finish(uid=ns+'finish',
-                              result=RESULTS.SUCCESSED,
+                              start=start.uid,
+                              results={ receiver.uid: RESULTS.FAILED,
+                                        antagonist_position.uid: RESULTS.NEUTRAL},
                               nesting=nesting,
                               description=u'навредили противнику',
                               actions=[facts.GiveReward(object=hero.uid, type='finish'),
@@ -62,10 +62,10 @@ class InterfereEnemy(QuestBetween2):
             if isinstance(help_fact, facts.Start):
                 help_extra.append(facts.Jump(state_from=start.uid, state_to=help_fact.uid))
             elif isinstance(help_fact, facts.Finish):
-                if help_fact.result == RESULTS.FAILED:
+                if help_fact.results[receiver.uid] == RESULTS.FAILED:
                     help_extra.append(facts.Jump(state_from=help_fact.uid, state_to=finish.uid, start_actions=[facts.Message(type='after_interfere')]))
 
-        subquest = facts.SubQuest(uid=ns+'interfere_subquest', members=logic.get_subquest_members(itertools.chain(help_quest, help_extra)))
+        subquest = facts.SubQuest(uid=ns+'interfere_subquest', members=logic.get_subquest_members(help_quest))
 
         line = [ start,
                  finish,

@@ -2,23 +2,7 @@
 import random
 
 from questgen.quests.base_quest import QuestBetween2, ROLES, RESULTS
-from questgen.facts import ( Start,
-                             State,
-                             Jump,
-                             Finish,
-                             Event,
-                             Place,
-                             Person,
-                             LocatedIn,
-                             MoveNear,
-                             Choice,
-                             Option,
-                             Message,
-                             GivePower,
-                             GiveReward,
-                             Fight,
-                             OptionsLink,
-                             QuestParticipant)
+from questgen import facts
 
 
 class Hunt(QuestBetween2):
@@ -52,57 +36,58 @@ class Hunt(QuestBetween2):
 
         ns = selector._kb.get_next_ns()
 
-        start = Start(uid=ns+'start',
+        start = facts.Start(uid=ns+'start',
                       type=cls.TYPE,
                       nesting=nesting,
                       description=u'Начало: задание на охоту',
-                      require=[LocatedIn(object=hero.uid, place=initiator_position.uid)],
-                      actions=[Message(type='intro')])
+                      require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
+                      actions=[facts.Message(type='intro')])
 
-        participants = [QuestParticipant(start=start.uid, participant=receiver_position.uid, role=ROLES.RECEIVER_POSITION) ]
+        participants = [facts.QuestParticipant(start=start.uid, participant=receiver_position.uid, role=ROLES.RECEIVER_POSITION) ]
 
-        start_hunting = State(uid=ns+'start_hunting',
+        start_hunting = facts.State(uid=ns+'start_hunting',
                               description=u'Прибытие в город охоты',
-                              require=[LocatedIn(object=hero.uid, place=receiver_position.uid)])
+                              require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)])
 
         hunt_loop = []
 
         for i in xrange(random.randint(*cls.HUNT_LOOPS)):
 
-            hunt = State(uid=ns+'hunt_%d' % i,
+            hunt = facts.State(uid=ns+'hunt_%d' % i,
                          description=u'Охота',
-                         actions=[MoveNear(object=hero.uid, place=receiver_position.uid, terrains=mob.terrains)])
+                         actions=[facts.MoveNear(object=hero.uid, place=receiver_position.uid, terrains=mob.terrains)])
 
-            fight = State(uid=ns+'fight_%d' % i,
+            fight = facts.State(uid=ns+'fight_%d' % i,
                           description=u'Сражение с жертвой',
-                          actions=[Message(type='fight'),
-                                   Fight(uid='fight_%d' % i, mob=mob.uid)])
+                          actions=[facts.Message(type='fight'),
+                                   facts.Fight(uid='fight_%d' % i, mob=mob.uid)])
 
             if hunt_loop:
-                hunt_loop.append(Jump(state_from=hunt_loop[-1].uid, state_to=hunt.uid, start_actions=[Message(type='start_track'),]))
+                hunt_loop.append(facts.Jump(state_from=hunt_loop[-1].uid, state_to=hunt.uid, start_actions=[facts.Message(type='start_track'),]))
 
             hunt_loop.extend([hunt,
-                              Jump(state_from=hunt.uid, state_to=fight.uid),
+                              facts.Jump(state_from=hunt.uid, state_to=fight.uid),
                               fight])
 
-        sell_prey = Finish(uid=ns+'sell_prey',
-                           result=RESULTS.SUCCESSED,
+        sell_prey = facts.Finish(uid=ns+'sell_prey',
+                           start=start.uid,
+                           results={receiver_position.uid: RESULTS.SUCCESSED},
                            nesting=nesting,
                            description=u'Продать добычу',
-                           require=[LocatedIn(object=hero.uid, place=receiver_position.uid)],
-                           actions=[GiveReward(object=hero.uid, type='sell_prey'),
-                                    GivePower(object=receiver_position.uid, power=1)])
+                           require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)],
+                           actions=[facts.GiveReward(object=hero.uid, type='sell_prey'),
+                                    facts.GivePower(object=receiver_position.uid, power=1)])
 
-        facts = [ start,
+        line = [ start,
                   start_hunting,
                   sell_prey,
 
-                  Jump(state_from=start.uid, state_to=start_hunting.uid, start_actions=[Message(type='move_to_hunt'),]),
-                  Jump(state_from=start_hunting.uid, state_to=hunt_loop[0].uid, start_actions=[Message(type='start_track'),]),
-                  Jump(state_from=hunt_loop[-1].uid, state_to=sell_prey.uid, start_actions=[Message(type='return_with_prey'),]),
+                  facts.Jump(state_from=start.uid, state_to=start_hunting.uid, start_actions=[facts.Message(type='move_to_hunt'),]),
+                  facts.Jump(state_from=start_hunting.uid, state_to=hunt_loop[0].uid, start_actions=[facts.Message(type='start_track'),]),
+                  facts.Jump(state_from=hunt_loop[-1].uid, state_to=sell_prey.uid, start_actions=[facts.Message(type='return_with_prey'),]),
                 ]
 
-        facts.extend(hunt_loop)
-        facts.extend(participants)
+        line.extend(hunt_loop)
+        line.extend(participants)
 
-        return facts
+        return line

@@ -33,7 +33,10 @@ QUEST_RESTRICTIONS =  [restrictions.SingleStartStateWithNoEnters(), # тольк
                        restrictions.ConnectedStateJumpGraph(), # граф связаный
                        restrictions.NoCirclesInStateJumpGraph(), # граф без циклов
                        restrictions.MultipleJumpsFromNormalState(), # каждая обычная вершина имеет только одну исходящую дугу
-                       restrictions.ChoicesConsistency()] # проверяем целостность развилок
+                       restrictions.ChoicesConsistency(), # проверяем целостность развилок
+                       restrictions.QuestionsConsistency(), # проверяем целостность условных узлов
+                       restrictions.FinishResultsConsistency() # проверяем, что для каждого окончания квеста указаны результаты для каждого его участника
+                       ]
 
 
 # создаём задание
@@ -90,6 +93,10 @@ def create_quest():
             facts.PreferenceHometown(object='hero', place='place_2'), # герой считате родным место place_2
             facts.PreferenceFriend(object='hero', person='person_4'), # герой дружит с person_4
             facts.PreferenceEnemy(object='hero', person='person_5'), # герой враждует с person_5
+
+            # указываем, что обновление экипировки стоит 777 монет (для задания SearchSmith)
+            # facts.HasMoney(object='hero', money=888), # если этот факт раскоментировать то в этом задании герой купит экипировку, а не пойдёт делать задание кузнеца
+            facts.UpgradeEquipmentCost(money=777),
 
             facts.OnlyGoodBranches(object='place_2'), # не вредить месту place_2
             facts.OnlyGoodBranches(object='person_4'), # не вредить персонажу person_4

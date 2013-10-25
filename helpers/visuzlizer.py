@@ -73,7 +73,9 @@ for Quest in QUESTS:
             facts.PreferenceMob(object='hero', mob='mob_1'),
             facts.PreferenceHometown(object='hero', place='place_2'),
             facts.PreferenceFriend(object='hero', person='person_4'),
-            facts.PreferenceEnemy(object='hero', person='person_5')]
+            facts.PreferenceEnemy(object='hero', person='person_5'),
+            facts.UpgradeEquipmentCost(money=777)
+            ]
 
     selector = Selector(kb, qb)
     kb += Quest.construct_from_place(nesting=0, selector=selector, start_place=selector.new_place(candidates=('place_1',)))
@@ -86,10 +88,14 @@ for Quest in QUESTS:
                                  restrictions.ReferencesIntegrity(),
                                  restrictions.ConnectedStateJumpGraph(),
                                  restrictions.NoCirclesInStateJumpGraph(),
-                             # restrictions.MultipleJumpsFromNormalState(),
-            restrictions.ChoicesConsistency()])
+                                 # restrictions.MultipleJumpsFromNormalState(),
+                                 restrictions.ChoicesConsistency(),
+                                 restrictions.QuestionsConsistency(),
+                                 restrictions.FinishResultsConsistency()])
+        pass
     except Exception:
-        print '!'
+        print 'quesr %s is invalid' % Quest.TYPE
+        raise
 
     drawer = Drawer(knowledge_base=kb)
     drawer.draw('./svgs/%s.svg' % Quest.TYPE)

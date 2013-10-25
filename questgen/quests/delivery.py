@@ -34,23 +34,29 @@ class Delivery(QuestBetween2):
 
 
         finish_delivery = facts.Finish(uid=ns+'finish_delivery',
-                                 result=RESULTS.SUCCESSED,
-                                 nesting=nesting,
-                                 description=u'Доставить посылку получателю',
-                                 require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)],
-                                 actions=[facts.GiveReward(object=hero.uid, type='finish_delivery'),
-                                          facts.GivePower(object=initiator.uid, power=1),
-                                          facts.GivePower(object=receiver.uid, power=1)])
+                                       start=start.uid,
+                                       results={ initiator.uid: RESULTS.SUCCESSED,
+                                                 receiver.uid: RESULTS.SUCCESSED,
+                                                 antagonist.uid: RESULTS.NEUTRAL},
+                                       nesting=nesting,
+                                       description=u'Доставить посылку получателю',
+                                       require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)],
+                                       actions=[facts.GiveReward(object=hero.uid, type='finish_delivery'),
+                                                facts.GivePower(object=initiator.uid, power=1),
+                                                facts.GivePower(object=receiver.uid, power=1)])
 
         finish_steal = facts.Finish(uid=ns+'finish_steal',
-                              result=RESULTS.FAILED,
-                              nesting=nesting,
-                              description=u'Доставить посылку скупщику',
-                              require=[facts.LocatedIn(object=hero.uid, place=antagonist_position.uid)],
-                              actions=[facts.GiveReward(object=hero.uid, type='finish_steal'),
-                                       facts.GivePower(object=initiator.uid, power=-1),
-                                       facts.GivePower(object=receiver.uid, power=-1),
-                                       facts.GivePower(object=antagonist.uid, power=1)])
+                                    start=start.uid,
+                                    results={ initiator.uid: RESULTS.FAILED,
+                                              receiver.uid: RESULTS.FAILED,
+                                              antagonist.uid: RESULTS.SUCCESSED},
+                                    nesting=nesting,
+                                    description=u'Доставить посылку скупщику',
+                                    require=[facts.LocatedIn(object=hero.uid, place=antagonist_position.uid)],
+                                    actions=[facts.GiveReward(object=hero.uid, type='finish_steal'),
+                                             facts.GivePower(object=initiator.uid, power=-1),
+                                             facts.GivePower(object=receiver.uid, power=-1),
+                                             facts.GivePower(object=antagonist.uid, power=1)])
 
         line = [ start,
                   delivery_choice,
