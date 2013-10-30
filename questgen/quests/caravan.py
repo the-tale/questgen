@@ -99,7 +99,7 @@ class Caravan(QuestBetween2):
                                      nesting=nesting,
                                      description=u'Продать товар на чёрном рынке',
                                      require=[facts.LocatedIn(object=hero.uid, place=black_market.uid)],
-                                     actions=[facts.GiveReward(object=hero.uid, type='finish_attack'),
+                                     actions=[facts.GiveReward(object=hero.uid, type='finish_attack', scale=1.5),
                                               facts.GivePower(object=initiator.uid, power=-1),
                                               facts.GivePower(object=receiver.uid, power=-1),
                                               facts.GivePower(object=black_market.uid, power=1)])
@@ -111,7 +111,6 @@ class Caravan(QuestBetween2):
                                                        black_market.uid: RESULTS.NEUTRAL },
                                              nesting=nesting,
                                              description=u'Герой не смог защитить караван',
-                                             require=[facts.LocatedIn(object=hero.uid, place=black_market.uid)],
                                              actions=[facts.Message(type='finish_defence_failed'),
                                                       facts.GivePower(object=initiator.uid, power=-1),
                                                       facts.GivePower(object=receiver.uid, power=-1)])
@@ -123,7 +122,6 @@ class Caravan(QuestBetween2):
                                                       black_market.uid: RESULTS.NEUTRAL },
                                             nesting=nesting,
                                             description=u'Герой не смог ограбить караван',
-                                            require=[facts.LocatedIn(object=hero.uid, place=black_market.uid)],
                                             actions=[facts.Message(type='finish_attack_failed'),
                                                      facts.GivePower(object=initiator.uid, power=1),
                                                      facts.GivePower(object=receiver.uid, power=1)])

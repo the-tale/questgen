@@ -53,7 +53,7 @@ class Delivery(QuestBetween2):
                                     nesting=nesting,
                                     description=u'Доставить посылку скупщику',
                                     require=[facts.LocatedIn(object=hero.uid, place=antagonist_position.uid)],
-                                    actions=[facts.GiveReward(object=hero.uid, type='finish_steal'),
+                                    actions=[facts.GiveReward(object=hero.uid, type='finish_steal', scale=1.5),
                                              facts.GivePower(object=initiator.uid, power=-1),
                                              facts.GivePower(object=receiver.uid, power=-1),
                                              facts.GivePower(object=antagonist.uid, power=1)])

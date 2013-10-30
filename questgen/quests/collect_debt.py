@@ -57,7 +57,6 @@ class CollectDebt(QuestBetween2):
                                                       receiver.uid: RESULTS.SUCCESSED},
                                             nesting=nesting,
                                             description=u'не удалось выбить долг',
-                                            require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
                                             actions=[facts.Message(type='finish_attack_failed'),
                                                      facts.GivePower(object=initiator.uid, power=-1),
                                                      facts.GivePower(object=receiver.uid, power=1)])

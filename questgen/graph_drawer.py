@@ -372,7 +372,7 @@ class Drawer(object):
         return u'<b>увеличить влияние </b>&nbsp; %s <b>на </b> %.2f' % (give_power.object, give_power.power)
 
     def create_action_label_for_give_reward(self, give_reward):
-        return u'<b>выдать награду </b>&nbsp; %s <b>типа </b> %s' % (give_reward.object, give_reward.type)
+        return u'<b>выдать награду </b>&nbsp; %s <b>типа </b> %s <b>в размере</b> %.2f' % (give_reward.object, give_reward.type, give_reward.scale)
 
     def create_action_label_for_fight(self, fight):
         if fight.mob:

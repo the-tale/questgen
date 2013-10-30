@@ -77,7 +77,7 @@ class Spying(QuestBetween2):
                                      nesting=nesting,
                                      description=u'Вернуться к заказчику и сообщить ложную информацию',
                                      require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
-                                     actions=[facts.GiveReward(object=hero.uid, type='open_up_lying'),
+                                     actions=[facts.GiveReward(object=hero.uid, type='open_up_lying', scale=1.5),
                                               facts.GivePower(object=initiator.uid, power=-1.5),
                                               facts.GivePower(object=receiver.uid, power=1.5)])
 

@@ -26,7 +26,7 @@
 <polygon fill="none" stroke="black" points="246.5,-442.5 246.5,-471.5 379.5,-471.5 379.5,-442.5 246.5,-442.5"/>
 </g>
 <!-- [ns&#45;1]finish_successed -->
-<g id="node5" class="node"><title>[ns&#45;1]finish_successed</title>
+<g id="node4" class="node"><title>[ns&#45;1]finish_successed</title>
 <polygon fill="#eeeeee" stroke="none" points="43.5,-288 43.5,-382 202.5,-382 202.5,-288 43.5,-288"/>
 <text text-anchor="start" x="46" y="-372.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;1]finish_successed</text>
 <text text-anchor="start" x="46" y="-358" font-family="Times,serif" font-size="10.00">завершить задание удачно</text>
@@ -34,11 +34,11 @@
 <text text-anchor="start" x="46" y="-346" font-family="Times,serif" font-weight="bold" font-size="10.00">результаты:</text>
 <text text-anchor="start" x="46" y="-333" font-family="Times,serif" font-weight="bold" font-size="10.00">person_2</text>
 <text text-anchor="start" x="161" y="-332" font-family="Times,serif" font-size="10.00">successed</text>
-<text text-anchor="start" x="46" y="-320" font-family="Times,serif" font-weight="bold" font-size="10.00">person_3</text>
+<text text-anchor="start" x="46" y="-320" font-family="Times,serif" font-weight="bold" font-size="10.00">person_9</text>
 <text text-anchor="start" x="161" y="-319" font-family="Times,serif" font-size="10.00">successed</text>
 <text text-anchor="start" x="46" y="-307" font-family="Times,serif" font-weight="bold" font-size="10.00">place_2</text>
 <text text-anchor="start" x="161" y="-306" font-family="Times,serif" font-size="10.00">successed</text>
-<text text-anchor="start" x="46" y="-294" font-family="Times,serif" font-weight="bold" font-size="10.00">place_3</text>
+<text text-anchor="start" x="46" y="-294" font-family="Times,serif" font-weight="bold" font-size="10.00">place_9</text>
 <text text-anchor="start" x="161" y="-293" font-family="Times,serif" font-size="10.00">successed</text>
 <polygon fill="none" stroke="black" points="43.5,-288 43.5,-382 202.5,-382 202.5,-288 43.5,-288"/>
 </g>
@@ -56,11 +56,11 @@
 <text text-anchor="start" x="239" y="-346" font-family="Times,serif" font-weight="bold" font-size="10.00">результаты:</text>
 <text text-anchor="start" x="239" y="-333" font-family="Times,serif" font-weight="bold" font-size="10.00">person_2</text>
 <text text-anchor="start" x="350" y="-332" font-family="Times,serif" font-size="10.00">failed</text>
-<text text-anchor="start" x="239" y="-320" font-family="Times,serif" font-weight="bold" font-size="10.00">person_3</text>
+<text text-anchor="start" x="239" y="-320" font-family="Times,serif" font-weight="bold" font-size="10.00">person_9</text>
 <text text-anchor="start" x="350" y="-319" font-family="Times,serif" font-size="10.00">failed</text>
 <text text-anchor="start" x="239" y="-307" font-family="Times,serif" font-weight="bold" font-size="10.00">place_2</text>
 <text text-anchor="start" x="350" y="-306" font-family="Times,serif" font-size="10.00">failed</text>
-<text text-anchor="start" x="239" y="-294" font-family="Times,serif" font-weight="bold" font-size="10.00">place_3</text>
+<text text-anchor="start" x="239" y="-294" font-family="Times,serif" font-weight="bold" font-size="10.00">place_9</text>
 <text text-anchor="start" x="350" y="-293" font-family="Times,serif" font-size="10.00">failed</text>
 <polygon fill="none" stroke="black" points="237,-288 237,-382 379,-382 379,-288 237,-288"/>
 </g>
@@ -119,8 +119,18 @@
 <text text-anchor="start" x="383" y="-121" font-family="Times,serif" font-size="10.00">neutral</text>
 <polygon fill="none" stroke="black" points="272.5,-116.5 272.5,-171.5 413.5,-171.5 413.5,-116.5 272.5,-116.5"/>
 </g>
+<!-- #jump([ns&#45;1]finish_successed, [ns&#45;0]upgrade_for_quest) -->
+<g id="node13" class="node"><title>#jump([ns&#45;1]finish_successed, [ns&#45;0]upgrade_for_quest)</title>
+<polygon fill="#eeeeee" stroke="none" points="61,-223 61,-237 186,-237 186,-223 61,-223"/>
+<text text-anchor="start" x="62" y="-228.5" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
+<text text-anchor="start" x="114" y="-228.5" font-family="Times,serif" font-size="10.00"> quest_successed</text>
+</g>
+<!-- [ns&#45;1]finish_successed&#45;&gt;#jump([ns&#45;1]finish_successed, [ns&#45;0]upgrade_for_quest) -->
+<g id="edge12" class="edge"><title>[ns&#45;1]finish_successed:[ns&#45;1]finish_successed&#45;&gt;#jump([ns&#45;1]finish_successed, [ns&#45;0]upgrade_for_quest):#jump([ns&#45;1]finish_successed, [ns&#45;0]upgrade_for_quest)</title>
+<path fill="none" stroke="black" d="M123,-287.923C123,-268.211 123,-247.429 123,-237.298"/>
+</g>
 <!-- [ns&#45;0]upgrade_for_money -->
-<g id="node4" class="node"><title>[ns&#45;0]upgrade_for_money</title>
+<g id="node5" class="node"><title>[ns&#45;0]upgrade_for_money</title>
 <polygon fill="#ddffdd" stroke="none" points="419,-429.5 419,-484.5 653,-484.5 653,-429.5 419,-429.5"/>
 <text text-anchor="start" x="421" y="-474.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]upgrade_for_money</text>
 <text text-anchor="start" x="421" y="-460" font-family="Times,serif" font-size="10.00">Обновление экипировки за деньги</text>
@@ -154,16 +164,6 @@
 <g id="edge8" class="edge"><title>[ns&#45;0]upgrade_for_money:[ns&#45;0]upgrade_for_money&#45;&gt;[ns&#45;0]finish_successed:[ns&#45;0]finish_successed</title>
 <path fill="none" stroke="black" d="M534.201,-429.336C528.766,-367.305 507.727,-211.073 430,-112 419.493,-98.6074 405.793,-87.1327 391.383,-77.5145"/>
 <polygon fill="black" stroke="black" points="393.149,-74.4898 382.835,-72.0656 389.386,-80.3924 393.149,-74.4898"/>
-</g>
-<!-- #jump([ns&#45;1]finish_successed, [ns&#45;0]upgrade_for_quest) -->
-<g id="node13" class="node"><title>#jump([ns&#45;1]finish_successed, [ns&#45;0]upgrade_for_quest)</title>
-<polygon fill="#eeeeee" stroke="none" points="61,-223 61,-237 186,-237 186,-223 61,-223"/>
-<text text-anchor="start" x="62" y="-228.5" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
-<text text-anchor="start" x="114" y="-228.5" font-family="Times,serif" font-size="10.00"> quest_successed</text>
-</g>
-<!-- [ns&#45;1]finish_successed&#45;&gt;#jump([ns&#45;1]finish_successed, [ns&#45;0]upgrade_for_quest) -->
-<g id="edge12" class="edge"><title>[ns&#45;1]finish_successed:[ns&#45;1]finish_successed&#45;&gt;#jump([ns&#45;1]finish_successed, [ns&#45;0]upgrade_for_quest):#jump([ns&#45;1]finish_successed, [ns&#45;0]upgrade_for_quest)</title>
-<path fill="none" stroke="black" d="M123,-287.923C123,-268.211 123,-247.429 123,-237.298"/>
 </g>
 <!-- #jump([ns&#45;1]finish_failed, [ns&#45;0]finish_quest_failed) -->
 <g id="node10" class="node"><title>#jump([ns&#45;1]finish_failed, [ns&#45;0]finish_quest_failed)</title>

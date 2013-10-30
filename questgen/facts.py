@@ -200,6 +200,7 @@ class ChoicePath(Fact):
 class Question(State):
     _attributes = dict(condition=None, **State._attributes)
     _required = tuple(['condition'] + list(State._required))
+    _serializable = ['condition'] + list(State._serializable)
 
 
 class Answer(Jump):
@@ -250,7 +251,7 @@ class HasMoney(Condition):
         if self.uid not in knowledge_base:
             return False
 
-        return self.money >= knowledge_base[self.uid].money
+        return self.money <= knowledge_base[self.uid].money
 
 
 class IsAlive(Condition):
@@ -346,8 +347,8 @@ class GivePower(Action):
         self.uid = '#give_power(%s, %f)' % (self.object, self.power)
 
 class GiveReward(Action):
-    _references = ('object',)
-    _attributes = dict(object=None, type=None, **Action._attributes)
+    _references = ('object', 'scale')
+    _attributes = dict(object=None, type=None, scale=1.0, **Action._attributes)
     _required = tuple(['object', 'type'] + list(Action._required))
 
     def update_uid(self):
