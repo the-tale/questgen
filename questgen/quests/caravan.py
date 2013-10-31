@@ -117,8 +117,8 @@ class Caravan(QuestBetween2):
 
         finish_attack_failed = facts.Finish(uid=ns+'finish_attack_failed',
                                             start=start.uid,
-                                            results={ initiator.uid: RESULTS.SUCCESSED,
-                                                      receiver.uid: RESULTS.SUCCESSED,
+                                            results={ initiator.uid: RESULTS.NEUTRAL,
+                                                      receiver.uid: RESULTS.NEUTRAL,
                                                       black_market.uid: RESULTS.NEUTRAL },
                                             nesting=nesting,
                                             description=u'Герой не смог ограбить караван',

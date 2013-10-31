@@ -32,13 +32,13 @@
 <text text-anchor="start" x="228" y="-298" font-family="Times,serif" font-size="10.00">завершить задание плохо</text>
 <polygon fill="#eeeeee" stroke="none" points="227,-281 227,-294 367,-294 367,-281 227,-281"/>
 <text text-anchor="start" x="228" y="-286" font-family="Times,serif" font-weight="bold" font-size="10.00">результаты:</text>
-<text text-anchor="start" x="228" y="-273" font-family="Times,serif" font-weight="bold" font-size="10.00">person_5</text>
+<text text-anchor="start" x="228" y="-273" font-family="Times,serif" font-weight="bold" font-size="10.00">person_3</text>
 <text text-anchor="start" x="339" y="-272" font-family="Times,serif" font-size="10.00">failed</text>
-<text text-anchor="start" x="228" y="-260" font-family="Times,serif" font-weight="bold" font-size="10.00">person_6</text>
+<text text-anchor="start" x="228" y="-260" font-family="Times,serif" font-weight="bold" font-size="10.00">person_5</text>
 <text text-anchor="start" x="339" y="-259" font-family="Times,serif" font-size="10.00">failed</text>
-<text text-anchor="start" x="228" y="-247" font-family="Times,serif" font-weight="bold" font-size="10.00">place_5</text>
+<text text-anchor="start" x="228" y="-247" font-family="Times,serif" font-weight="bold" font-size="10.00">place_3</text>
 <text text-anchor="start" x="339" y="-246" font-family="Times,serif" font-size="10.00">failed</text>
-<text text-anchor="start" x="228" y="-234" font-family="Times,serif" font-weight="bold" font-size="10.00">place_6</text>
+<text text-anchor="start" x="228" y="-234" font-family="Times,serif" font-weight="bold" font-size="10.00">place_5</text>
 <text text-anchor="start" x="339" y="-233" font-family="Times,serif" font-size="10.00">failed</text>
 <polygon fill="none" stroke="black" points="226,-228 226,-322 368,-322 368,-228 226,-228"/>
 </g>
@@ -54,13 +54,13 @@
 <text text-anchor="start" x="35" y="-298" font-family="Times,serif" font-size="10.00">завершить задание удачно</text>
 <polygon fill="#eeeeee" stroke="none" points="34,-281 34,-294 191,-294 191,-281 34,-281"/>
 <text text-anchor="start" x="35" y="-286" font-family="Times,serif" font-weight="bold" font-size="10.00">результаты:</text>
-<text text-anchor="start" x="35" y="-273" font-family="Times,serif" font-weight="bold" font-size="10.00">person_5</text>
+<text text-anchor="start" x="35" y="-273" font-family="Times,serif" font-weight="bold" font-size="10.00">person_3</text>
 <text text-anchor="start" x="150" y="-272" font-family="Times,serif" font-size="10.00">successed</text>
-<text text-anchor="start" x="35" y="-260" font-family="Times,serif" font-weight="bold" font-size="10.00">person_6</text>
+<text text-anchor="start" x="35" y="-260" font-family="Times,serif" font-weight="bold" font-size="10.00">person_5</text>
 <text text-anchor="start" x="150" y="-259" font-family="Times,serif" font-size="10.00">successed</text>
-<text text-anchor="start" x="35" y="-247" font-family="Times,serif" font-weight="bold" font-size="10.00">place_5</text>
+<text text-anchor="start" x="35" y="-247" font-family="Times,serif" font-weight="bold" font-size="10.00">place_3</text>
 <text text-anchor="start" x="150" y="-246" font-family="Times,serif" font-size="10.00">successed</text>
-<text text-anchor="start" x="35" y="-234" font-family="Times,serif" font-weight="bold" font-size="10.00">place_6</text>
+<text text-anchor="start" x="35" y="-234" font-family="Times,serif" font-weight="bold" font-size="10.00">place_5</text>
 <text text-anchor="start" x="150" y="-233" font-family="Times,serif" font-size="10.00">successed</text>
 <polygon fill="none" stroke="black" points="32.5,-228 32.5,-322 191.5,-322 191.5,-228 32.5,-228"/>
 </g>
@@ -108,14 +108,14 @@
 <text text-anchor="start" x="335" y="-62" font-family="Times,serif" font-size="10.00"> &#45;1.00</text>
 <polygon fill="#ffffff" stroke="none" points="188,-44 188,-57 407,-57 407,-44 188,-44"/>
 <text text-anchor="start" x="189" y="-49" font-family="Times,serif" font-weight="bold" font-size="10.00">увеличить влияние </text>
-<text text-anchor="start" x="277" y="-49" font-family="Times,serif" font-size="10.00">  place_6 </text>
+<text text-anchor="start" x="277" y="-49" font-family="Times,serif" font-size="10.00">  place_3 </text>
 <text text-anchor="start" x="317" y="-49" font-family="Times,serif" font-weight="bold" font-size="10.00">на </text>
 <text text-anchor="start" x="330" y="-49" font-family="Times,serif" font-size="10.00"> &#45;1.00</text>
 <polygon fill="#eeeeee" stroke="none" points="188,-31 188,-44 407,-44 407,-31 188,-31"/>
 <text text-anchor="start" x="189" y="-36" font-family="Times,serif" font-weight="bold" font-size="10.00">результаты:</text>
 <text text-anchor="start" x="189" y="-23" font-family="Times,serif" font-weight="bold" font-size="10.00">person_5</text>
 <text text-anchor="start" x="299" y="-22" font-family="Times,serif" font-size="10.00">failed</text>
-<text text-anchor="start" x="189" y="-10" font-family="Times,serif" font-weight="bold" font-size="10.00">place_6</text>
+<text text-anchor="start" x="189" y="-10" font-family="Times,serif" font-weight="bold" font-size="10.00">place_3</text>
 <text text-anchor="start" x="299" y="-9" font-family="Times,serif" font-size="10.00">neutral</text>
 <polygon fill="none" stroke="black" points="186.5,-4.5 186.5,-111.5 407.5,-111.5 407.5,-4.5 186.5,-4.5"/>
 </g>
