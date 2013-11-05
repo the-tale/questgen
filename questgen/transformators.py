@@ -220,7 +220,11 @@ def remove_unused_actors(knowledge_base):
             used_actors |= _get_actors(action)
 
         for requirement in state.require:
-            used_actors |= _get_actors(action)
+            used_actors |= _get_actors(requirement)
+
+        if isinstance(state, facts.Question):
+            for condition in state.condition:
+                used_actors |= _get_actors(condition)
 
     for participant in knowledge_base.filter(facts.QuestParticipant):
         used_actors |= _get_actors(participant)
