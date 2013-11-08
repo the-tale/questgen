@@ -257,34 +257,45 @@ class Drawer(object):
 
         trs = []
 
-        for requirement in state.require:
-            if isinstance(requirement, facts.LocatedIn):
-                trs.append(tr(td(self.create_label_for_requirement(requirement), bgcolor=requirements_bgcolor, colspan=2)))
-
-        for action in state.actions:
-            trs.append(tr(td(self.create_label_for_action(action), bgcolor=actions_bgcolor, colspan=2)))
-
-        if hasattr(state, 'condition'):
-            trs.append(tr(td(u'<b>условия:</b>', bgcolor=bgcolor, colspan=2)))
-            for condition in state.condition:
-                trs.append(tr(td(u'<b>если </b>'), td(self.create_label_for_requirement(condition), bgcolor=bgcolor)))
-
-        colspan = 1
+        head_colspan = 1
 
         head = [td(i(state.uid))]
 
         if hasattr(state, 'type'):
             head.append(td(b(state.type), align='center'))
-            colspan += 1
+            head_colspan += 1
+
+        requirement_colspan = 0
+
+        for requirement in state.require:
+            if isinstance(requirement, facts.LocatedIn):
+                requirement_colspan = 2
+                trs.append(tr(td(self.create_label_for_requirement(requirement), bgcolor=requirements_bgcolor, colspan=requirement_colspan)))
+
+        actions_colspan = 0
+
+        for action in state.actions:
+            actions_colspan = 2
+            trs.append(tr(td(self.create_label_for_action(action), bgcolor=actions_bgcolor, colspan=actions_colspan)))
+
+        condition_colspan = 0
+        if hasattr(state, 'condition'):
+            condition_colspan = 2
+            trs.append(tr(td(u'<b>условия:</b>', bgcolor=bgcolor, colspan=condition_colspan)))
+            for condition in state.condition:
+                trs.append(tr(td(u'<b>если </b>'), td(self.create_label_for_requirement(condition), bgcolor=bgcolor)))
+
+        results_colspan = 0
 
         if hasattr(state, 'results'):
-            trs.append(tr(td(u'<b>результаты:</b>', bgcolor=bgcolor, colspan=2)))
+            results_colspan = 2
+            trs.append(tr(td(u'<b>результаты:</b>', bgcolor=bgcolor, colspan=results_colspan)))
             results_order = sorted(state.results.keys())
             for object_uid in results_order:
                 trs.append(tr(td(u'<b>%s</b>' % object_uid), td(state.results[object_uid])))
 
         return table(tr(*head),
-                     tr(td(state.description, colspan=colspan)),
+                     tr(td(state.description, colspan=max(head_colspan, requirement_colspan, actions_colspan, results_colspan))),
                      *trs,
                      bgcolor=bgcolor,
                      port=state.uid)
@@ -378,12 +389,11 @@ class Drawer(object):
         if fight.mob:
             return u'<b>сразиться с</b>&nbsp; %s' % fight.mob
 
-
-        if fight.mercenary:
-            return u'<b>сразиться с наёмником</b>'
-
-        if not fight.mercenary:
-            return u'<b>сразиться с кем-нибудь, кроме  наёмника</b>'
+        if fight.mercenary is not None:
+            if fight.mercenary:
+                return u'<b>сразиться с наёмником</b>'
+            else:
+                return u'<b>сразиться с кем-нибудь, кроме  наёмника</b>'
 
         return u'<b>сразиться с кем-нибудь</b>'
 

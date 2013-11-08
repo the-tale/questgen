@@ -15,13 +15,15 @@ from questgen.quests.delivery import Delivery
 from questgen.quests.caravan import Caravan
 from questgen.quests.collect_debt import CollectDebt
 from questgen.quests.simple import Simple
+from questgen.quests.simplest import Simplest
+from questgen.quests.complex import Complex
 from questgen.quests.help_friend import HelpFriend
 from questgen.quests.interfere_enemy import InterfereEnemy
 from questgen.quests.help import Help
 
 from questgen.relations import PROFESSION
 
-QUESTS = [Spying, Hunt, Hometown, SearchSmith, Delivery, Caravan, CollectDebt, HelpFriend, InterfereEnemy, Help, Simple]
+QUESTS = [Spying, Hunt, Hometown, SearchSmith, Delivery, Caravan, CollectDebt, HelpFriend, InterfereEnemy, Help, Simple, Simplest, Complex]
 
 qb = QuestsBase()
 qb += [Simple]
