@@ -41,7 +41,7 @@ class FactsTests(unittest.TestCase):
         self.assertFalse(has_money_1.check(self.kb))
         self.assertFalse(has_money_2.check(self.kb))
 
-        self.kb += has_money_2
+        self.kb += has_money_1
 
-        self.assertFalse(has_money_1.check(self.kb))
-        self.assertTrue(has_money_2.check(self.kb))
+        self.assertTrue(has_money_1.check(self.kb))
+        self.assertFalse(has_money_2.check(self.kb))

@@ -8,6 +8,8 @@ from questgen import exceptions
 
 class KnowledgeBase(object):
 
+    __slots__ = ('_facts', 'restrictions', 'ns_number')
+
     def __init__(self):
         self._facts = {}
         self.restrictions = []

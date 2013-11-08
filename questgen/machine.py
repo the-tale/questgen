@@ -8,6 +8,8 @@ EMPTY_LAMBDA = lambda *argv, **kwargs: None
 
 class Machine(object):
 
+    __slots__ = ('knowledge_base', 'on_state', 'on_jump_start', 'on_jump_end')
+
     def __init__(self, knowledge_base, on_state=EMPTY_LAMBDA, on_jump_start=EMPTY_LAMBDA, on_jump_end=EMPTY_LAMBDA):
         self.knowledge_base = knowledge_base
         self.on_state = on_state
