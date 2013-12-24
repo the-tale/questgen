@@ -7,20 +7,22 @@ from questgen import exceptions
 EMPTY_LAMBDA = lambda *argv, **kwargs: None
 
 class Machine(object):
+    POINTER_UID = facts.Pointer().uid
 
-    __slots__ = ('knowledge_base', 'on_state', 'on_jump_start', 'on_jump_end')
+    __slots__ = ('knowledge_base', 'interpreter', 'on_state', 'on_jump_start', 'on_jump_end')
 
-    def __init__(self, knowledge_base, on_state=EMPTY_LAMBDA, on_jump_start=EMPTY_LAMBDA, on_jump_end=EMPTY_LAMBDA):
+    def __init__(self, knowledge_base, interpreter, on_state=EMPTY_LAMBDA, on_jump_start=EMPTY_LAMBDA, on_jump_end=EMPTY_LAMBDA):
         self.knowledge_base = knowledge_base
+        self.interpreter = interpreter
         self.on_state = on_state
         self.on_jump_start = on_jump_start
         self.on_jump_end = on_jump_end
 
     @property
     def pointer(self):
-        if facts.Pointer.UID not in self.knowledge_base:
+        if self.POINTER_UID not in self.knowledge_base:
             self.knowledge_base += facts.Pointer()
-        return self.knowledge_base[facts.Pointer.UID]
+        return self.knowledge_base[self.POINTER_UID]
 
     def _has_jumps(self, fact):
         return bool([jump for jump in self.knowledge_base.filter(facts.Jump) if jump.state_from == fact.uid])
@@ -88,7 +90,7 @@ class Machine(object):
         if self.pointer.jump is None:
             return True
 
-        return self.next_state is not None and all(requirement.check(self.knowledge_base) for requirement in self.next_state.require)
+        return self.next_state is not None and all(requirement.check(self.interpreter) for requirement in self.next_state.require)
 
     def step_until_can(self):
         while self.can_do_step():
@@ -121,7 +123,7 @@ class Machine(object):
             return [self.knowledge_base[default.option] for default in defaults]
 
         if isinstance(state, facts.Question):
-            condition = all(requirement.check(self.knowledge_base) for requirement in state.condition)
+            condition = all(requirement.check(self.interpreter) for requirement in state.condition)
             return [answer for answer in self.knowledge_base.filter(facts.Answer) if answer.state_from == state.uid and answer.condition == condition]
 
         return [jump

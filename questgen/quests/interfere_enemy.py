@@ -2,6 +2,8 @@
 from questgen.quests.base_quest import QuestBetween2, ROLES, RESULTS
 from questgen import facts
 from questgen import logic
+from questgen import requirements
+from questgen import actions
 
 
 class InterfereEnemy(QuestBetween2):
@@ -39,8 +41,8 @@ class InterfereEnemy(QuestBetween2):
                             type=cls.TYPE,
                             nesting=nesting,
                             description=u'Начало: навредить противнику',
-                            require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
-                            actions=[facts.Message(type='intro')])
+                            require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
+                            actions=[actions.Message(type='intro')])
 
         participants = [facts.QuestParticipant(start=start.uid, participant=receiver.uid, role=ROLES.RECEIVER),
                         facts.QuestParticipant(start=start.uid, participant=antagonist_position.uid, role=ROLES.ANTAGONIST_POSITION) ]
@@ -51,9 +53,9 @@ class InterfereEnemy(QuestBetween2):
                                         antagonist_position.uid: RESULTS.NEUTRAL},
                               nesting=nesting,
                               description=u'навредили противнику',
-                              actions=[facts.GiveReward(object=hero.uid, type='finish'),
-                                       facts.GivePower(object=receiver.uid, power=-1),
-                                       facts.GivePower(object=antagonist_position.uid, power=-1)])
+                              actions=[actions.GiveReward(object=hero.uid, type='finish'),
+                                       actions.GivePower(object=receiver.uid, power=-1),
+                                       actions.GivePower(object=antagonist_position.uid, power=-1)])
 
         help_quest = selector.create_quest_between_2(nesting=nesting+1, initiator=antagonist, receiver=receiver, tags=('can_continue',))
         help_extra = []
@@ -63,7 +65,7 @@ class InterfereEnemy(QuestBetween2):
                 help_extra.append(facts.Jump(state_from=start.uid, state_to=help_fact.uid))
             elif isinstance(help_fact, facts.Finish):
                 if help_fact.results[receiver.uid] == RESULTS.FAILED:
-                    help_extra.append(facts.Jump(state_from=help_fact.uid, state_to=finish.uid, start_actions=[facts.Message(type='after_interfere')]))
+                    help_extra.append(facts.Jump(state_from=help_fact.uid, state_to=finish.uid, start_actions=[actions.Message(type='after_interfere')]))
 
         subquest = facts.SubQuest(uid=ns+'interfere_subquest', members=logic.get_subquest_members(help_quest))
 

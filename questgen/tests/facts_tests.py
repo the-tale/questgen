@@ -31,7 +31,7 @@ class FactsTests(unittest.TestCase):
 
 
     def test_uid_not_setupped(self):
-        self.assertRaises(exceptions.UIDDidNotSetupped, facts.Fact)
+        self.assertEqual(facts.Fact().uid, '#fact()')
 
 
     def test_has_money(self):

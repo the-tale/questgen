@@ -3,6 +3,8 @@ import random
 
 from questgen.quests.base_quest import QuestBetween2, ROLES, RESULTS
 from questgen import facts
+from questgen import requirements
+from questgen import actions
 
 
 class Hunt(QuestBetween2):
@@ -40,14 +42,14 @@ class Hunt(QuestBetween2):
                       type=cls.TYPE,
                       nesting=nesting,
                       description=u'Начало: задание на охоту',
-                      require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
-                      actions=[facts.Message(type='intro')])
+                      require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
+                      actions=[actions.Message(type='intro')])
 
         participants = [facts.QuestParticipant(start=start.uid, participant=receiver_position.uid, role=ROLES.RECEIVER_POSITION) ]
 
         start_hunting = facts.State(uid=ns+'start_hunting',
                               description=u'Прибытие в город охоты',
-                              require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)])
+                              require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)])
 
         hunt_loop = []
 
@@ -55,15 +57,15 @@ class Hunt(QuestBetween2):
 
             hunt = facts.State(uid=ns+'hunt_%d' % i,
                          description=u'Охота',
-                         actions=[facts.MoveNear(object=hero.uid, place=receiver_position.uid, terrains=mob.terrains)])
+                         actions=[actions.MoveNear(object=hero.uid, place=receiver_position.uid, terrains=mob.terrains)])
 
             fight = facts.State(uid=ns+'fight_%d' % i,
-                          description=u'Сражение с жертвой',
-                          actions=[facts.Message(type='fight'),
-                                   facts.Fight(uid='fight_%d' % i, mob=mob.uid)])
+                                description=u'Сражение с жертвой',
+                                actions=[actions.Message(type='fight'),
+                                         actions.Fight(mob=mob.uid)])
 
             if hunt_loop:
-                hunt_loop.append(facts.Jump(state_from=hunt_loop[-1].uid, state_to=hunt.uid, start_actions=[facts.Message(type='start_track'),]))
+                hunt_loop.append(facts.Jump(state_from=hunt_loop[-1].uid, state_to=hunt.uid, start_actions=[actions.Message(type='start_track'),]))
 
             hunt_loop.extend([hunt,
                               facts.Jump(state_from=hunt.uid, state_to=fight.uid),
@@ -74,17 +76,17 @@ class Hunt(QuestBetween2):
                            results={receiver_position.uid: RESULTS.SUCCESSED},
                            nesting=nesting,
                            description=u'Продать добычу',
-                           require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)],
-                           actions=[facts.GiveReward(object=hero.uid, type='sell_prey'),
-                                    facts.GivePower(object=receiver_position.uid, power=1)])
+                           require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
+                           actions=[actions.GiveReward(object=hero.uid, type='sell_prey'),
+                                    actions.GivePower(object=receiver_position.uid, power=1)])
 
         line = [ start,
                   start_hunting,
                   sell_prey,
 
-                  facts.Jump(state_from=start.uid, state_to=start_hunting.uid, start_actions=[facts.Message(type='move_to_hunt'),]),
-                  facts.Jump(state_from=start_hunting.uid, state_to=hunt_loop[0].uid, start_actions=[facts.Message(type='start_track'),]),
-                  facts.Jump(state_from=hunt_loop[-1].uid, state_to=sell_prey.uid, start_actions=[facts.Message(type='return_with_prey'),]),
+                  facts.Jump(state_from=start.uid, state_to=start_hunting.uid, start_actions=[actions.Message(type='move_to_hunt'),]),
+                  facts.Jump(state_from=start_hunting.uid, state_to=hunt_loop[0].uid, start_actions=[actions.Message(type='start_track'),]),
+                  facts.Jump(state_from=hunt_loop[-1].uid, state_to=sell_prey.uid, start_actions=[actions.Message(type='return_with_prey'),]),
                 ]
 
         line.extend(hunt_loop)

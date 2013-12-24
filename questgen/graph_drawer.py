@@ -3,6 +3,9 @@
 import gv
 
 from questgen import facts
+from questgen import requirements
+from questgen import actions
+
 
 
 class HEAD_COLORS(object):
@@ -268,7 +271,7 @@ class Drawer(object):
         requirement_colspan = 0
 
         for requirement in state.require:
-            if isinstance(requirement, facts.LocatedIn):
+            if isinstance(requirement, requirements.LocatedIn):
                 requirement_colspan = 2
                 trs.append(tr(td(self.create_label_for_requirement(requirement), bgcolor=requirements_bgcolor, colspan=requirement_colspan)))
 
@@ -301,31 +304,31 @@ class Drawer(object):
                      port=state.uid)
 
     def create_label_for_requirement(self, requirement):
-        if isinstance(requirement, facts.LocatedIn):
+        if isinstance(requirement, requirements.LocatedIn):
             return self.create_label_for_located_in(requirement)
-        elif isinstance(requirement, facts.LocatedNear):
+        elif isinstance(requirement, requirements.LocatedNear):
             return self.create_label_for_located_near(requirement)
-        elif isinstance(requirement, facts.HasMoney):
+        elif isinstance(requirement, requirements.HasMoney):
             return self.create_label_for_has_money(requirement)
-        elif isinstance(requirement, facts.IsAlive):
+        elif isinstance(requirement, requirements.IsAlive):
             return self.create_label_for_is_alive(requirement)
 
     def create_label_for_action(self, action):
-        if isinstance(action, facts.Message):
+        if isinstance(action, actions.Message):
             return self.create_action_label_for_message(action)
-        elif isinstance(action, facts.GivePower):
+        elif isinstance(action, actions.GivePower):
             return self.create_action_label_for_give_power(action)
-        elif isinstance(action, facts.GiveReward):
+        elif isinstance(action, actions.GiveReward):
             return self.create_action_label_for_give_reward(action)
-        elif isinstance(action, facts.MoveNear):
+        elif isinstance(action, actions.MoveNear):
             return self.create_action_label_for_move_near(action)
-        elif isinstance(action, facts.MoveIn):
+        elif isinstance(action, actions.MoveIn):
             return self.create_action_label_for_move_in(action)
-        elif isinstance(action, facts.Fight):
+        elif isinstance(action, actions.Fight):
             return self.create_action_label_for_fight(action)
-        elif isinstance(action, facts.DoNothing):
+        elif isinstance(action, actions.DoNothing):
             return self.create_action_label_for_donothing(action)
-        elif isinstance(action, facts.UpgradeEquipment):
+        elif isinstance(action, actions.UpgradeEquipment):
             return self.create_action_label_for_upgrade_equipment(action)
 
     def create_label_for_event(self, event):

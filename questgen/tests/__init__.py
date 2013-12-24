@@ -7,3 +7,4 @@ from questgen.tests.restrictions_tests import *
 from questgen.tests.transformators_tests import *
 from questgen.tests.simple_quest_tests import *
 from questgen.tests.selectors_tests import *
+from questgen.tests.quest_tests import *

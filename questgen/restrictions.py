@@ -4,6 +4,9 @@ import itertools
 from questgen import facts
 from questgen import exceptions
 from questgen import logic
+from questgen import requirements
+from questgen import actions
+
 
 class Restriction(object):
 
@@ -82,6 +85,39 @@ class ReferencesIntegrity(Restriction):
                 uid = getattr(fact, reference)
                 if uid is not None and uid not in knowledge_base:
                     raise self.Error(fact=fact, attribute=reference, uid=uid)
+
+
+class RequirementsConsistency(Restriction):
+    class Error(exceptions.RollBackError):
+        MSG = u'wrong class of requirement "%(requirement)s" in state "%(state)s"'
+
+    def validate(self, knowledge_base):
+        for state in knowledge_base.filter(facts.State):
+            for requirement in state.require:
+                if not isinstance(requirement, requirements.Requirement):
+                    raise self.Error(requirement=requirement, state=state)
+
+            if isinstance(state, facts.Question):
+                for requirement in state.condition:
+                    if not isinstance(requirement, requirements.Requirement):
+                        raise self.Error(requirement=requirement, state=state)
+
+
+class ActionsConsistency(Restriction):
+    class Error(exceptions.RollBackError):
+        MSG = u'wrong class of action "%(action)s" in fact "%(fact)s"'
+
+    def validate(self, knowledge_base):
+        for state in knowledge_base.filter(facts.State):
+            for action in state.actions:
+                if not isinstance(action, actions.Action):
+                    raise self.Error(action=action, fact=state)
+
+        for jump in knowledge_base.filter(facts.Jump):
+            for action in itertools.chain(jump.start_actions, jump.end_actions):
+                if not isinstance(action, actions.Action):
+                    raise self.Error(action=action, fact=jump)
+
 
 
 class ConnectedStateJumpGraph(Restriction):

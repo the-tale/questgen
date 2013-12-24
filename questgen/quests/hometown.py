@@ -3,6 +3,8 @@ import random
 
 from questgen.quests.base_quest import QuestBetween2, ROLES, RESULTS
 from questgen import facts
+from questgen import requirements
+from questgen import actions
 
 
 class Hometown(QuestBetween2):
@@ -37,35 +39,35 @@ class Hometown(QuestBetween2):
                             type=cls.TYPE,
                             nesting=nesting,
                             description=u'Начало: посетить родной города',
-                            require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
-                            actions=[facts.Message(type='intro')])
+                            require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
+                            actions=[actions.Message(type='intro')])
 
         participants = [facts.QuestParticipant(start=start.uid, participant=receiver_position.uid, role=ROLES.RECEIVER_POSITION) ]
 
         arriving = facts.State(uid=ns+'arriving',
                                description=u'Прибытие в город',
-                               require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)])
+                               require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)])
 
-        action_choices = [facts.State(uid=ns+'drunk_song', description=u'спеть пьяную песню', actions=[facts.Message(type='drunk_song'),
-                                                                                                       facts.DoNothing(type='drunk_song')]),
-                          facts.State(uid=ns+'stagger_streets', description=u'пошататься по улицам', actions=[facts.Message(type='stagger_streets'),
-                                                                                                              facts.DoNothing(type='stagger_streets')]),
-                          facts.State(uid=ns+'chatting', description=u'пообщаться с друзьями', actions=[facts.Message(type='chatting'),
-                                                                                                        facts.DoNothing(type='chatting')]),
-                          facts.State(uid=ns+'search_old_friends', description=u'искать старого друга', actions=[facts.Message(type='search_old_friends'),
-                                                                                                                 facts.DoNothing(type='search_old_friends')]),
-                          facts.State(uid=ns+'remember_names', description=u'вспоминать имена друзей', actions=[facts.Message(type='remember_names'),
-                                                                                                                facts.DoNothing(type='remember_names')])]
+        action_choices = [facts.State(uid=ns+'drunk_song', description=u'спеть пьяную песню', actions=[actions.Message(type='drunk_song'),
+                                                                                                       actions.DoNothing(type='drunk_song')]),
+                          facts.State(uid=ns+'stagger_streets', description=u'пошататься по улицам', actions=[actions.Message(type='stagger_streets'),
+                                                                                                              actions.DoNothing(type='stagger_streets')]),
+                          facts.State(uid=ns+'chatting', description=u'пообщаться с друзьями', actions=[actions.Message(type='chatting'),
+                                                                                                        actions.DoNothing(type='chatting')]),
+                          facts.State(uid=ns+'search_old_friends', description=u'искать старого друга', actions=[actions.Message(type='search_old_friends'),
+                                                                                                                 actions.DoNothing(type='search_old_friends')]),
+                          facts.State(uid=ns+'remember_names', description=u'вспоминать имена друзей', actions=[actions.Message(type='remember_names'),
+                                                                                                                actions.DoNothing(type='remember_names')])]
 
-        actions = random.sample(action_choices, 3)
+        home_actions = random.sample(action_choices, 3)
 
         finish = facts.Finish(uid=ns+'finish',
                               start=start.uid,
                               results={ receiver_position.uid: RESULTS.SUCCESSED},
                               nesting=nesting,
                               description=u'завершить посещение города',
-                              actions=[facts.GiveReward(object=hero.uid, type='finish'),
-                                       facts.GivePower(object=receiver_position.uid, power=1)])
+                              actions=[actions.GiveReward(object=hero.uid, type='finish'),
+                                       actions.GivePower(object=receiver_position.uid, power=1)])
 
         line = [ start,
 
@@ -73,15 +75,15 @@ class Hometown(QuestBetween2):
 
                  arriving,
 
-                 facts.Jump(state_from=arriving.uid, state_to=actions[0].uid),
-                 facts.Jump(state_from=actions[0].uid, state_to=actions[1].uid),
-                 facts.Jump(state_from=actions[1].uid, state_to=actions[2].uid),
-                 facts.Jump(state_from=actions[2].uid, state_to=finish.uid),
+                 facts.Jump(state_from=arriving.uid, state_to=home_actions[0].uid),
+                 facts.Jump(state_from=home_actions[0].uid, state_to=home_actions[1].uid),
+                 facts.Jump(state_from=home_actions[1].uid, state_to=home_actions[2].uid),
+                 facts.Jump(state_from=home_actions[2].uid, state_to=finish.uid),
 
                  finish
                ]
 
-        line.extend(actions)
+        line.extend(home_actions)
         line.extend(participants)
 
         return line

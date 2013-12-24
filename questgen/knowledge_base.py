@@ -24,7 +24,7 @@ class KnowledgeBase(object):
         kb = cls()
 
         for fact_data in data['facts'].values():
-            kb += fact_classes[fact_data['class']].deserialize(fact_data, fact_classes)
+            kb += fact_classes[fact_data['type']].deserialize(fact_data)
 
         kb.ns_number = data['ns_number']
 

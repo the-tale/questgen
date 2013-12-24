@@ -2,6 +2,8 @@
 
 from questgen.quests.base_quest import QuestBetween2, ROLES, RESULTS
 from questgen import facts
+from questgen import requirements
+from questgen import actions
 
 
 class Caravan(QuestBetween2):
@@ -21,8 +23,8 @@ class Caravan(QuestBetween2):
                             type=cls.TYPE,
                             nesting=nesting,
                             description=u'Начало: караван',
-                            require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
-                            actions=[facts.Message(type='intro')])
+                            require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
+                            actions=[actions.Message(type='intro')])
 
         participants = [facts.QuestParticipant(start=start.uid, participant=initiator.uid, role=ROLES.INITIATOR),
                         facts.QuestParticipant(start=start.uid, participant=receiver.uid, role=ROLES.RECEIVER),
@@ -30,29 +32,29 @@ class Caravan(QuestBetween2):
 
         first_moving = facts.State(uid=ns+'first_moving',
                                     description=u'двигаемся с караваном',
-                                    actions=(facts.MoveIn(object=hero.uid, place=receiver_position.uid, percents=0.2), ))
+                                    actions=[actions.MoveIn(object=hero.uid, place=receiver_position.uid, percents=0.2)])
 
         caravan_choice = facts.Choice(uid=ns+'caravan_choice',
                                       description=u'Решение: защитить или ограбить')
 
         first_defence = facts.Choice(uid=ns+'first_defence',
                                      description=u'первая защита',
-                                     actions=(facts.Message(type='defence'),
-                                              facts.Fight(uid='fight_1'), ))
+                                     actions=(actions.Message(type='defence'),
+                                              actions.Fight(), ))
 
         first_defence_continue = facts.Question(uid=ns+'first_defence_continue',
                                                 description=u'удалось ли защитить караван?',
-                                                condition=(facts.IsAlive(object=hero.uid),))
+                                                condition=(requirements.IsAlive(object=hero.uid),))
 
         second_moving = facts.State(uid=ns+'second_moving',
                                     description=u'двигаемся с караваном',
-                                    actions=(facts.MoveIn(object=hero.uid, place=receiver_position.uid, percents=0.5), ))
+                                    actions=(actions.MoveIn(object=hero.uid, place=receiver_position.uid, percents=0.5), ))
 
         second_defence = facts.Question(uid=ns+'second_defence',
                                         description=u'вторая защита',
-                                        condition=(facts.IsAlive(object=hero.uid),),
-                                        actions=(facts.Message(type='defence'),
-                                                 facts.Fight(uid='fight_2'), ))
+                                        condition=(requirements.IsAlive(object=hero.uid),),
+                                        actions=(actions.Message(type='defence'),
+                                                 actions.Fight(), ))
 
         finish_defence = facts.Finish(uid=ns+'finish_defence',
                                       start=start.uid,
@@ -61,35 +63,35 @@ class Caravan(QuestBetween2):
                                                 black_market.uid: RESULTS.NEUTRAL },
                                       nesting=nesting,
                                       description=u'Караван приходит в точку назначения',
-                                      require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)],
-                                      actions=[facts.GiveReward(object=hero.uid, type='finish_defence'),
-                                               facts.GivePower(object=initiator.uid, power=1),
-                                               facts.GivePower(object=receiver.uid, power=1)])
+                                      require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
+                                      actions=[actions.GiveReward(object=hero.uid, type='finish_defence'),
+                                               actions.GivePower(object=initiator.uid, power=1),
+                                               actions.GivePower(object=receiver.uid, power=1)])
 
         move_to_attack = facts.State(uid=ns+'move_to_attack',
                                      description=u'ведём караван в засаду',
-                                     actions=(facts.MoveIn(object=hero.uid, place=receiver_position.uid, percents=0.3), ))
+                                     actions=(actions.MoveIn(object=hero.uid, place=receiver_position.uid, percents=0.3), ))
 
         attack = facts.Question(uid=ns+'attack',
                                 description=u'нападение',
-                                condition=(facts.IsAlive(object=hero.uid),),
-                                actions=(facts.Message(type='attack'),
-                                         facts.Fight(uid='fight_3', mercenary=True), ))
+                                condition=(requirements.IsAlive(object=hero.uid),),
+                                actions=(actions.Message(type='attack'),
+                                         actions.Fight(mercenary=True), ))
 
         run = facts.State(uid=ns+'run',
                           description=u'скрываемся с места преступления',
-                          actions=(facts.MoveNear(object=hero.uid),))
+                          actions=(actions.MoveNear(object=hero.uid),))
 
         fight = facts.Question(uid=ns+'fight',
                                description=u'защита награбленного',
-                               condition=(facts.IsAlive(object=hero.uid),),
-                               actions=(facts.Message(type='fight'),
-                                        facts.Fight(uid='fight_4', mercenary=True), ))
+                               condition=(requirements.IsAlive(object=hero.uid),),
+                               actions=(actions.Message(type='fight'),
+                                        actions.Fight(mercenary=True), ))
 
         hide = facts.State(uid=ns+'hide',
                            description=u'прячемся',
-                           actions=(facts.Message(type='hide'),
-                                    facts.MoveNear(object=hero.uid)))
+                           actions=(actions.Message(type='hide'),
+                                    actions.MoveNear(object=hero.uid)))
 
         finish_attack = facts.Finish(uid=ns+'finish_attack',
                                      start=start.uid,
@@ -98,11 +100,11 @@ class Caravan(QuestBetween2):
                                                black_market.uid: RESULTS.SUCCESSED },
                                      nesting=nesting,
                                      description=u'Продать товар на чёрном рынке',
-                                     require=[facts.LocatedIn(object=hero.uid, place=black_market.uid)],
-                                     actions=[facts.GiveReward(object=hero.uid, type='finish_attack', scale=1.5),
-                                              facts.GivePower(object=initiator.uid, power=-1),
-                                              facts.GivePower(object=receiver.uid, power=-1),
-                                              facts.GivePower(object=black_market.uid, power=1)])
+                                     require=[requirements.LocatedIn(object=hero.uid, place=black_market.uid)],
+                                     actions=[actions.GiveReward(object=hero.uid, type='finish_attack', scale=1.5),
+                                              actions.GivePower(object=initiator.uid, power=-1),
+                                              actions.GivePower(object=receiver.uid, power=-1),
+                                              actions.GivePower(object=black_market.uid, power=1)])
 
         finish_defence_failed = facts.Finish(uid=ns+'finish_defence_failed',
                                              start=start.uid,
@@ -111,9 +113,9 @@ class Caravan(QuestBetween2):
                                                        black_market.uid: RESULTS.NEUTRAL },
                                              nesting=nesting,
                                              description=u'Герой не смог защитить караван',
-                                             actions=[facts.Message(type='finish_defence_failed'),
-                                                      facts.GivePower(object=initiator.uid, power=-1),
-                                                      facts.GivePower(object=receiver.uid, power=-1)])
+                                             actions=[actions.Message(type='finish_defence_failed'),
+                                                      actions.GivePower(object=initiator.uid, power=-1),
+                                                      actions.GivePower(object=receiver.uid, power=-1)])
 
         finish_attack_failed = facts.Finish(uid=ns+'finish_attack_failed',
                                             start=start.uid,
@@ -122,23 +124,23 @@ class Caravan(QuestBetween2):
                                                       black_market.uid: RESULTS.NEUTRAL },
                                             nesting=nesting,
                                             description=u'Герой не смог ограбить караван',
-                                            actions=[facts.Message(type='finish_attack_failed'),
-                                                     facts.GivePower(object=initiator.uid, power=1),
-                                                     facts.GivePower(object=receiver.uid, power=1)])
+                                            actions=[actions.Message(type='finish_attack_failed'),
+                                                     actions.GivePower(object=initiator.uid, power=1),
+                                                     actions.GivePower(object=receiver.uid, power=1)])
 
         caravan_choice__first_defence = facts.Option(state_from=caravan_choice.uid, state_to=first_defence.uid,
-                                                     type='jump_defence', start_actions=[facts.Message(type='choose_defence'),])
+                                                     type='jump_defence', start_actions=[actions.Message(type='choose_defence'),])
         caravan_choice__move_to_attack = facts.Option(state_from=caravan_choice.uid, state_to=move_to_attack.uid,
-                                                      type='jump_attack', start_actions=[facts.Message(type='choose_attack'),])
+                                                      type='jump_attack', start_actions=[actions.Message(type='choose_attack'),])
 
         first_defence__first_defence_continue = facts.Option(state_from=first_defence.uid, state_to=first_defence_continue.uid,
-                                                             type='jump_defence', start_actions=[facts.Message(type='choose_defence'),])
+                                                             type='jump_defence', start_actions=[actions.Message(type='choose_defence'),])
         first_defence__move_to_attack = facts.Option(state_from=first_defence.uid, state_to=move_to_attack.uid,
-                                             type='jump_attack', start_actions=[facts.Message(type='choose_attack'),])
+                                             type='jump_attack', start_actions=[actions.Message(type='choose_attack'),])
 
         line = [ start,
 
-                 facts.Jump(state_from=start.uid, state_to=first_moving.uid, start_actions=(facts.Message(type='first_moving'), )),
+                 facts.Jump(state_from=start.uid, state_to=first_moving.uid, start_actions=(actions.Message(type='first_moving'), )),
 
                  first_moving,
 
@@ -176,7 +178,7 @@ class Caravan(QuestBetween2):
 
                  attack,
 
-                 facts.Answer(state_from=attack.uid, state_to=run.uid, condition=True, start_actions=(facts.Message(type='start_run'),)),
+                 facts.Answer(state_from=attack.uid, state_to=run.uid, condition=True, start_actions=(actions.Message(type='start_run'),)),
                  facts.Answer(state_from=attack.uid, state_to=finish_attack_failed.uid, condition=False),
 
                  run,
@@ -185,7 +187,7 @@ class Caravan(QuestBetween2):
 
                  fight,
 
-                 facts.Answer(state_from=fight.uid, state_to=hide.uid, condition=True, start_actions=(facts.Message(type='start_hide'),)),
+                 facts.Answer(state_from=fight.uid, state_to=hide.uid, condition=True, start_actions=(actions.Message(type='start_hide'),)),
                  facts.Answer(state_from=fight.uid, state_to=finish_attack_failed.uid, condition=False),
 
                  hide,

@@ -140,6 +140,47 @@ class ReferencesIntegrityTests(RestrictionsTestsBase):
         self.assertRaises(self.restriction.Error, self.restriction.validate, self.kb)
 
 
+class RequirementsConsistencyTests(RestrictionsTestsBase):
+
+    def setUp(self):
+        super(RequirementsConsistencyTests, self).setUp()
+        self.restriction = restrictions.RequirementsConsistency()
+
+    def test_success(self):
+        self.restriction.validate(self.kb)
+
+    def test_wrong_require(self):
+        self.kb += [facts.State(uid='state', require=[facts.Place(uid='wrong requirement')])]
+        self.assertRaises(self.restriction.Error, self.restriction.validate, self.kb)
+
+    def test_wrong_condition(self):
+        self.kb += [facts.Question(uid='state', condition=[facts.Place(uid='wrong requirement')])]
+        self.assertRaises(self.restriction.Error, self.restriction.validate, self.kb)
+
+
+class ActionsConsistencyTests(RestrictionsTestsBase):
+
+    def setUp(self):
+        super(ActionsConsistencyTests, self).setUp()
+        self.restriction = restrictions.ActionsConsistency()
+
+    def test_success(self):
+        self.restriction.validate(self.kb)
+
+    def test_wrong_action(self):
+        self.kb += [facts.State(uid='state', actions=[facts.Place(uid='wrong action')])]
+        self.assertRaises(self.restriction.Error, self.restriction.validate, self.kb)
+
+    def test_wrong_start_action(self):
+        self.kb += [facts.Jump(state_from='start', state_to='state_1', start_actions=[facts.Place(uid='wrong action')])]
+        self.assertRaises(self.restriction.Error, self.restriction.validate, self.kb)
+
+    def test_wrong_end_action(self):
+        self.kb += [facts.Jump(state_from='start', state_to='state_1', end_actions=[facts.Place(uid='wrong action')])]
+        self.assertRaises(self.restriction.Error, self.restriction.validate, self.kb)
+
+
+
 class ConnectedStateJumpGraphTests(RestrictionsTestsBase):
 
     def setUp(self):
@@ -148,7 +189,7 @@ class ConnectedStateJumpGraphTests(RestrictionsTestsBase):
 
         self.kb += [facts.Start(uid='start', type='test', nesting=0),
                     facts.State(uid='state_1'),
-                    facts.Start(uid='start_2', type='test', nesting=0),
+                    facts.Start(uid='start_2', type='test', nesting=1),
                     facts.Finish(start='start', uid='finish_1', results={}, nesting=0),
                     facts.Finish(start='start', uid='finish_2', results={}, nesting=0),
                     facts.Jump(state_from='start', state_to='state_1'),

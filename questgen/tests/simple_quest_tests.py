@@ -2,6 +2,8 @@
 
 import unittest
 
+import mock
+
 from questgen.knowledge_base import KnowledgeBase
 from questgen.facts import Place, Person
 from questgen.facts import Start, Finish, State, Jump
@@ -9,6 +11,8 @@ from questgen.facts import LocatedIn
 from questgen.facts import Hero, Pointer
 from questgen import restrictions
 from questgen import machine
+from questgen import requirements
+from questgen.tests.helpers import FakeInterpreter
 
 
 class SimpleQuestTests(unittest.TestCase):
@@ -29,18 +33,18 @@ class SimpleQuestTests(unittest.TestCase):
         self.kb += [ Start(uid='start',
                            nesting=0,
                            type='simple_test',
-                           require=(LocatedIn(object='person_from', place='place_from'),
-                                    LocatedIn(object='person_to', place='place_to'),
-                                    LocatedIn(object='hero', place='place_from'))),
+                           require=(requirements.LocatedIn(object='person_from', place='place_from'),
+                                    requirements.LocatedIn(object='person_to', place='place_to'),
+                                    requirements.LocatedIn(object='hero', place='place_from'))),
 
                      State(uid='st_throught_place',
-                           require=(LocatedIn(object='hero', place='place_thought'),)),
+                           require=(requirements.LocatedIn(object='hero', place='place_thought'),)),
 
                      Finish(uid='st_finish',
                             start='start',
                             results={},
                             nesting=0,
-                            require=(LocatedIn(object='hero', place='place_to'),)),
+                            require=(requirements.LocatedIn(object='hero', place='place_to'),)),
 
                      Jump(state_from='start', state_to='st_throught_place'),
                      Jump(state_from='st_throught_place', state_to='st_finish') ]
@@ -57,7 +61,7 @@ class SimpleQuestTests(unittest.TestCase):
                                       restrictions.MultipleJumpsFromNormalState(),
                                       restrictions.ChoicesConsistency()])
 
-        self.machine = machine.Machine(knowledge_base=self.kb)
+        self.machine = machine.Machine(knowledge_base=self.kb, interpreter=None)
 
     def test_initialized(self):
         pass
@@ -87,34 +91,46 @@ class SimpleQuestTests(unittest.TestCase):
         # no move, since hero not in right place
         self.assertEqual(self.machine.pointer, Pointer(state=None, jump=None) )
 
-        self.machine.step_until_can()
+        def check_located_in_place_from(object, place):
+            return place == 'place_from'
+
+        def check_located_in_place_to(object, place):
+            return place == 'place_to'
+
+        def check_located_in_place_thought(object, place):
+            return place == 'place_thought'
+
+        with mock.patch('questgen.machine.Machine.interpreter', FakeInterpreter(check_located_in=check_located_in_place_from)):
+            self.machine.step_until_can()
+
         self.assertEqual(self.machine.pointer, Pointer(state='start', jump=Jump(state_from='start', state_to='st_throught_place').uid) )
 
-        self.kb += LocatedIn(object='hero', place='place_from')
-
-        self.machine.step_until_can()
+        with mock.patch('questgen.machine.Machine.interpreter', FakeInterpreter(check_located_in=check_located_in_place_from)):
+            self.machine.step_until_can()
         self.assertEqual(self.machine.pointer,
                          Pointer(state='start', jump=Jump(state_from='start', state_to='st_throught_place').uid))
 
         # no move, since hero not in right place
-        self.machine.step_until_can()
+        with mock.patch('questgen.machine.Machine.interpreter', FakeInterpreter(check_located_in=check_located_in_place_from)):
+            self.machine.step_until_can()
         self.assertEqual(self.machine.pointer,
                          Pointer(state='start', jump=Jump(state_from='start', state_to='st_throught_place').uid))
 
-        LocatedIn.relocate(self.kb, 'hero', 'place_thought')
+        with mock.patch('questgen.machine.Machine.interpreter', FakeInterpreter(check_located_in=check_located_in_place_thought)):
+            self.machine.step_until_can()
 
-        self.machine.step_until_can()
         self.assertEqual(self.machine.pointer,
                          Pointer(state='st_throught_place',
                                  jump=Jump(state_from='st_throught_place', state_to='st_finish').uid))
 
         # no move, since hero not in right place
-        self.machine.step_until_can()
+        with mock.patch('questgen.machine.Machine.interpreter', FakeInterpreter(check_located_in=check_located_in_place_thought)):
+            self.machine.step_until_can()
         self.assertEqual(self.machine.pointer,
                          Pointer(state='st_throught_place',
                                  jump=Jump(state_from='st_throught_place', state_to='st_finish').uid))
 
-        LocatedIn.relocate(self.kb, 'hero', 'place_to')
-        self.machine.step_until_can()
+        with mock.patch('questgen.machine.Machine.interpreter', FakeInterpreter(check_located_in=check_located_in_place_to)):
+            self.machine.step_until_can()
         self.assertEqual(self.machine.pointer,
                          Pointer(state='st_finish', jump=None))

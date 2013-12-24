@@ -2,6 +2,8 @@
 
 from questgen.quests.base_quest import QuestBetween2, ROLES, RESULTS
 from questgen import facts
+from questgen import requirements
+from questgen import actions
 
 
 class Delivery(QuestBetween2):
@@ -22,8 +24,8 @@ class Delivery(QuestBetween2):
                       type=cls.TYPE,
                       nesting=nesting,
                       description=u'Начало: доставка',
-                      require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
-                      actions=[facts.Message(type='intro')])
+                      require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
+                      actions=[actions.Message(type='intro')])
 
         participants = [facts.QuestParticipant(start=start.uid, participant=initiator.uid, role=ROLES.INITIATOR),
                         facts.QuestParticipant(start=start.uid, participant=receiver.uid, role=ROLES.RECEIVER),
@@ -40,10 +42,10 @@ class Delivery(QuestBetween2):
                                                  antagonist.uid: RESULTS.NEUTRAL},
                                        nesting=nesting,
                                        description=u'Доставить посылку получателю',
-                                       require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)],
-                                       actions=[facts.GiveReward(object=hero.uid, type='finish_delivery'),
-                                                facts.GivePower(object=initiator.uid, power=1),
-                                                facts.GivePower(object=receiver.uid, power=1)])
+                                       require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
+                                       actions=[actions.GiveReward(object=hero.uid, type='finish_delivery'),
+                                                actions.GivePower(object=initiator.uid, power=1),
+                                                actions.GivePower(object=receiver.uid, power=1)])
 
         finish_steal = facts.Finish(uid=ns+'finish_steal',
                                     start=start.uid,
@@ -52,11 +54,11 @@ class Delivery(QuestBetween2):
                                               antagonist.uid: RESULTS.SUCCESSED},
                                     nesting=nesting,
                                     description=u'Доставить посылку скупщику',
-                                    require=[facts.LocatedIn(object=hero.uid, place=antagonist_position.uid)],
-                                    actions=[facts.GiveReward(object=hero.uid, type='finish_steal', scale=1.5),
-                                             facts.GivePower(object=initiator.uid, power=-1),
-                                             facts.GivePower(object=receiver.uid, power=-1),
-                                             facts.GivePower(object=antagonist.uid, power=1)])
+                                    require=[requirements.LocatedIn(object=hero.uid, place=antagonist_position.uid)],
+                                    actions=[actions.GiveReward(object=hero.uid, type='finish_steal', scale=1.5),
+                                             actions.GivePower(object=initiator.uid, power=-1),
+                                             actions.GivePower(object=receiver.uid, power=-1),
+                                             actions.GivePower(object=antagonist.uid, power=1)])
 
         line = [ start,
                   delivery_choice,
@@ -65,8 +67,8 @@ class Delivery(QuestBetween2):
 
                   facts.Jump(state_from=start.uid, state_to=delivery_choice.uid),
 
-                  facts.Option(state_from=delivery_choice.uid, state_to=finish_delivery.uid, type='delivery', start_actions=[facts.Message(type='start_delivery'),]),
-                  facts.Option(state_from=delivery_choice.uid, state_to=finish_steal.uid, type='steal', start_actions=[facts.Message(type='start_steal'),])
+                  facts.Option(state_from=delivery_choice.uid, state_to=finish_delivery.uid, type='delivery', start_actions=[actions.Message(type='start_delivery'),]),
+                  facts.Option(state_from=delivery_choice.uid, state_to=finish_steal.uid, type='steal', start_actions=[actions.Message(type='start_steal'),])
                 ]
 
         line.extend(participants)

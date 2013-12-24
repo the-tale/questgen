@@ -2,6 +2,8 @@
 
 from questgen.quests.base_quest import QuestBetween2, ROLES, RESULTS
 from questgen import facts
+from questgen import requirements
+from questgen import actions
 
 
 class Complex(QuestBetween2):
@@ -30,35 +32,35 @@ class Complex(QuestBetween2):
                             type=cls.TYPE,
                             nesting=nesting,
                             description=u'Начало: «сложное» задание',
-                            require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
-                            actions=[facts.Message(type='intro')])
+                            require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
+                            actions=[actions.Message(type='intro')])
 
         participants = [facts.QuestParticipant(start=start.uid, participant=receiver_position.uid, role=ROLES.RECEIVER_POSITION) ]
 
         arriving = facts.Choice(uid=ns+'arriving',
                                 description=u'Заплатить пошлину при прибытии в город или махнуть через стену',
-                                require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)])
+                                require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)])
 
         tax = facts.Question(uid=ns+'tax',
                              description=u'Хватит ли у героя денег на пошлину',
-                             condition=(facts.HasMoney(object=hero.uid, money=100500),),
-                             actions=[facts.Message(type='tax_officer_conversation')])
+                             condition=[requirements.HasMoney(object=hero.uid, money=100500)],
+                             actions=[actions.Message(type='tax_officer_conversation')])
 
         finish_not_paid = facts.Finish(uid=ns+'finish_not_paid',
                                        start=start.uid,
                                        results={ receiver_position.uid: RESULTS.FAILED},
                                        nesting=nesting,
                                        description=u'завершить задание',
-                                       actions=[facts.GiveReward(object=hero.uid, type='finish'),
-                                                facts.GivePower(object=receiver_position.uid, power=-1)])
+                                       actions=[actions.GiveReward(object=hero.uid, type='finish'),
+                                                actions.GivePower(object=receiver_position.uid, power=-1)])
 
         finish_paid = facts.Finish(uid=ns+'finish_paid',
                                    start=start.uid,
                                    results={ receiver_position.uid: RESULTS.SUCCESSED},
                                    nesting=nesting,
                                    description=u'завершить задание',
-                                   actions=[facts.GiveReward(object=hero.uid, type='finish'),
-                                            facts.GivePower(object=receiver_position.uid, power=1)])
+                                   actions=[actions.GiveReward(object=hero.uid, type='finish'),
+                                            actions.GivePower(object=receiver_position.uid, power=1)])
 
         line = [ start,
                  arriving,

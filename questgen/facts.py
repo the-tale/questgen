@@ -1,69 +1,127 @@
 # coding: utf-8
 
-import copy
-
+from questgen import utils
 from questgen import exceptions
+from questgen import actions
+from questgen import requirements
 
-######################
-# Base class
-######################
+
+class FactAttribute(object):
+
+    def __init__(self, is_reference=False, remove_in_short=False, deserialization_classes=None, is_uid=False, **kwargs):
+        super(FactAttribute, self).__init__()
+        self.is_reference = is_reference
+        self.is_uid = is_uid
+
+        self.remove_in_short = remove_in_short
+
+        self.has_default = 'default' in kwargs
+        self.default = kwargs.get('default')
+
+        self.is_serializable = deserialization_classes is not None
+        self.deserialization_classes = deserialization_classes
+
+    def need_serialization(self, value, short):
+        if short and self.remove_in_short:
+            return False
+        if self.has_default and value == self.default:
+            return False
+        return True
+
+    def serialize(self, value):
+        if not self.is_serializable:
+            return value
+
+        return [object.serialize() for object in value]
+
+    def deserialize(self, value):
+        if not self.is_serializable:
+            return value
+
+        return [self.deserialization_classes[data['type']].deserialize(data) for data in value]
+
+
+class _FactMetaclass(type):
+
+    def __new__(cls, name, bases, attributes):
+
+        _references = set()
+        _attributes = {}
+
+        for base in bases:
+            if isinstance(base, _FactMetaclass):
+                _attributes.update(base._attributes)
+                _references |= base._references
+
+        fact_attributes = {}
+
+        for attribute_name, attribute in attributes.iteritems():
+            if isinstance(attribute, FactAttribute):
+                _attributes[attribute_name] = attribute
+
+                if attribute.is_reference:
+                    _references.add(attribute_name)
+            else:
+                fact_attributes[attribute_name] = attribute
+
+        fact_attributes['__slots__'] = tuple(attributes.keys())
+        fact_attributes['_references'] = _references
+        fact_attributes['_attributes'] = _attributes
+
+        return super(_FactMetaclass, cls).__new__(cls, name, bases, fact_attributes)
+
+
 
 class Fact(object):
-    _references = ()
-    _attributes = {'uid': None,
-                   'description': None,
-                   'externals': None}
-    _required = ()
-    _serializable = ()
-    _short = ('description')
+    __metaclass__ = _FactMetaclass
 
-    __slots__ = _attributes.keys()
+    uid = FactAttribute(default=None)
+    description = FactAttribute(remove_in_short=True, default=None)
+    externals = FactAttribute(default=None)
 
     def __init__(self, **kwargs):
-        for name in self._required:
-            if name not in kwargs:
-                raise exceptions.RequiredAttributeError(fact=self.__class__,  attribute=name)
-        for name, default in self._attributes.iteritems():
-            setattr(self, name, kwargs.get(name, default))
+        super(Fact, self).__init__()
+        for slot_attribute in self._attributes.iterkeys():
+            if slot_attribute in kwargs:
+                setattr(self, slot_attribute, kwargs[slot_attribute])
+            elif self._attributes[slot_attribute].has_default:
+                setattr(self, slot_attribute, self._attributes[slot_attribute].default)
+            else:
+                raise exceptions.RequiredFactAttributeError(fact=self, attribute=slot_attribute)
+
         for name in kwargs.iterkeys():
             if name not in self._attributes:
-                raise exceptions.WrongAttributeError(fact=self.__class__, attribute=name)
+                raise exceptions.WrongFactAttributeError(fact=self, attribute=name)
+
         self.update_uid()
 
     def serialize(self, short=False):
-        data = {'class': self.__class__.__name__,
-                'attributes': {attribute: getattr(self, attribute)
-                               for attribute, default in self._attributes.iteritems()
-                               if getattr(self, attribute) != default and (not short or attribute not in self._short)}}
-        for attribute in self._serializable:
-            if attribute not in data['attributes']:
-                continue
-            data['attributes'][attribute] = [fact.serialize() for fact in data['attributes'][attribute]]
-
-        return data
+        return dict(type=self.type_name(),
+                    attributes={name: self._attributes[name].serialize(getattr(self, name))
+                                for name in self._attributes.iterkeys()
+                                if self._attributes[name].need_serialization(getattr(self, name), short=short)})
 
     @classmethod
-    def deserialize(cls, data, fact_classes):
-        attributes = copy.copy(cls._attributes)
-        attributes.update(data['attributes'])
-        obj = cls(**attributes)
-        for attribute in cls._serializable:
-            if attribute not in data['attributes']:
-                continue
-            setattr(obj,
-                    attribute,
-                    [fact_classes[fact_data['class']].deserialize(fact_data, fact_classes)
-                     for fact_data in data['attributes'][attribute]])
-        return obj
+    def deserialize(cls, data):
+        attributes = {attribute_name: cls._attributes[attribute_name].deserialize(attribute_value)
+                      for attribute_name, attribute_value in data['attributes'].iteritems()
+                      if attribute_name in cls._attributes}
+
+        return cls(**attributes)
+
 
     def change(self, **kwargs):
-        changed_fact = copy.deepcopy(self)
-        for key, value in kwargs.items():
-            if not hasattr(changed_fact, key):
-                raise exceptions.WrongChangeAttributeError(fact=changed_fact, attribute=key)
-            setattr(changed_fact, key, value)
-        changed_fact.update_uid()
-        return changed_fact
+        attributes = {attribute_name: getattr(self, attribute_name)
+                      for attribute_name in self._attributes.iterkeys()}
+
+        for key in kwargs:
+            if key not in attributes:
+                raise exceptions.WrongChangeAttributeError(fact=self, attribute=key)
+
+        attributes.update(kwargs)
+
+        return self.__class__(**attributes)
+
 
     def change_in_knowlege_base(self, knowledge_base, **kwargs):
         knowledge_base -= self
@@ -74,7 +132,16 @@ class Fact(object):
 
     def update_uid(self):
         if self.uid is None:
-            raise exceptions.UIDDidNotSetupped(fact=self)
+            uid_parts = []
+            for attribute_name in sorted(self._attributes.keys()):
+                attribute = self._attributes[attribute_name]
+                if attribute.is_uid:
+                    value = getattr(self, attribute_name)
+                    if isinstance(value, (list, tuple)):
+                        value = '|'.join(value)
+                    uid_parts.append(str(value))
+
+            self.uid = '#%s(%s)' % (utils.camel_to_underscores(self.type_name()), ','.join(uid_parts))
 
     def __eq__(self, other):
         return self.__class__ == other.__class__ and all(getattr(self, attribute) == getattr(other, attribute) for attribute in self._attributes.iterkeys())
@@ -83,94 +150,75 @@ class Fact(object):
         return not (self == other)
 
     @classmethod
-    def fact_class(cls): return cls.__name__
+    def type_name(cls): return cls.__name__
 
     def __repr__(self):
-        return u'%s(%s)' % (self.fact_class(),
+        return u'%s(%s)' % (self.type_name(),
                             u', '.join(u'%s=%r' % (attribute, getattr(self, attribute))
                                        for attribute, default in self._attributes.iteritems()
-                                       if getattr(self, attribute) != default))
+                                       if hasattr(self, attribute) and getattr(self, attribute) != default))
 
 ######################
-# Base classes for different knowlege aspects
+# Common Classes
 ######################
-
-class Action(Fact): pass
-
-class Restriction(Fact): pass
-
-class Actor(Fact): pass
-
-class State(Fact):
-    _attributes = dict(require=(), actions=(), **Fact._attributes)
-    _serializable = ['require', 'actions'] + list(Fact._serializable)
-    __slots__ = _attributes.keys()
-
-class Jump(Fact):
-    _references = ('state_from', 'state_to')
-    _attributes = dict(state_from=None, state_to=None, start_actions=(), end_actions=(), **Fact._attributes)
-    _required = tuple(['state_from', 'state_to'] + list(Fact._required))
-    _serializable = ['start_actions', 'end_actions'] + list(Fact._serializable)
-    __slots__ = _attributes.keys()
-
-    def update_uid(self):
-        self.uid='#jump(%s, %s)' % (self.state_from, self.state_to)
-
-
-class Condition(Fact): pass
-
 
 class Pointer(Fact):
-    UID = '#pointer'
-    _references = ('state', 'jump')
-    _attributes = dict(state=None, jump=None, **{attribute:(default if attribute != 'uid' else '#pointer')
-                                                 for attribute, default in State._attributes.iteritems()})
-    __slots__ = _attributes.keys()
+    state = FactAttribute(is_reference=True, default=None)
+    jump = FactAttribute(is_reference=True, default=None)
 
 
 class Event(Fact):
-    _attributes = dict(members=None, **Action._attributes)
-    _required = tuple(['members'] + list(Action._required))
-    __slots__ = _attributes.keys()
+    members = FactAttribute(default=())
 
 
 class SubQuest(Fact):
-    _attributes = dict(members=None, **Action._attributes)
-    _required = tuple(['members'] + list(Action._required))
-    __slots__ = _attributes.keys()
+    members = FactAttribute(default=())
+
 
 ######################
-# Concrete classes
+# Actor classes
 ######################
 
+class Actor(Fact): pass
 
 class Hero(Actor): pass
 
 class Place(Actor):
-    _attributes = dict(terrains=None, **Actor._attributes)
-    __slots__ = _attributes.keys()
+    terrains = FactAttribute(default=None)
 
 class Person(Actor):
-    _attributes = dict(profession=None, **Actor._attributes)
-    __slots__ = _attributes.keys()
+    profession = FactAttribute(default=None)
 
 class Mob(Actor):
-    _attributes = dict(terrains=None, **Actor._attributes)
-    __slots__ = _attributes.keys()
+    terrains = FactAttribute(default=None)
+
+######################
+# States classes
+######################
+
+class State(Fact):
+    require = FactAttribute(deserialization_classes=requirements.REQUIREMENTS, default=())
+    actions = FactAttribute(deserialization_classes=actions.ACTIONS, default=())
+
+
+class Jump(Fact):
+    state_from = FactAttribute(is_reference=True, is_uid=True)
+    state_to = FactAttribute(is_reference=True, is_uid=True)
+    start_actions = FactAttribute(deserialization_classes=actions.ACTIONS, default=())
+    end_actions = FactAttribute(deserialization_classes=actions.ACTIONS, default=())
 
 
 class Start(State):
-    _attributes = dict(type=None, nesting=False, **State._attributes)
-    _required = tuple(['type', 'nesting'] + list(State._required))
-    __slots__ = _attributes.keys()
+    type = FactAttribute()
+    nesting = FactAttribute()
 
     @property
     def is_external(self): return self.nesting == 0
 
 class Finish(State):
-    _attributes = dict(nesting=False, results=None, start=None, **State._attributes)
-    _required = tuple(['nesting', 'results', 'start'] + list(State._required))
-    __slots__ = _attributes.keys()
+    nesting = FactAttribute()
+    results = FactAttribute()
+    start = FactAttribute(is_reference=True)
 
     @property
     def is_external(self): return self.nesting == 0
@@ -182,92 +230,65 @@ class Finish(State):
 
 class Choice(State): pass
 
-class Option(Jump):
-    _attributes = dict(type=None, **Jump._attributes)
-    _required = tuple(['type'] + list(Jump._required))
-    __slots__ = _attributes.keys()
 
-    def update_uid(self):
-        self.uid='#option(%s, %s)' % (self.state_from, self.state_to)
+class Option(Jump):
+    type = FactAttribute()
+
 
 class OptionsLink(Fact):
-    _attributes = dict(options=(), **Fact._attributes)
-    _required = tuple(['options'] + list(Fact._required))
-    __slots__ = _attributes.keys()
-
-
-    def update_uid(self):
-        self.uid='#options_link(%s)' % ','.join(self.options)
+    options = FactAttribute(is_uid=True)
 
 
 class ChoicePath(Fact):
-    _references = ('choice', 'option')
-    _attributes = dict(choice=None, option=None, default=None, **Fact._attributes)
-    _required = tuple(['choice', 'option', 'default'] + list(Fact._required))
-    __slots__ = _attributes.keys()
-
-
-    def update_uid(self):
-        self.uid = '#choice_path(%s, %s, %s)' % (self.choice, self.option, self.default)
+    choice = FactAttribute(is_reference=True, is_uid=True)
+    option = FactAttribute(is_reference=True, is_uid=True)
+    default = FactAttribute(is_uid=True)
 
 #############
 # Question
 #############
 
 class Question(State):
-    _attributes = dict(condition=None, **State._attributes)
-    _required = tuple(['condition'] + list(State._required))
-    _serializable = ['condition'] + list(State._serializable)
-    __slots__ = _attributes.keys()
+    condition = FactAttribute(deserialization_classes=requirements.REQUIREMENTS)
 
 
 class Answer(Jump):
-    _attributes = dict(condition=None, **Jump._attributes)
-    _required = tuple(['condition'] + list(Jump._required))
-    __slots__ = _attributes.keys()
-
-    def update_uid(self):
-        self.uid='#answer_%s(%s, %s)' % (self.condition, self.state_from, self.state_to)
+    condition = FactAttribute(is_uid=True)
 
 
 #############
 # Conditions
 #############
 
+class Condition(Fact): pass
+
 class LocatedIn(Condition):
-    _references = ('object', 'place')
-    _attributes = dict(object=None, place=None, **Condition._attributes)
-    _required = tuple(['object', 'place'] + list(Condition._required))
-    __slots__ = _attributes.keys()
-
-    @classmethod
-    def relocate(cls, knowlege_base, object, new_place):
-        location = filter(lambda fact: fact.object == object,
-                          knowlege_base.filter(cls))[0]
-        location.change_in_knowlege_base(knowlege_base, place=new_place)
-
-    def update_uid(self):
-        self.uid = '#located_in(%s, %s)' % (self.object, self.place)
+    object = FactAttribute(is_reference=True, is_uid=True)
+    place = FactAttribute(is_reference=True, is_uid=True)
 
 
 class LocatedNear(Condition):
-    _references = ('object', 'place')
-    _attributes = dict(object=None, place=None, terrains=None, **Condition._attributes)
-    _required = tuple(['object', 'place'] + list(Condition._required))
-    __slots__ = _attributes.keys()
+    object = FactAttribute(is_reference=True, is_uid=True)
+    place = FactAttribute(is_reference=True, is_uid=True)
+    terrains = FactAttribute(default=None)
 
-    def update_uid(self):
-        self.uid = '#located_near(%s, %s)' % (self.object, self.place)
+
+class LocatedOnRoad(Condition):
+    object = FactAttribute(is_reference=True, is_uid=True)
+    place_1 = FactAttribute(is_reference=True, is_uid=True)
+    place_2 = FactAttribute(is_reference=True, is_uid=True)
+    percents = FactAttribute()
+
+    def check(self, knowledge_base):
+        if self.uid not in knowledge_base:
+            return False
+
+        return self.percents < knowledge_base[self.uid].percents
 
 
 class HasMoney(Condition):
-    _references = ('object',)
-    _attributes = dict(object=None, money=None, **Condition._attributes)
-    _required = tuple(['object', 'money'] + list(Condition._required))
-    __slots__ = _attributes.keys()
-
-    def update_uid(self):
-        self.uid = '#has_money(%s)' % self.object
+    object = FactAttribute(is_reference=True, is_uid=True)
+    money = FactAttribute()
 
     def check(self, knowledge_base):
         if self.uid not in knowledge_base:
@@ -277,214 +298,69 @@ class HasMoney(Condition):
 
 
 class IsAlive(Condition):
-    _references = ('object',)
-    _attributes = dict(object=None, **Condition._attributes)
-    _required = tuple(['object'] + list(Condition._required))
-    __slots__ = _attributes.keys()
-
-    def update_uid(self):
-        self.uid = '#is_alive(%s)' % self.object
+    object = FactAttribute(is_reference=True, is_uid=True)
 
 
 class Preference(Condition):
-    _references = ('object',)
-
-    def update_uid(self):
-        self.uid = '#preference_%s(%s, %s)' % (self.preference, self.object, self.value)
+    object = FactAttribute(is_reference=True, is_uid=True)
 
 
 class PreferenceMob(Preference):
-    _references = ('object', 'mob')
-    _attributes = dict(object=None, mob=None, **Preference._attributes)
-    _required = tuple(['object', 'mob'] + list(Preference._required))
-    __slots__ = _attributes.keys()
-
-    def update_uid(self):
-        self.uid = '#preference_mob(%s, %s)' % (self.object, self.mob)
+    mob = FactAttribute(is_reference=True, is_uid=True)
 
 
 class PreferenceHometown(Preference):
-    _references = ('object', 'place')
-    _attributes = dict(object=None, place=None, **Preference._attributes)
-    _required = tuple(['object', 'place'] + list(Preference._required))
-    __slots__ = _attributes.keys()
-
-    def update_uid(self):
-        self.uid = '#preference_place(%s, %s)' % (self.object, self.place)
-
+    place = FactAttribute(is_reference=True, is_uid=True)
 
 
 class PreferenceFriend(Preference):
-    _references = ('object', 'person')
-    _attributes = dict(object=None, person=None, **Preference._attributes)
-    _required = tuple(['object', 'person'] + list(Preference._required))
-    __slots__ = _attributes.keys()
-
-    def update_uid(self):
-        self.uid = '#preference_friend(%s, %s)' % (self.object, self.person)
+    person = FactAttribute(is_reference=True, is_uid=True)
 
 
 class PreferenceEnemy(Preference):
-    _references = ('object', 'person')
-    _attributes = dict(object=None, person=None, **Preference._attributes)
-    _required = tuple(['object', 'person'] + list(Preference._required))
-    __slots__ = _attributes.keys()
-
-    def update_uid(self):
-        self.uid = '#preference_enemy(%s, %s)' % (self.object, self.person)
-
+    person = FactAttribute(is_reference=True, is_uid=True)
 
 
 class PreferenceEquipmentSlot(Preference):
-    _references = ('object',)
-    _attributes = dict(object=None, equipment_slot=None, **Preference._attributes)
-    _required = tuple(['object', 'equipment_slot'] + list(Preference._required))
-    __slots__ = _attributes.keys()
-
-    def update_uid(self):
-        self.uid = '#preference_equipment_slot(%s, %s)' % (self.object, self.equipment_slot)
+    equipment_slot = FactAttribute(is_uid=True)
 
 
 class QuestParticipant(Fact):
-    _references = ('start', 'participant',)
-    _attributes = dict(start=None, participant=None, role=None, **Fact._attributes)
-    _required = tuple(['start', 'participant', 'role'] + list(Fact._required))
-    __slots__ = _attributes.keys()
+    participant = FactAttribute(is_reference=True, is_uid=True)
+    role = FactAttribute(is_uid=True)
+    start = FactAttribute(is_reference=True, is_uid=True)
 
-    def update_uid(self):
-        self.uid = '#quest_participant(%s, %s, %s)' % (self.start, self.participant, self.role)
-
-
-######################
-# Actions classes
-######################
-
-
-class Message(Action):
-    _attributes = dict(type=None, **Action._attributes)
-    _required = tuple(['type'] + list(Action._required))
-    __slots__ = _attributes.keys()
-
-    def update_uid(self):
-        self.uid = '#message(%s)' % self.type
-
-class GivePower(Action):
-    _references = ('object',)
-    _attributes = dict(object=None, power=None, **Action._attributes)
-    _required = tuple(['object', 'power'] + list(Action._required))
-    __slots__ = _attributes.keys()
-
-    def update_uid(self):
-        self.uid = '#give_power(%s, %f)' % (self.object, self.power)
-
-class GiveReward(Action):
-    _references = ('object', 'scale')
-    _attributes = dict(object=None, type=None, scale=1.0, **Action._attributes)
-    _required = tuple(['object', 'type'] + list(Action._required))
-    __slots__ = _attributes.keys()
-
-    def update_uid(self):
-        self.uid = '#give_reward(%s, %s)' % (self.object, self.type)
-
-class Fight(Action):
-    _attributes = dict(mercenary=None, mob=None, **Action._attributes)
-    __slots__ = _attributes.keys()
-
-
-class DoNothing(Action):
-    _attributes = dict(type=None, **Action._attributes)
-    _required = tuple(['type'] + list(Action._required))
-    __slots__ = _attributes.keys()
-
-    def update_uid(self):
-        self.uid = '#donothing(%s)' % (self.type,)
-
-class UpgradeEquipment(Action):
-    _attributes = dict(cost=None, **Action._attributes)
-    _required = ['cost'] + list(Action._required)
-    __slots__ = _attributes.keys()
-
-    def update_uid(self):
-        self.uid = '#upgrade_equipment(cost=%s)' % self.cost
 
 class UpgradeEquipmentCost(Fact):
-    _attributes = dict(money=None, **Fact._attributes)
-    _required = ['money'] + list(Fact._required)
-    __slots__ = _attributes.keys()
-
-    def update_uid(self):
-        self.uid = '#upgrade_equipment_cost(%s)' % self.money
-
-
-class MoveNear(Condition):
-    _references = ('object', 'place')
-    _attributes = dict(object=None, place=None, terrains=None, **Condition._attributes)
-    _required = tuple(['object',] + list(Condition._required))
-    __slots__ = _attributes.keys()
-
-    def update_uid(self):
-        self.uid = '#move_near(%s, %s)' % (self.object, self.place)
-
-class MoveIn(Condition):
-    _references = ('object', 'place')
-    _attributes = dict(object=None, place=None, percents=None, **Condition._attributes)
-    _required = tuple(['object', 'place', 'percents'] + list(Condition._required))
-    __slots__ = _attributes.keys()
-
-    def update_uid(self):
-        self.uid = '#move_in(%s, %s, %.3f)' % (self.object, self.place, self.percents)
+    money = FactAttribute(is_uid=True)
 
 
 ######################
 # Restrictions classes
 ######################
 
-class OnlyGoodBranches(Restriction):
-    _references = ('object',)
-    _attributes = dict(object=None, **Restriction._attributes)
-    _required = tuple(['object'] + list(Restriction._required))
-    __slots__ = _attributes.keys()
+class Restriction(Fact): pass
 
-    def update_uid(self):
-        self.uid = '#only_good_branches(%s)' % self.object
+class OnlyGoodBranches(Restriction):
+    object = FactAttribute(is_reference=True, is_uid=True)
+
 
 class OnlyBadBranches(Restriction):
-    _references = ('object',)
-    _attributes = dict(object=None, **Restriction._attributes)
-    _required = tuple(['object'] + list(Restriction._required))
-    __slots__ = _attributes.keys()
+    object = FactAttribute(is_reference=True, is_uid=True)
 
-    def update_uid(self):
-        self.uid = '#only_bad_branches(%s)' % self.object
 
 class ExceptGoodBranches(Restriction):
-    _references = ('object',)
-    _attributes = dict(object=None, **Restriction._attributes)
-    _required = tuple(['object'] + list(Restriction._required))
-    __slots__ = _attributes.keys()
+    object = FactAttribute(is_reference=True, is_uid=True)
 
-    def update_uid(self):
-        self.uid = '#only_good_branches(%s)' % self.object
 
 class ExceptBadBranches(Restriction):
-    _references = ('object',)
-    _attributes = dict(object=None, **Restriction._attributes)
-    _required = tuple(['object'] + list(Restriction._required))
-    __slots__ = _attributes.keys()
+    object = FactAttribute(is_reference=True, is_uid=True)
 
-    def update_uid(self):
-        self.uid = '#only_bad_branches(%s)' % self.object
 
 class NotFirstInitiator(Restriction):
-    _references = ('person',)
-    _attributes = dict(person=None, **Restriction._attributes)
-    _required = tuple(['person'] + list(Restriction._required))
-    __slots__ = _attributes.keys()
-
-    def update_uid(self):
-        self.uid = '#not_first_initiator(%s)' % self.person
+    person = FactAttribute(is_reference=True, is_uid=True)
 
 
-FACTS = {fact_class.fact_class(): fact_class
+FACTS = {fact_class.type_name(): fact_class
          for fact_class in globals().values()
          if isinstance(fact_class, type) and issubclass(fact_class, Fact)}

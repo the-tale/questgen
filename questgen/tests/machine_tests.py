@@ -7,6 +7,8 @@ from questgen.knowledge_base import KnowledgeBase
 from questgen.machine import Machine
 from questgen import exceptions
 from questgen import facts
+from questgen import requirements
+from questgen.tests.helpers import FakeInterpreter
 
 
 class MachineTests(unittest.TestCase):
@@ -14,14 +16,16 @@ class MachineTests(unittest.TestCase):
     def setUp(self):
         self.kb = KnowledgeBase()
 
+        self.hero = facts.Hero(uid='hero')
+
         self.start = facts.Start(uid='start', type='test', nesting=0)
         self.state_1 = facts.State(uid='state_1')
         self.state_2 = facts.State(uid='state_2')
         self.finish_1 = facts.Finish(start='start', uid='finish_1', results={}, nesting=0)
 
-        self.kb += [ self.start, self.state_1, self.state_2, self.finish_1]
+        self.kb += [ self.start, self.state_1, self.state_2, self.finish_1, self.hero]
 
-        self.machine = Machine(knowledge_base=self.kb)
+        self.machine = Machine(knowledge_base=self.kb, interpreter=None)
 
     def test_get_pointer(self):
         self.assertEqual(list(self.kb.filter(facts.Pointer)), [])
@@ -50,20 +54,20 @@ class MachineTests(unittest.TestCase):
             self.assertEqual(self.machine.get_available_jumps(choice), [option_2])
 
     def test_get_available_jumps__for_question_state(self):
-        condition = facts.LocatedIn(object='object', place='place')
+        condition = requirements.LocatedIn(object='object', place='place')
 
         question = facts.Question(uid='choice', condition=[condition])
         answer_1 = facts.Answer(state_from=question.uid, state_to=self.state_1.uid, condition=True)
         answer_2 = facts.Answer(state_from=question.uid, state_to=self.state_2.uid, condition=False)
         self.kb += (question, answer_1, answer_2)
 
-        for i in xrange(100):
-            self.assertEqual(self.machine.get_available_jumps(question), [answer_2])
+        with mock.patch('questgen.machine.Machine.interpreter', FakeInterpreter(check_located_in=False)):
+            for i in xrange(100):
+                self.assertEqual(self.machine.get_available_jumps(question), [answer_2])
 
-        self.kb += condition
-
-        for i in xrange(100):
-            self.assertEqual(self.machine.get_available_jumps(question), [answer_1])
+        with mock.patch('questgen.machine.Machine.interpreter', FakeInterpreter(check_located_in=True)):
+            for i in xrange(100):
+                self.assertEqual(self.machine.get_available_jumps(question), [answer_1])
 
     def test_get_next_jump__no_jumps(self):
         self.assertRaises(exceptions.NoJumpsAvailableError,
@@ -97,8 +101,9 @@ class MachineTests(unittest.TestCase):
         self.assertEqual(list(self.kb.filter(facts.Pointer)), [])
         self.assertTrue(self.machine.can_do_step())
 
+    @mock.patch('questgen.machine.Machine.interpreter', FakeInterpreter(check_is_alive=False))
     def test_can_do_step__requirement_failed(self):
-        state_3 = facts.State(uid='state_3', require=[facts.Place(uid='unexisted_place')])
+        state_3 = facts.State(uid='state_3', require=[requirements.IsAlive(object='hero')])
         jump_3 = facts.Jump(state_from=self.start.uid, state_to=state_3.uid)
         self.kb += [ state_3, jump_3]
 
@@ -109,7 +114,7 @@ class MachineTests(unittest.TestCase):
         self.assertFalse(self.machine.can_do_step())
 
     def test_can_do_step__success(self):
-        state_3 = facts.State(uid='state_3', require=[facts.Start(uid='start', type='test', nesting=0)])
+        state_3 = facts.State(uid='state_3', require=[requirements.IsAlive(object='hero')])
         jump_3 = facts.Jump(state_from=self.start.uid, state_to=state_3.uid)
         self.kb += [ state_3, jump_3]
 
@@ -117,7 +122,8 @@ class MachineTests(unittest.TestCase):
         self.kb -= pointer
         self.kb += pointer.change(state=self.start.uid, jump=jump_3.uid)
 
-        self.assertTrue(self.machine.can_do_step())
+        with mock.patch('questgen.machine.Machine.interpreter', FakeInterpreter(check_is_alive=True)):
+            self.assertTrue(self.machine.can_do_step())
 
 
     def test_do_step__no_pointer(self):

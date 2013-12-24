@@ -4,6 +4,8 @@ from questgen.quests.base_quest import QuestBetween2, ROLES, RESULTS
 from questgen import facts
 from questgen.relations import PROFESSION
 from questgen import logic
+from questgen import requirements
+from questgen import actions
 
 
 class SearchSmith(QuestBetween2):
@@ -37,32 +39,32 @@ class SearchSmith(QuestBetween2):
                             type=cls.TYPE,
                             nesting=nesting,
                             description=u'Начало: посещение кузнеца',
-                            require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
-                            actions=[facts.Message(type='intro')])
+                            require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
+                            actions=[actions.Message(type='intro')])
 
         participants = [facts.QuestParticipant(start=start.uid, participant=receiver.uid, role=ROLES.RECEIVER) ]
 
         arriving = facts.Question(uid=ns+'arriving',
                                   description=u'Прибытие в город',
-                                  condition=(facts.HasMoney(object=hero.uid, money=upgrade_equipment_cost),),
-                                  require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)])
+                                  condition=[requirements.HasMoney(object=hero.uid, money=upgrade_equipment_cost)],
+                                  require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)])
 
         upgrade_for_money = facts.State(uid=ns+'upgrade_for_money',
                                         description=u'Обновление экипировки за деньги',
-                                        actions=[facts.UpgradeEquipment(cost=upgrade_equipment_cost)],
-                                        require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)])
+                                        actions=[actions.UpgradeEquipment(cost=upgrade_equipment_cost)],
+                                        require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)])
 
         upgrade_for_quest = facts.State(uid=ns+'upgrade_for_quest',
                                         description=u'Обновление экипировки за задание',
-                                        actions=[facts.UpgradeEquipment(cost=None)],
-                                        require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)])
+                                        actions=[actions.UpgradeEquipment(cost=None)],
+                                        require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)])
 
         finish_successed = facts.Finish(uid=ns+'finish_successed',
                                         start=start.uid,
                                         results={ receiver.uid: RESULTS.SUCCESSED},
                                         nesting=nesting,
                                         description=u'завершить задание',
-                                        actions=[facts.GivePower(object=receiver.uid, power=1)])
+                                        actions=[actions.GivePower(object=receiver.uid, power=1)])
 
         finish_quest_failed = facts.Finish(uid=ns+'finish_quest_failed',
                                            start=start.uid,
@@ -79,16 +81,16 @@ class SearchSmith(QuestBetween2):
                 help_extra.append(facts.Answer(state_from=arriving.uid,
                                                state_to=help_fact.uid,
                                                condition=False,
-                                               start_actions=[facts.Message(type='start_quest')]))
+                                               start_actions=[actions.Message(type='start_quest')]))
             elif isinstance(help_fact, facts.Finish):
                 if help_fact.results[receiver.uid] == RESULTS.SUCCESSED:
                     help_extra.append(facts.Jump(state_from=help_fact.uid,
                                                  state_to=upgrade_for_quest.uid,
-                                                 start_actions=[facts.Message(type='quest_successed')]))
+                                                 start_actions=[actions.Message(type='quest_successed')]))
                 else:
                     help_extra.append(facts.Jump(state_from=help_fact.uid,
                                                  state_to=finish_quest_failed.uid,
-                                                 start_actions=[facts.Message(type='quest_failed')]))
+                                                 start_actions=[actions.Message(type='quest_failed')]))
 
         subquest = facts.SubQuest(uid=ns+'help_subquest', members=logic.get_subquest_members(help_quest))
 

@@ -3,6 +3,8 @@
 from questgen.quests.base_quest import QuestBetween2, ROLES, RESULTS
 from questgen import facts
 from questgen import logic
+from questgen import requirements
+from questgen import actions
 
 
 class HelpFriend(QuestBetween2):
@@ -36,33 +38,33 @@ class HelpFriend(QuestBetween2):
                             type=cls.TYPE,
                             nesting=nesting,
                             description=u'Начало: навестить соратника',
-                            require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
-                            actions=[facts.Message(type='intro')])
+                            require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
+                            actions=[actions.Message(type='intro')])
 
         participants = [facts.QuestParticipant(start=start.uid, participant=receiver.uid, role=ROLES.RECEIVER) ]
 
         meeting = facts.State(uid=ns+'meeting',
                               description=u'встреча с соратником',
-                              require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)])
+                              require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)])
 
         finish_meeting = facts.Finish(uid=ns+'finish_meeting',
                                       start=start.uid,
                                       results={receiver.uid: RESULTS.SUCCESSED},
                                       nesting=nesting,
                                       description=u'соратнику оказана помощь',
-                                      require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)],
-                                      actions=[facts.GiveReward(object=hero.uid, type='finish_meeting'),
-                                               facts.GivePower(object=receiver.uid, power=1)])
+                                      require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
+                                      actions=[actions.GiveReward(object=hero.uid, type='finish_meeting'),
+                                               actions.GivePower(object=receiver.uid, power=1)])
 
         help_quest = selector.create_quest_from_person(nesting=nesting+1, initiator=receiver, tags=('can_continue',))
         help_extra = []
 
         for help_fact in logic.filter_subquest(help_quest, nesting):
             if isinstance(help_fact, facts.Start):
-                help_extra.append(facts.Jump(state_from=meeting.uid, state_to=help_fact.uid, start_actions=[facts.Message(type='before_help')]))
+                help_extra.append(facts.Jump(state_from=meeting.uid, state_to=help_fact.uid, start_actions=[actions.Message(type='before_help')]))
             elif isinstance(help_fact, facts.Finish):
                 if help_fact.results[receiver.uid] == RESULTS.SUCCESSED:
-                    help_extra.append(facts.Jump(state_from=help_fact.uid, state_to=finish_meeting.uid, start_actions=[facts.Message(type='after_help')]))
+                    help_extra.append(facts.Jump(state_from=help_fact.uid, state_to=finish_meeting.uid, start_actions=[actions.Message(type='after_help')]))
 
         subquest = facts.SubQuest(uid=ns+'help_subquest', members=logic.get_subquest_members(help_quest))
 

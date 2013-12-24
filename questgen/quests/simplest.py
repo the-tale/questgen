@@ -1,8 +1,9 @@
 # coding: utf-8
-import random
 
 from questgen.quests.base_quest import QuestBetween2, ROLES, RESULTS
 from questgen import facts
+from questgen import requirements
+from questgen import actions
 
 
 class Simplest(QuestBetween2):
@@ -31,26 +32,26 @@ class Simplest(QuestBetween2):
                             type=cls.TYPE,
                             nesting=nesting,
                             description=u'Начало: простейшее задание',
-                            require=[facts.LocatedIn(object=hero.uid, place=initiator_position.uid)],
-                            actions=[facts.Message(type='intro')])
+                            require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
+                            actions=[actions.Message(type='intro')])
 
         participants = [facts.QuestParticipant(start=start.uid, participant=receiver_position.uid, role=ROLES.RECEIVER_POSITION) ]
 
         arriving = facts.State(uid=ns+'arriving',
                                description=u'Прибытие в другой город',
-                               require=[facts.LocatedIn(object=hero.uid, place=receiver_position.uid)])
+                               require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)])
 
         facts.State(uid=ns+'any_action',
                     description=u'выполнить какое-то действие',
-                    actions=[facts.Message(type='do smth')])
+                    actions=[actions.Message(type='do smth')])
 
         finish = facts.Finish(uid=ns+'finish',
                               start=start.uid,
                               results={ receiver_position.uid: RESULTS.SUCCESSED},
                               nesting=nesting,
                               description=u'завершить задание',
-                              actions=[facts.GiveReward(object=hero.uid, type='finish'),
-                                       facts.GivePower(object=receiver_position.uid, power=1)])
+                              actions=[actions.GiveReward(object=hero.uid, type='finish'),
+                                       actions.GivePower(object=receiver_position.uid, power=1)])
 
         line = [ start,
                  facts.Jump(state_from=start.uid, state_to=arriving.uid),
