@@ -38,6 +38,7 @@ class LocatedIn(Requirement):
 class LocatedNear(Requirement):
     object = RequirementAttribute(is_reference=True)
     place = RequirementAttribute(is_reference=True)
+    terrains = RequirementAttribute(default=None)
 
 
 class LocatedOnRoad(Requirement):

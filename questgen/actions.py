@@ -40,7 +40,7 @@ class GiveReward(Action):
 
 class Fight(Action):
     mercenary = ActionAttribute(default=None)
-    mob = ActionAttribute(default=None)
+    mob = ActionAttribute(is_reference=True, default=None)
 
 
 class DoNothing(Action):

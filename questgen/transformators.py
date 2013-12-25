@@ -175,41 +175,12 @@ def remove_restricted_states(knowledge_base):
     # print 'restricted states', [s.uid for s in states_to_remove]
 
 
-def _get_actors(fact):
+def _get_actors(record):
     used_actors = set()
 
-    if isinstance(fact, facts.LocatedIn):
-        used_actors.add(fact.object)
-        used_actors.add(fact.place)
-    elif isinstance(fact, facts.LocatedNear):
-        used_actors.add(fact.object)
-        used_actors.add(fact.place)
-    if isinstance(fact, facts.MoveIn):
-        used_actors.add(fact.object)
-        used_actors.add(fact.place)
-    elif isinstance(fact, facts.MoveNear):
-        used_actors.add(fact.object)
-        used_actors.add(fact.place)
-    elif isinstance(fact, facts.PreferenceMob):
-        used_actors.add(fact.mob)
-    elif isinstance(fact, facts.PreferenceHometown):
-        used_actors.add(fact.object)
-        used_actors.add(fact.place)
-    elif isinstance(fact, facts.PreferenceFriend):
-        used_actors.add(fact.object)
-        used_actors.add(fact.person)
-    elif isinstance(fact, facts.PreferenceEnemy):
-        used_actors.add(fact.object)
-        used_actors.add(fact.person)
-    elif isinstance(fact, facts.PreferenceEquipmentSlot):
-        used_actors.add(fact.object)
-        used_actors.add(fact.equipment_slot)
-    elif isinstance(fact, facts.QuestParticipant):
-        used_actors.add(fact.participant)
-    elif isinstance(fact, facts.GivePower):
-        used_actors.add(fact.object)
-    elif isinstance(fact, facts.Fight):
-        used_actors.add(fact.mob)
+    for attribute_name, attribute in record._attributes.iteritems():
+        if attribute.is_reference:
+            used_actors.add(getattr(record, attribute_name))
 
     return used_actors
 
@@ -231,22 +202,10 @@ def remove_unused_actors(knowledge_base):
     for participant in knowledge_base.filter(facts.QuestParticipant):
         used_actors |= _get_actors(participant)
 
-    # remove fully unused conditions
-    to_remove = set()
-
-    for condition in knowledge_base.filter(facts.Condition):
-        actors = _get_actors(condition)
-        if not (actors & used_actors):
-            to_remove.add(condition)
-
-    knowledge_base -= to_remove
-
-    # add actors, used in conditions
-    for condition in knowledge_base.filter(facts.Condition):
-        used_actors |= _get_actors(condition)
+    knowledge_base -= list(knowledge_base.filter(facts.Condition))
+    knowledge_base -= list(knowledge_base.filter(facts.Restriction))
 
     # remove actors
-
     to_remove = set()
     for actor in knowledge_base.filter(facts.Actor):
         if actor.uid in used_actors:
@@ -255,6 +214,3 @@ def remove_unused_actors(knowledge_base):
         to_remove.add(actor)
 
     knowledge_base -= to_remove
-
-    # remove restrictions
-    knowledge_base -= list(knowledge_base.filter(facts.Restriction))

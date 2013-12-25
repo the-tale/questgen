@@ -100,7 +100,7 @@ class Fact(records.Record):
                         value = '|'.join(value)
                     uid_parts.append(str(value))
 
-            self.uid = '#%s(%s)' % (utils.camel_to_underscores(self.type_name()), ','.join(uid_parts))
+            self.uid = '#%s(%s)' % (utils.camel_to_underscores(self.type_name()), ', '.join(uid_parts))
 
 
 ######################
