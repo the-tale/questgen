@@ -5,12 +5,33 @@ import unittest
 from questgen.knowledge_base import KnowledgeBase
 from questgen import exceptions
 from questgen import facts
+from questgen import actions
+from questgen import requirements
 
 
 class FactsTests(unittest.TestCase):
 
     def setUp(self):
         self.kb = KnowledgeBase()
+
+
+    def test_short_serialization(self):
+        fact = facts.State(uid='state-uid',
+                           description=u'some description',
+                           # externals settuped to default
+                           require=[requirements.IsAlive(object='hero')],
+                           actions=[actions.Message(type='message-type')])
+        self.assertEqual(fact.serialize(short=True), facts.State.deserialize(fact.serialize(short=True)).serialize())
+        self.assertFalse('description' in fact.serialize(short=True)['attributes'])
+
+    def test_full_serialization(self):
+        fact = facts.State(uid='state-uid',
+                           description=u'some description',
+                           # externals settuped to default
+                           require=[requirements.IsAlive(object='hero')],
+                           actions=[actions.Message(type='message-type')])
+        self.assertEqual(fact.serialize(), facts.State.deserialize(fact.serialize()).serialize())
+        self.assertTrue('description' in fact.serialize()['attributes'])
 
     def test_check(self):
         fact = facts.Fact(uid='fact_uid')

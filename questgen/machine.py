@@ -4,19 +4,15 @@ import random
 from questgen import facts
 from questgen import exceptions
 
-EMPTY_LAMBDA = lambda *argv, **kwargs: None
-
 class Machine(object):
     POINTER_UID = facts.Pointer().uid
 
-    __slots__ = ('knowledge_base', 'interpreter', 'on_state', 'on_jump_start', 'on_jump_end')
+    __slots__ = ('knowledge_base', 'interpreter', 'unsatisfied_requirements')
 
-    def __init__(self, knowledge_base, interpreter, on_state=EMPTY_LAMBDA, on_jump_start=EMPTY_LAMBDA, on_jump_end=EMPTY_LAMBDA):
+    def __init__(self, knowledge_base, interpreter):
         self.knowledge_base = knowledge_base
         self.interpreter = interpreter
-        self.on_state = on_state
-        self.on_jump_start = on_jump_start
-        self.on_jump_end = on_jump_end
+        self.unsatisfied_requirements = []
 
     @property
     def pointer(self):
@@ -63,9 +59,14 @@ class Machine(object):
             new_pointer = self.pointer.change(state=next_state.uid, jump=None)
 
             if self.pointer.jump is not None:
-                self.on_jump_end(jump=self.knowledge_base[self.pointer.jump])
+                next_jump = self.knowledge_base[self.pointer.jump]
+                self.interpreter.on_jump_end__before_actions(jump=next_jump)
+                self.do_actions(next_jump.end_actions)
+                self.interpreter.on_jump_end__after_actions(jump=next_jump)
 
-            self.on_state(state=next_state)
+            self.interpreter.on_state__before_actions(state=next_state)
+            self.do_actions(next_state.actions)
+            self.interpreter.on_state__after_actions(state=next_state)
         else:
             next_jump = None
 
@@ -77,11 +78,33 @@ class Machine(object):
             new_pointer = self.pointer.change(jump=next_jump.uid if next_jump else None)
 
             if next_jump is not None:
-                self.on_jump_start(jump=next_jump)
+                self.interpreter.on_jump_start__before_actions(jump=next_jump)
+                self.do_actions(next_jump.start_actions)
+                self.interpreter.on_jump_start__after_actions(jump=next_jump)
 
         self.knowledge_base -= self.pointer
         self.knowledge_base += new_pointer
 
+    def do_actions(self, actions):
+        for action in actions:
+            action.do(self.interpreter)
+
+    def do_step(self):
+        if self.can_do_step():
+            self.step()
+            return True
+
+        if self.is_processed:
+            return False
+
+        if self.next_state:
+            self.satisfy_requirements(self.next_state)
+
+        return True
+
+    def satisfy_requirements(self, state):
+        if self.unsatisfied_requirements:
+            self.unsatisfied_requirements[0].satisfy(self.interpreter)
 
     def can_do_step(self):
         if self.is_processed:
@@ -90,7 +113,14 @@ class Machine(object):
         if self.pointer.jump is None:
             return True
 
-        return self.next_state is not None and all(requirement.check(self.interpreter) for requirement in self.next_state.require)
+        return self.next_state is not None and self.check_requirements(self.next_state)
+
+    def check_requirements(self, state):
+        self.unsatisfied_requirements = [requirement
+                                         for requirement in state.require
+                                         if not requirement.check(self.interpreter)]
+        return not self.unsatisfied_requirements
+
 
     def step_until_can(self):
         while self.can_do_step():
@@ -103,7 +133,10 @@ class Machine(object):
         new_pointer = self.pointer.change(jump=self.get_next_jump(self.current_state).uid)
 
         if new_pointer.jump is not None and self.pointer.jump != new_pointer.jump:
-            self.on_jump_start(jump=self.knowledge_base[new_pointer.jump])
+            next_jump = self.knowledge_base[new_pointer.jump]
+            self.interpreter.on_jump_start__before_actions(jump=next_jump)
+            self.do_actions(next_jump.start_actions)
+            self.interpreter.on_jump_start__after_actions(jump=next_jump)
 
             self.knowledge_base -= self.pointer
             self.knowledge_base += new_pointer

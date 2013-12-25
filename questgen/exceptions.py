@@ -30,14 +30,19 @@ class FactsError(QuestgenError): pass
 class WrongChangeAttributeError(KnowledgeBaseError):
     MSG = u'can not change fact %(fact)r - unknown attribute "%(attribute)s"'
 
-class RequiredFactAttributeError(KnowledgeBaseError):
-    MSG = u'can not create fact %(fact)r - attribute "%(attribute)s" not specified'
-
-class WrongFactAttributeError(KnowledgeBaseError):
-    MSG = u'can not create fact %(fact)r - wrong attribute "%(attribute)s"'
-
 class UIDDidNotSetupped(FactsError):
     MSG = u'uid for "%(fact)r did not setupped'
+
+####################################################################
+# records
+####################################################################
+class RecordsError(QuestgenError): pass
+
+class RequiredRecordAttributeError(KnowledgeBaseError):
+    MSG = u'can not create record %(record)r - attribute "%(attribute)s" not specified'
+
+class WrongRecordAttributeError(KnowledgeBaseError):
+    MSG = u'can not create record %(record)r - wrong attribute "%(attribute)s"'
 
 ####################################################################
 # machine
@@ -101,31 +106,3 @@ class SelectorsBaseError(RollBackError): pass
 
 class NoFactSelectedError(SelectorsBaseError):
     MSG = u'can not found fact with method "%(method)s" and arguments: %(arguments)s'
-
-
-####################################################################
-# actions
-####################################################################
-
-class ActionError(RollBackError): pass
-
-
-class RequiredActionAttributeError(ActionError):
-    MSG = u'can not create action %(action)r - attribute "%(attribute)s" not specified'
-
-class WrongActionAttributeError(KnowledgeBaseError):
-    MSG = u'can not create action %(action)r - wrong attribute "%(attribute)s"'
-
-
-####################################################################
-# requirements
-####################################################################
-
-class RequirementError(RollBackError): pass
-
-
-class RequiredRequirementAttributeError(RequirementError):
-    MSG = u'can not create requirement %(requirement)r - attribute "%(attribute)s" not specified'
-
-class WrongRequirementAttributeError(KnowledgeBaseError):
-    MSG = u'can not create requirement %(requirement)r - wrong attribute "%(attribute)s"'

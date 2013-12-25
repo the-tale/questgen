@@ -61,7 +61,7 @@ class SimpleQuestTests(unittest.TestCase):
                                       restrictions.MultipleJumpsFromNormalState(),
                                       restrictions.ChoicesConsistency()])
 
-        self.machine = machine.Machine(knowledge_base=self.kb, interpreter=None)
+        self.machine = machine.Machine(knowledge_base=self.kb, interpreter=FakeInterpreter())
 
     def test_initialized(self):
         pass
@@ -91,14 +91,14 @@ class SimpleQuestTests(unittest.TestCase):
         # no move, since hero not in right place
         self.assertEqual(self.machine.pointer, Pointer(state=None, jump=None) )
 
-        def check_located_in_place_from(object, place):
-            return place == 'place_from'
+        def check_located_in_place_from(requirement):
+            return requirement.place == 'place_from'
 
-        def check_located_in_place_to(object, place):
-            return place == 'place_to'
+        def check_located_in_place_to(requirement):
+            return requirement.place == 'place_to'
 
-        def check_located_in_place_thought(object, place):
-            return place == 'place_thought'
+        def check_located_in_place_thought(requirement):
+            return requirement.place == 'place_thought'
 
         with mock.patch('questgen.machine.Machine.interpreter', FakeInterpreter(check_located_in=check_located_in_place_from)):
             self.machine.step_until_can()

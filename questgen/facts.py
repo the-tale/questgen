@@ -4,19 +4,16 @@ from questgen import utils
 from questgen import exceptions
 from questgen import actions
 from questgen import requirements
+from questgen import records
 
 
-class FactAttribute(object):
+class FactAttribute(records.RecordAttribute):
 
-    def __init__(self, is_reference=False, remove_in_short=False, deserialization_classes=None, is_uid=False, **kwargs):
-        super(FactAttribute, self).__init__()
-        self.is_reference = is_reference
+    def __init__(self, remove_in_short=False, deserialization_classes=None, is_uid=False, **kwargs):
+        super(FactAttribute, self).__init__(**kwargs)
         self.is_uid = is_uid
 
         self.remove_in_short = remove_in_short
-
-        self.has_default = 'default' in kwargs
-        self.default = kwargs.get('default')
 
         self.is_serializable = deserialization_classes is not None
         self.deserialization_classes = deserialization_classes
@@ -41,58 +38,20 @@ class FactAttribute(object):
         return [self.deserialization_classes[data['type']].deserialize(data) for data in value]
 
 
-class _FactMetaclass(type):
-
-    def __new__(cls, name, bases, attributes):
-
-        _references = set()
-        _attributes = {}
-
-        for base in bases:
-            if isinstance(base, _FactMetaclass):
-                _attributes.update(base._attributes)
-                _references |= base._references
-
-        fact_attributes = {}
-
-        for attribute_name, attribute in attributes.iteritems():
-            if isinstance(attribute, FactAttribute):
-                _attributes[attribute_name] = attribute
-
-                if attribute.is_reference:
-                    _references.add(attribute_name)
-            else:
-                fact_attributes[attribute_name] = attribute
-
-        fact_attributes['__slots__'] = tuple(attributes.keys())
-        fact_attributes['_references'] = _references
-        fact_attributes['_attributes'] = _attributes
-
-        return super(_FactMetaclass, cls).__new__(cls, name, bases, fact_attributes)
+class FactMetaclass(records.RecordMetaclass):
+    pass
 
 
 
-class Fact(object):
-    __metaclass__ = _FactMetaclass
+class Fact(records.Record):
+    __metaclass__ = FactMetaclass
 
     uid = FactAttribute(default=None)
     description = FactAttribute(remove_in_short=True, default=None)
     externals = FactAttribute(default=None)
 
     def __init__(self, **kwargs):
-        super(Fact, self).__init__()
-        for slot_attribute in self._attributes.iterkeys():
-            if slot_attribute in kwargs:
-                setattr(self, slot_attribute, kwargs[slot_attribute])
-            elif self._attributes[slot_attribute].has_default:
-                setattr(self, slot_attribute, self._attributes[slot_attribute].default)
-            else:
-                raise exceptions.RequiredFactAttributeError(fact=self, attribute=slot_attribute)
-
-        for name in kwargs.iterkeys():
-            if name not in self._attributes:
-                raise exceptions.WrongFactAttributeError(fact=self, attribute=name)
-
+        super(Fact, self).__init__(**kwargs)
         self.update_uid()
 
     def serialize(self, short=False):
@@ -143,20 +102,6 @@ class Fact(object):
 
             self.uid = '#%s(%s)' % (utils.camel_to_underscores(self.type_name()), ','.join(uid_parts))
 
-    def __eq__(self, other):
-        return self.__class__ == other.__class__ and all(getattr(self, attribute) == getattr(other, attribute) for attribute in self._attributes.iterkeys())
-
-    def __ne__(self, other):
-        return not (self == other)
-
-    @classmethod
-    def type_name(cls): return cls.__name__
-
-    def __repr__(self):
-        return u'%s(%s)' % (self.type_name(),
-                            u', '.join(u'%s=%r' % (attribute, getattr(self, attribute))
-                                       for attribute, default in self._attributes.iteritems()
-                                       if hasattr(self, attribute) and getattr(self, attribute) != default))
 
 ######################
 # Common Classes

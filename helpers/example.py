@@ -6,6 +6,7 @@ from questgen.selectors import Selector # вспомогательный кла�
 from questgen import restrictions # ограничения, которые обязательно должны выплнятся в валидном задании
 from questgen import transformators # трансформации, которые можно делать над базой знаний
 from questgen import machine # механизм для итерации по заданию
+from questgen import logic
 
 # импортируем квесты
 from questgen.quests.quests_base import QuestsBase
@@ -126,97 +127,116 @@ def create_quest():
 
 
 # интерпретатор задания
-class Interpretator(object):
+class Interpreter(object):
 
     def __init__(self, kb):
         self.kb = kb
         # создаём механизм для итерации по графу и передаём в него коллбэки
-        self.machine = machine.Machine(knowledge_base=kb,
-                                       on_state=self._on_state,
-                                       on_jump_start=self._on_jump_start,
-                                       on_jump_end=self._on_jump_end)
+        self.machine = machine.Machine(knowledge_base=kb, interpreter=self)
+
+        # для эмуляции изменения состояний мира
+        # при необходимости удовлетворить какое-то ограничение, просто помещаемего в это множество
+        # чистим его после каждого успешного продвижения по сюжету
+        self.satisfied_requirements = set()
+
+    # делаем квест
+    def process(self):
+        while self.machine.do_step():
+            print '---- next step ----'
+
+    ###########################
+    # CALLBACKS
+    ###########################
 
     # когда входим в новую вершину
-    def _on_state(self, state):
+    def on_state__before_actions(self, state):
         print 'on state: %s' % state.uid
+
+        self.satisfied_requirements = set()
 
         if isinstance(state, facts.Start):
             print '    starting quest "%s"' % state.type
 
-        if isinstance(state, facts.Finish):
-            print '    finishing quest with result "%s"' % state.result
 
-        print '    find %d actions' % len(state.actions)
-        for action in state.actions:
-            print '    do %r' % action
+    def on_state__after_actions(self, state):
+        if isinstance(state, facts.Finish):
+            print '    finishing quest with results "%s"' % state.results
+
 
     # когда переходим на новую дугу
-    def _on_jump_start(self, jump):
+    def on_jump_start__before_actions(self, jump):
         print 'on jump start: %s' % jump.uid
         print '    find %d actions' % len(jump.start_actions)
-        for action in jump.start_actions:
-            print '    do %r' % action
+
+    def on_jump_start__after_actions(self, jump):
+        print '    actions done'
 
     # когда уходим из дуги
-    def _on_jump_end(self, jump):
+    def on_jump_end__before_actions(self, jump):
         print 'on jump end: %s' % jump.uid
         print '    find %d actions' % len(jump.end_actions)
-        for action in jump.end_actions:
-            print '    do %r' % action
 
-    # делаем квест
-    def process(self):
-        while self.do_step():
-            print '---- next step ----'
+    def on_jump_end__after_actions(self, jump):
+        print '    actions done'
 
-    # один шаг квеста
-    def do_step(self):
-        # синхронизируем базу с реальным состоянием вещей
-        # например, указываем новое положение героя
-        self.sync_knowledge_base()
+    # обрабокта действий
+    def do_message(self, action): print u'    действие %s' % action
 
-        # можем ли перейти дальше
-        if self.machine.can_do_step():
-            self.machine.step() # переходим
-            return True
+    def do_give_power(self, action): print u'    действие %s' % action
 
-        if self.machine.is_processed: # прошли по всему заданию
-            return False
+    def do_give_reward(self, action): print u'    действие %s' % action
 
-        # если не можем сделать шаг, значит есть какие-то требования, которые надо удовлетворить
-        # например, переместить героя
-        if self.machine.next_state:
-            self.satisfy_requirements(self.machine.next_state)
+    def do_fight(self, action): print u'    действие %s' % action
 
-        return True
+    def do_do_nothing(self, action): print u'    действие %s' % action
 
-    def sync_knowledge_base(self):
-        print 'sync knowlege base with real situation'
+    def do_upgrade_equipment(self, action): print u'    действие %s' % action
 
-    def satisfy_requirements(self, state):
-        for requirement in state.require:
-            if not requirement.check(self.kb):
-                if isinstance(requirement, (facts.LocatedIn, facts.LocatedNear)):
-                    self._satisfy_position(requirement)
+    def do_move_near(self, action): print u'    действие %s' % action
 
-    def _satisfy_position(self, requirement):
-        self.kb -= [location
-                    for location in self.kb.filter(facts.LocatedIn)
-                    if location.object == requirement.object]
+    def do_move_in(self, action): print u'    действие %s' % action
 
-        self.kb -= [location
-                    for location in self.kb.filter(facts.LocatedNear)
-                    if location.object == requirement.object]
+    def _check_requirement(self, requirement):
+        print u'    проверка %s' % requirement
+        return requirement in self.satisfied_requirements
 
-        new_position = requirement.__class__(object=requirement.object, place=requirement.place)
-        self.kb += new_position
+    def _satisfy_requirement(self, requirement):
+        print u'    выполнить %s' % requirement
+        self.satisfied_requirements.add(requirement)
 
-        print 'change position: %r' % new_position
+    # проверка ограничений
+    def check_located_in(self, requirement): return self._check_requirement(requirement)
+
+    def check_located_near(self, requirement): return self._check_requirement(requirement)
+
+    def check_located_on_road(self, requirement): return self._check_requirement(requirement)
+
+    def check_has_money(self, requirement): return self._check_requirement(requirement)
+
+    def check_is_alive(self, requirement): return self._check_requirement(requirement)
 
 
+    # удовлетворение ограничений
+    def satisfy_located_in(self, requirement): self._satisfy_requirement(requirement)
+
+    def satisfy_located_near(self, requirement): self._satisfy_requirement(requirement)
+
+    def satisfy_located_on_road(self, requirement): self._satisfy_requirement(requirement)
+
+    def satisfy_has_money(self, requirement): self._satisfy_requirement(requirement)
+
+    def satisfy_is_alive(self, requirement): self._satisfy_requirement(requirement)
 
 
 if __name__ == '__main__':
     kb = create_quest()
-    interpretator = Interpretator(kb=kb)
-    interpretator.process()
+    interpreter = Interpreter(kb=kb)
+
+    # проверяем, что в интерпретаторе реализованы все необходимые методы
+    for method_name in logic.get_required_interpreter_methods():
+        if not hasattr(interpreter, method_name):
+            error = u'интерпретатор не реализует метод: %s' % method_name
+            print error
+            raise Exception(error)
+
+    interpreter.process()

@@ -155,11 +155,11 @@ def remove_restricted_states(knowledge_base):
     for finish in knowledge_base.filter(facts.Finish):
 
         for restriction_fact in knowledge_base.filter(facts.OnlyGoodBranches):
-            if finish.results.get(restriction_fact.object) != RESULTS.SUCCESSED:
+            if finish.results.get(restriction_fact.object) not in (None, RESULTS.SUCCESSED):
                 states_to_remove.add(finish)
 
         for restriction_fact in knowledge_base.filter(facts.OnlyBadBranches):
-            if finish.results.get(restriction_fact.object) != RESULTS.FAILED:
+            if finish.results.get(restriction_fact.object) not in (None, RESULTS.FAILED):
                 states_to_remove.add(finish)
 
         for restriction_fact in knowledge_base.filter(facts.ExceptBadBranches):
@@ -171,6 +171,8 @@ def remove_restricted_states(knowledge_base):
                 states_to_remove.add(finish)
 
     knowledge_base -= states_to_remove
+
+    # print 'restricted states', [s.uid for s in states_to_remove]
 
 
 def _get_actors(fact):
