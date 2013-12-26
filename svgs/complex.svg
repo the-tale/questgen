@@ -32,11 +32,11 @@
 <polygon fill="#ccccee" stroke="none" points="163,-387 163,-400 454,-400 454,-387 163,-387"/>
 <text text-anchor="start" x="164" y="-392" font-family="Times,serif" font-size="10.00">hero </text>
 <text text-anchor="start" x="185" y="-392" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
-<text text-anchor="start" x="240" y="-392" font-family="Times,serif" font-size="10.00"> place_4</text>
+<text text-anchor="start" x="240" y="-392" font-family="Times,serif" font-size="10.00"> place_5</text>
 <polygon fill="none" stroke="black" points="161.5,-386 161.5,-428 454.5,-428 454.5,-386 161.5,-386"/>
 </g>
 <!-- [ns&#45;0]start&#45;&gt;[ns&#45;0]arriving -->
-<g id="edge7" class="edge"><title>[ns&#45;0]start:[ns&#45;0]start&#45;&gt;[ns&#45;0]arriving:[ns&#45;0]arriving</title>
+<g id="edge9" class="edge"><title>[ns&#45;0]start:[ns&#45;0]start&#45;&gt;[ns&#45;0]arriving:[ns&#45;0]arriving</title>
 <path fill="none" stroke="black" d="M308,-472.189C308,-461.542 308,-449.241 308,-438.275"/>
 <polygon fill="black" stroke="black" points="311.5,-438.266 308,-428.266 304.5,-438.267 311.5,-438.266"/>
 </g>
@@ -54,12 +54,12 @@
 <text text-anchor="start" x="205" y="-49" font-family="Times,serif" font-size="10.00"> 1.00</text>
 <polygon fill="#ffffff" stroke="none" points="9,-31 9,-44 228,-44 228,-31 9,-31"/>
 <text text-anchor="start" x="10" y="-36" font-family="Times,serif" font-weight="bold" font-size="10.00">увеличить влияние </text>
-<text text-anchor="start" x="98" y="-36" font-family="Times,serif" font-size="10.00">  place_4 </text>
+<text text-anchor="start" x="98" y="-36" font-family="Times,serif" font-size="10.00">  place_5 </text>
 <text text-anchor="start" x="138" y="-36" font-family="Times,serif" font-weight="bold" font-size="10.00">на </text>
 <text text-anchor="start" x="151" y="-36" font-family="Times,serif" font-size="10.00"> 1.00</text>
 <polygon fill="#eeeeee" stroke="none" points="9,-18 9,-31 228,-31 228,-18 9,-18"/>
 <text text-anchor="start" x="10" y="-23" font-family="Times,serif" font-weight="bold" font-size="10.00">результаты:</text>
-<text text-anchor="start" x="10" y="-10" font-family="Times,serif" font-weight="bold" font-size="10.00">place_4</text>
+<text text-anchor="start" x="10" y="-10" font-family="Times,serif" font-weight="bold" font-size="10.00">place_5</text>
 <text text-anchor="start" x="120" y="-9" font-family="Times,serif" font-size="10.00">successed</text>
 <polygon fill="none" stroke="black" points="7.5,-4.5 7.5,-85.5 228.5,-85.5 228.5,-4.5 7.5,-4.5"/>
 </g>
@@ -81,22 +81,22 @@
 <text text-anchor="start" x="289" y="-208" font-family="Times,serif" font-weight="bold" font-size="10.00">монет</text>
 <polygon fill="none" stroke="black" points="119,-202 119,-270 319,-270 319,-202 119,-202"/>
 </g>
-<!-- #answer_False([ns&#45;0]tax, [ns&#45;0]finish_not_paid) -->
-<g id="node8" class="node"><title>#answer_False([ns&#45;0]tax, [ns&#45;0]finish_not_paid)</title>
+<!-- #answer(False, [ns&#45;0]tax, [ns&#45;0]finish_not_paid) -->
+<g id="node7" class="node"><title>#answer(False, [ns&#45;0]tax, [ns&#45;0]finish_not_paid)</title>
 <polygon fill="#ffffff" stroke="none" points="291,-137 291,-151 324,-151 324,-137 291,-137"/>
 <text text-anchor="start" x="292" y="-141.5" font-family="Times,serif" font-size="10.00">ЛОЖЬ</text>
 </g>
-<!-- [ns&#45;0]tax&#45;&gt;#answer_False([ns&#45;0]tax, [ns&#45;0]finish_not_paid) -->
-<g id="edge5" class="edge"><title>[ns&#45;0]tax:[ns&#45;0]tax&#45;&gt;#answer_False([ns&#45;0]tax, [ns&#45;0]finish_not_paid):#answer_False([ns&#45;0]tax, [ns&#45;0]finish_not_paid)</title>
+<!-- [ns&#45;0]tax&#45;&gt;#answer(False, [ns&#45;0]tax, [ns&#45;0]finish_not_paid) -->
+<g id="edge3" class="edge"><title>[ns&#45;0]tax:[ns&#45;0]tax&#45;&gt;#answer(False, [ns&#45;0]tax, [ns&#45;0]finish_not_paid):#answer(False, [ns&#45;0]tax, [ns&#45;0]finish_not_paid)</title>
 <path fill="none" stroke="black" d="M251.268,-201.998C269.516,-183.336 290.668,-161.703 300.871,-151.268"/>
 </g>
-<!-- #answer_True([ns&#45;0]tax, [ns&#45;0]finish_paid) -->
-<g id="node9" class="node"><title>#answer_True([ns&#45;0]tax, [ns&#45;0]finish_paid)</title>
+<!-- #answer(True, [ns&#45;0]tax, [ns&#45;0]finish_paid) -->
+<g id="node8" class="node"><title>#answer(True, [ns&#45;0]tax, [ns&#45;0]finish_paid)</title>
 <polygon fill="#ffffff" stroke="none" points="146,-137 146,-151 192,-151 192,-137 146,-137"/>
 <text text-anchor="start" x="147" y="-141.5" font-family="Times,serif" font-size="10.00">ИСТИНА</text>
 </g>
-<!-- [ns&#45;0]tax&#45;&gt;#answer_True([ns&#45;0]tax, [ns&#45;0]finish_paid) -->
-<g id="edge8" class="edge"><title>[ns&#45;0]tax:[ns&#45;0]tax&#45;&gt;#answer_True([ns&#45;0]tax, [ns&#45;0]finish_paid):#answer_True([ns&#45;0]tax, [ns&#45;0]finish_paid)</title>
+<!-- [ns&#45;0]tax&#45;&gt;#answer(True, [ns&#45;0]tax, [ns&#45;0]finish_paid) -->
+<g id="edge5" class="edge"><title>[ns&#45;0]tax:[ns&#45;0]tax&#45;&gt;#answer(True, [ns&#45;0]tax, [ns&#45;0]finish_paid):#answer(True, [ns&#45;0]tax, [ns&#45;0]finish_paid)</title>
 <path fill="none" stroke="black" d="M200.666,-201.998C190.298,-183.336 178.28,-161.703 172.482,-151.268"/>
 </g>
 <!-- [ns&#45;0]finish_not_paid -->
@@ -113,12 +113,12 @@
 <text text-anchor="start" x="460" y="-49" font-family="Times,serif" font-size="10.00"> 1.00</text>
 <polygon fill="#ffffff" stroke="none" points="264,-31 264,-44 483,-44 483,-31 264,-31"/>
 <text text-anchor="start" x="265" y="-36" font-family="Times,serif" font-weight="bold" font-size="10.00">увеличить влияние </text>
-<text text-anchor="start" x="353" y="-36" font-family="Times,serif" font-size="10.00">  place_4 </text>
+<text text-anchor="start" x="353" y="-36" font-family="Times,serif" font-size="10.00">  place_5 </text>
 <text text-anchor="start" x="393" y="-36" font-family="Times,serif" font-weight="bold" font-size="10.00">на </text>
 <text text-anchor="start" x="406" y="-36" font-family="Times,serif" font-size="10.00"> &#45;1.00</text>
 <polygon fill="#eeeeee" stroke="none" points="264,-18 264,-31 483,-31 483,-18 264,-18"/>
 <text text-anchor="start" x="265" y="-23" font-family="Times,serif" font-weight="bold" font-size="10.00">результаты:</text>
-<text text-anchor="start" x="265" y="-10" font-family="Times,serif" font-weight="bold" font-size="10.00">place_4</text>
+<text text-anchor="start" x="265" y="-10" font-family="Times,serif" font-weight="bold" font-size="10.00">place_5</text>
 <text text-anchor="start" x="375" y="-9" font-family="Times,serif" font-size="10.00">failed</text>
 <polygon fill="none" stroke="black" points="262.5,-4.5 262.5,-85.5 483.5,-85.5 483.5,-4.5 262.5,-4.5"/>
 </g>
@@ -132,12 +132,12 @@
 <path fill="none" stroke="black" stroke-dasharray="1,5" d="M297.49,-385.769C288.787,-369.015 276.962,-346.253 271.295,-335.342"/>
 </g>
 <!-- #option([ns&#45;0]arriving, [ns&#45;0]finish_not_paid) -->
-<g id="node7" class="node"><title>#option([ns&#45;0]arriving, [ns&#45;0]finish_not_paid)</title>
+<g id="node9" class="node"><title>#option([ns&#45;0]arriving, [ns&#45;0]finish_not_paid)</title>
 <polygon fill="#ffffff" stroke="none" points="353,-229 353,-243 393,-243 393,-229 353,-229"/>
 <text text-anchor="start" x="354" y="-233.5" font-family="Times,serif" font-size="10.00">not_paid</text>
 </g>
 <!-- [ns&#45;0]arriving&#45;&gt;#option([ns&#45;0]arriving, [ns&#45;0]finish_not_paid) -->
-<g id="edge3" class="edge"><title>[ns&#45;0]arriving:[ns&#45;0]arriving&#45;&gt;#option([ns&#45;0]arriving, [ns&#45;0]finish_not_paid):#option([ns&#45;0]arriving, [ns&#45;0]finish_not_paid)</title>
+<g id="edge7" class="edge"><title>[ns&#45;0]arriving:[ns&#45;0]arriving&#45;&gt;#option([ns&#45;0]arriving, [ns&#45;0]finish_not_paid):#option([ns&#45;0]arriving, [ns&#45;0]finish_not_paid)</title>
 <path fill="none" stroke="black" stroke-dasharray="1,5" d="M315.712,-385.95C330.441,-347.654 361.894,-265.874 370.679,-243.035"/>
 </g>
 <!-- #option([ns&#45;0]arriving, [ns&#45;0]tax)&#45;&gt;[ns&#45;0]tax -->
@@ -145,20 +145,20 @@
 <path fill="none" stroke="black" stroke-dasharray="1,5" d="M264.632,-320.814C259.889,-312.102 250.833,-295.468 242.031,-279.301"/>
 <polygon fill="black" stroke="black" points="245.051,-277.53 237.196,-270.421 238.904,-280.877 245.051,-277.53"/>
 </g>
-<!-- #option([ns&#45;0]arriving, [ns&#45;0]finish_not_paid)&#45;&gt;[ns&#45;0]finish_not_paid -->
-<g id="edge4" class="edge"><title>#option([ns&#45;0]arriving, [ns&#45;0]finish_not_paid):#option([ns&#45;0]arriving, [ns&#45;0]finish_not_paid)&#45;&gt;[ns&#45;0]finish_not_paid:[ns&#45;0]finish_not_paid</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M373,-228.712C373,-208.346 373,-142.813 373,-96.0646"/>
-<polygon fill="black" stroke="black" points="376.5,-95.8078 373,-85.8078 369.5,-95.8079 376.5,-95.8078"/>
-</g>
-<!-- #answer_False([ns&#45;0]tax, [ns&#45;0]finish_not_paid)&#45;&gt;[ns&#45;0]finish_not_paid -->
-<g id="edge6" class="edge"><title>#answer_False([ns&#45;0]tax, [ns&#45;0]finish_not_paid):#answer_False([ns&#45;0]tax, [ns&#45;0]finish_not_paid)&#45;&gt;[ns&#45;0]finish_not_paid:[ns&#45;0]finish_not_paid</title>
+<!-- #answer(False, [ns&#45;0]tax, [ns&#45;0]finish_not_paid)&#45;&gt;[ns&#45;0]finish_not_paid -->
+<g id="edge4" class="edge"><title>#answer(False, [ns&#45;0]tax, [ns&#45;0]finish_not_paid):#answer(False, [ns&#45;0]tax, [ns&#45;0]finish_not_paid)&#45;&gt;[ns&#45;0]finish_not_paid:[ns&#45;0]finish_not_paid</title>
 <path fill="none" stroke="black" d="M311.129,-136.932C317.095,-128.164 328.682,-111.134 340.232,-94.159"/>
 <polygon fill="black" stroke="black" points="343.142,-96.1036 345.874,-85.867 337.355,-92.1657 343.142,-96.1036"/>
 </g>
-<!-- #answer_True([ns&#45;0]tax, [ns&#45;0]finish_paid)&#45;&gt;[ns&#45;0]finish_paid -->
-<g id="edge9" class="edge"><title>#answer_True([ns&#45;0]tax, [ns&#45;0]finish_paid):#answer_True([ns&#45;0]tax, [ns&#45;0]finish_paid)&#45;&gt;[ns&#45;0]finish_paid:[ns&#45;0]finish_paid</title>
+<!-- #answer(True, [ns&#45;0]tax, [ns&#45;0]finish_paid)&#45;&gt;[ns&#45;0]finish_paid -->
+<g id="edge6" class="edge"><title>#answer(True, [ns&#45;0]tax, [ns&#45;0]finish_paid):#answer(True, [ns&#45;0]tax, [ns&#45;0]finish_paid)&#45;&gt;[ns&#45;0]finish_paid:[ns&#45;0]finish_paid</title>
 <path fill="none" stroke="black" d="M165.81,-136.932C161.283,-128.323 152.57,-111.75 143.808,-95.0849"/>
 <polygon fill="black" stroke="black" points="146.713,-93.0893 138.961,-85.867 140.517,-96.3469 146.713,-93.0893"/>
+</g>
+<!-- #option([ns&#45;0]arriving, [ns&#45;0]finish_not_paid)&#45;&gt;[ns&#45;0]finish_not_paid -->
+<g id="edge8" class="edge"><title>#option([ns&#45;0]arriving, [ns&#45;0]finish_not_paid):#option([ns&#45;0]arriving, [ns&#45;0]finish_not_paid)&#45;&gt;[ns&#45;0]finish_not_paid:[ns&#45;0]finish_not_paid</title>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M373,-228.712C373,-208.346 373,-142.813 373,-96.0646"/>
+<polygon fill="black" stroke="black" points="376.5,-95.8078 373,-85.8078 369.5,-95.8079 376.5,-95.8078"/>
 </g>
 </g>
 </svg>

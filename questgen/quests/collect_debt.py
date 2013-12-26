@@ -104,8 +104,8 @@ class CollectDebt(QuestBetween2):
                  help,
                  attack,
 
-                 facts.Answer(state_from=attack.uid, state_to=finish_attack_successed.uid, condition=True),
-                 facts.Answer(state_from=attack.uid, state_to=finish_attack_failed.uid, condition=False),
+                 facts.Answer(state_from=attack.uid, state_to=finish_attack_successed.uid, condition=True, start_actions=[actions.Message(type='attack_successed')]),
+                 facts.Answer(state_from=attack.uid, state_to=finish_attack_failed.uid, condition=False, start_actions=[actions.Message(type='attack_failed')]),
 
                  finish_attack_successed,
                  finish_attack_failed,

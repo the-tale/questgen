@@ -34,16 +34,16 @@
 <text text-anchor="start" x="252" y="-272" font-family="Times,serif" font-weight="bold" font-size="10.00">результаты:</text>
 <text text-anchor="start" x="252" y="-259" font-family="Times,serif" font-weight="bold" font-size="10.00">person_4</text>
 <text text-anchor="start" x="333" y="-258" font-family="Times,serif" font-size="10.00">failed</text>
-<text text-anchor="start" x="252" y="-246" font-family="Times,serif" font-weight="bold" font-size="10.00">person_6</text>
+<text text-anchor="start" x="252" y="-246" font-family="Times,serif" font-weight="bold" font-size="10.00">person_8</text>
 <text text-anchor="start" x="333" y="-245" font-family="Times,serif" font-size="10.00">failed</text>
 <text text-anchor="start" x="252" y="-233" font-family="Times,serif" font-weight="bold" font-size="10.00">place_4</text>
 <text text-anchor="start" x="333" y="-232" font-family="Times,serif" font-size="10.00">failed</text>
-<text text-anchor="start" x="252" y="-220" font-family="Times,serif" font-weight="bold" font-size="10.00">place_6</text>
+<text text-anchor="start" x="252" y="-220" font-family="Times,serif" font-weight="bold" font-size="10.00">place_8</text>
 <text text-anchor="start" x="333" y="-219" font-family="Times,serif" font-size="10.00">failed</text>
 <polygon fill="none" stroke="black" points="250,-214 250,-308 388,-308 388,-214 250,-214"/>
 </g>
 <!-- [ns&#45;1]start&#45;&gt;[ns&#45;1]finish_failed -->
-<g id="edge1" class="edge"><title>[ns&#45;1]start:[ns&#45;1]start&#45;&gt;[ns&#45;1]finish_failed:[ns&#45;1]finish_failed</title>
+<g id="edge6" class="edge"><title>[ns&#45;1]start:[ns&#45;1]start&#45;&gt;[ns&#45;1]finish_failed:[ns&#45;1]finish_failed</title>
 <path fill="none" stroke="black" d="M239.525,-355.448C248.159,-345.296 260.585,-330.685 273.056,-316.022"/>
 <polygon fill="black" stroke="black" points="275.749,-318.258 279.562,-308.373 270.417,-313.723 275.749,-318.258"/>
 </g>
@@ -56,11 +56,11 @@
 <text text-anchor="start" x="62" y="-272" font-family="Times,serif" font-weight="bold" font-size="10.00">результаты:</text>
 <text text-anchor="start" x="62" y="-259" font-family="Times,serif" font-weight="bold" font-size="10.00">person_4</text>
 <text text-anchor="start" x="159" y="-258" font-family="Times,serif" font-size="10.00">successed</text>
-<text text-anchor="start" x="62" y="-246" font-family="Times,serif" font-weight="bold" font-size="10.00">person_6</text>
+<text text-anchor="start" x="62" y="-246" font-family="Times,serif" font-weight="bold" font-size="10.00">person_8</text>
 <text text-anchor="start" x="159" y="-245" font-family="Times,serif" font-size="10.00">successed</text>
 <text text-anchor="start" x="62" y="-233" font-family="Times,serif" font-weight="bold" font-size="10.00">place_4</text>
 <text text-anchor="start" x="159" y="-232" font-family="Times,serif" font-size="10.00">successed</text>
-<text text-anchor="start" x="62" y="-220" font-family="Times,serif" font-weight="bold" font-size="10.00">place_6</text>
+<text text-anchor="start" x="62" y="-220" font-family="Times,serif" font-weight="bold" font-size="10.00">place_8</text>
 <text text-anchor="start" x="159" y="-219" font-family="Times,serif" font-size="10.00">successed</text>
 <polygon fill="none" stroke="black" points="60,-214 60,-308 216,-308 216,-214 60,-214"/>
 </g>
@@ -96,7 +96,7 @@
 <polygon fill="none" stroke="black" points="168,-504 168,-546 288,-546 288,-504 168,-504"/>
 </g>
 <!-- [ns&#45;0]start&#45;&gt;[ns&#45;0]meeting -->
-<g id="edge6" class="edge"><title>[ns&#45;0]start:[ns&#45;0]start&#45;&gt;[ns&#45;0]meeting:[ns&#45;0]meeting</title>
+<g id="edge3" class="edge"><title>[ns&#45;0]start:[ns&#45;0]start&#45;&gt;[ns&#45;0]meeting:[ns&#45;0]meeting</title>
 <path fill="none" stroke="black" d="M228,-590.189C228,-579.542 228,-567.241 228,-556.275"/>
 <polygon fill="black" stroke="black" points="231.5,-556.266 228,-546.266 224.5,-556.267 231.5,-556.266"/>
 </g>
@@ -107,7 +107,7 @@
 <text text-anchor="start" x="142" y="-154.5" font-family="Times,serif" font-size="10.00"> after_help</text>
 </g>
 <!-- [ns&#45;1]finish_successed&#45;&gt;#jump([ns&#45;1]finish_successed, [ns&#45;0]finish_meeting) -->
-<g id="edge2" class="edge"><title>[ns&#45;1]finish_successed:[ns&#45;1]finish_successed&#45;&gt;#jump([ns&#45;1]finish_successed, [ns&#45;0]finish_meeting):#jump([ns&#45;1]finish_successed, [ns&#45;0]finish_meeting)</title>
+<g id="edge1" class="edge"><title>[ns&#45;1]finish_successed:[ns&#45;1]finish_successed&#45;&gt;#jump([ns&#45;1]finish_successed, [ns&#45;0]finish_meeting):#jump([ns&#45;1]finish_successed, [ns&#45;0]finish_meeting)</title>
 <path fill="none" stroke="black" d="M138,-213.923C138,-194.211 138,-173.429 138,-163.298"/>
 </g>
 <!-- #jump([ns&#45;0]meeting, [ns&#45;1]start) -->
@@ -148,7 +148,7 @@
 <polygon fill="none" stroke="black" points="7.5,-4 7.5,-98 268.5,-98 268.5,-4 7.5,-4"/>
 </g>
 <!-- #jump([ns&#45;1]finish_successed, [ns&#45;0]finish_meeting)&#45;&gt;[ns&#45;0]finish_meeting -->
-<g id="edge3" class="edge"><title>#jump([ns&#45;1]finish_successed, [ns&#45;0]finish_meeting):#jump([ns&#45;1]finish_successed, [ns&#45;0]finish_meeting)&#45;&gt;[ns&#45;0]finish_meeting:[ns&#45;0]finish_meeting</title>
+<g id="edge2" class="edge"><title>#jump([ns&#45;1]finish_successed, [ns&#45;0]finish_meeting):#jump([ns&#45;1]finish_successed, [ns&#45;0]finish_meeting)&#45;&gt;[ns&#45;0]finish_meeting:[ns&#45;0]finish_meeting</title>
 <path fill="none" stroke="black" d="M138,-148.865C138,-140.545 138,-124.829 138,-108.44"/>
 <polygon fill="black" stroke="black" points="141.5,-108.209 138,-98.2087 134.5,-108.209 141.5,-108.209"/>
 </g>

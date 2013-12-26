@@ -32,7 +32,7 @@
 <polygon fill="#cceecc" stroke="none" points="59,-131 59,-144 178,-144 178,-131 59,-131"/>
 <text text-anchor="start" x="60" y="-136" font-family="Times,serif" font-size="10.00">hero </text>
 <text text-anchor="start" x="81" y="-136" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
-<text text-anchor="start" x="136" y="-136" font-family="Times,serif" font-size="10.00"> place_4</text>
+<text text-anchor="start" x="136" y="-136" font-family="Times,serif" font-size="10.00"> place_2</text>
 <polygon fill="none" stroke="black" points="57.5,-130 57.5,-172 178.5,-172 178.5,-130 57.5,-130"/>
 </g>
 <!-- [ns&#45;0]start&#45;&gt;[ns&#45;0]arriving -->
@@ -54,12 +54,12 @@
 <text text-anchor="start" x="205" y="-49" font-family="Times,serif" font-size="10.00"> 1.00</text>
 <polygon fill="#ffffff" stroke="none" points="9,-31 9,-44 228,-44 228,-31 9,-31"/>
 <text text-anchor="start" x="10" y="-36" font-family="Times,serif" font-weight="bold" font-size="10.00">увеличить влияние </text>
-<text text-anchor="start" x="98" y="-36" font-family="Times,serif" font-size="10.00">  place_4 </text>
+<text text-anchor="start" x="98" y="-36" font-family="Times,serif" font-size="10.00">  place_2 </text>
 <text text-anchor="start" x="138" y="-36" font-family="Times,serif" font-weight="bold" font-size="10.00">на </text>
 <text text-anchor="start" x="151" y="-36" font-family="Times,serif" font-size="10.00"> 1.00</text>
 <polygon fill="#eeeeee" stroke="none" points="9,-18 9,-31 228,-31 228,-18 9,-18"/>
 <text text-anchor="start" x="10" y="-23" font-family="Times,serif" font-weight="bold" font-size="10.00">результаты:</text>
-<text text-anchor="start" x="10" y="-10" font-family="Times,serif" font-weight="bold" font-size="10.00">place_4</text>
+<text text-anchor="start" x="10" y="-10" font-family="Times,serif" font-weight="bold" font-size="10.00">place_2</text>
 <text text-anchor="start" x="120" y="-9" font-family="Times,serif" font-size="10.00">successed</text>
 <polygon fill="none" stroke="black" points="7.5,-4.5 7.5,-85.5 228.5,-85.5 228.5,-4.5 7.5,-4.5"/>
 </g>

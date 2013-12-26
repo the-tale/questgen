@@ -41,7 +41,7 @@
 <text text-anchor="start" x="380" y="-389" font-family="Times,serif" font-size="10.00">successed</text>
 <text text-anchor="start" x="251" y="-377" font-family="Times,serif" font-weight="bold" font-size="10.00">person_4</text>
 <text text-anchor="start" x="380" y="-376" font-family="Times,serif" font-size="10.00">successed</text>
-<text text-anchor="start" x="251" y="-364" font-family="Times,serif" font-weight="bold" font-size="10.00">place_7</text>
+<text text-anchor="start" x="251" y="-364" font-family="Times,serif" font-weight="bold" font-size="10.00">place_3</text>
 <text text-anchor="start" x="380" y="-363" font-family="Times,serif" font-size="10.00">neutral</text>
 <polygon fill="none" stroke="black" points="248.5,-358.5 248.5,-491.5 507.5,-491.5 507.5,-358.5 248.5,-358.5"/>
 </g>
@@ -58,22 +58,22 @@
 <text text-anchor="start" x="324" y="-1006" font-family="Times,serif" font-weight="bold" font-size="10.00">жив</text>
 <polygon fill="none" stroke="black" points="167.5,-1000.5 167.5,-1055.5 344.5,-1055.5 344.5,-1000.5 167.5,-1000.5"/>
 </g>
-<!-- #answer_True([ns&#45;0]first_defence_continue, [ns&#45;0]second_moving) -->
-<g id="node18" class="node"><title>#answer_True([ns&#45;0]first_defence_continue, [ns&#45;0]second_moving)</title>
+<!-- #answer(True, [ns&#45;0]first_defence_continue, [ns&#45;0]second_moving) -->
+<g id="node28" class="node"><title>#answer(True, [ns&#45;0]first_defence_continue, [ns&#45;0]second_moving)</title>
 <polygon fill="#ffffff" stroke="none" points="233,-908 233,-922 279,-922 279,-908 233,-908"/>
 <text text-anchor="start" x="234" y="-912.5" font-family="Times,serif" font-size="10.00">ИСТИНА</text>
 </g>
-<!-- [ns&#45;0]first_defence_continue&#45;&gt;#answer_True([ns&#45;0]first_defence_continue, [ns&#45;0]second_moving) -->
-<g id="edge3" class="edge"><title>[ns&#45;0]first_defence_continue:[ns&#45;0]first_defence_continue&#45;&gt;#answer_True([ns&#45;0]first_defence_continue, [ns&#45;0]second_moving):#answer_True([ns&#45;0]first_defence_continue, [ns&#45;0]second_moving)</title>
+<!-- [ns&#45;0]first_defence_continue&#45;&gt;#answer(True, [ns&#45;0]first_defence_continue, [ns&#45;0]second_moving) -->
+<g id="edge28" class="edge"><title>[ns&#45;0]first_defence_continue:[ns&#45;0]first_defence_continue&#45;&gt;#answer(True, [ns&#45;0]first_defence_continue, [ns&#45;0]second_moving):#answer(True, [ns&#45;0]first_defence_continue, [ns&#45;0]second_moving)</title>
 <path fill="none" stroke="black" d="M256,-1000.41C256,-974.501 256,-936.924 256,-922.224"/>
 </g>
-<!-- #answer_False([ns&#45;0]first_defence_continue, [ns&#45;0]finish_defence_failed) -->
-<g id="node24" class="node"><title>#answer_False([ns&#45;0]first_defence_continue, [ns&#45;0]finish_defence_failed)</title>
+<!-- #answer(False, [ns&#45;0]first_defence_continue, [ns&#45;0]finish_defence_failed) -->
+<g id="node29" class="node"><title>#answer(False, [ns&#45;0]first_defence_continue, [ns&#45;0]finish_defence_failed)</title>
 <polygon fill="#ffffff" stroke="none" points="95,-696 95,-710 128,-710 128,-696 95,-696"/>
 <text text-anchor="start" x="96" y="-700.5" font-family="Times,serif" font-size="10.00">ЛОЖЬ</text>
 </g>
-<!-- [ns&#45;0]first_defence_continue&#45;&gt;#answer_False([ns&#45;0]first_defence_continue, [ns&#45;0]finish_defence_failed) -->
-<g id="edge17" class="edge"><title>[ns&#45;0]first_defence_continue:[ns&#45;0]first_defence_continue&#45;&gt;#answer_False([ns&#45;0]first_defence_continue, [ns&#45;0]finish_defence_failed):#answer_False([ns&#45;0]first_defence_continue, [ns&#45;0]finish_defence_failed)</title>
+<!-- [ns&#45;0]first_defence_continue&#45;&gt;#answer(False, [ns&#45;0]first_defence_continue, [ns&#45;0]finish_defence_failed) -->
+<g id="edge30" class="edge"><title>[ns&#45;0]first_defence_continue:[ns&#45;0]first_defence_continue&#45;&gt;#answer(False, [ns&#45;0]first_defence_continue, [ns&#45;0]finish_defence_failed):#answer(False, [ns&#45;0]first_defence_continue, [ns&#45;0]finish_defence_failed)</title>
 <path fill="none" stroke="black" d="M233.084,-1000.32C203.995,-964.879 154.642,-899.12 130,-834 112.886,-788.774 111.087,-729.301 110.974,-710.193"/>
 </g>
 <!-- [ns&#45;0]start -->
@@ -119,25 +119,25 @@
 <text text-anchor="start" x="651" y="-880" font-family="Times,serif" font-weight="bold" font-size="10.00">жив</text>
 <polygon fill="none" stroke="black" points="573.5,-874.5 573.5,-955.5 682.5,-955.5 682.5,-874.5 573.5,-874.5"/>
 </g>
-<!-- #answer_True([ns&#45;0]attack, [ns&#45;0]run) -->
-<g id="node27" class="node"><title>#answer_True([ns&#45;0]attack, [ns&#45;0]run)</title>
+<!-- #answer(True, [ns&#45;0]attack, [ns&#45;0]run) -->
+<g id="node20" class="node"><title>#answer(True, [ns&#45;0]attack, [ns&#45;0]run)</title>
 <polygon fill="#ffffff" stroke="none" points="581,-808 581,-822 675,-822 675,-808 581,-808"/>
 <text text-anchor="start" x="582" y="-812.5" font-family="Times,serif" font-size="10.00">ИСТИНА</text>
 <polygon fill="#eeeeee" stroke="none" points="581,-795 581,-808 675,-808 675,-795 581,-795"/>
 <text text-anchor="start" x="582" y="-800" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
 <text text-anchor="start" x="634" y="-800" font-family="Times,serif" font-size="10.00"> start_run</text>
 </g>
-<!-- [ns&#45;0]attack&#45;&gt;#answer_True([ns&#45;0]attack, [ns&#45;0]run) -->
-<g id="edge26" class="edge"><title>[ns&#45;0]attack:[ns&#45;0]attack&#45;&gt;#answer_True([ns&#45;0]attack, [ns&#45;0]run):#answer_True([ns&#45;0]attack, [ns&#45;0]run)</title>
+<!-- [ns&#45;0]attack&#45;&gt;#answer(True, [ns&#45;0]attack, [ns&#45;0]run) -->
+<g id="edge9" class="edge"><title>[ns&#45;0]attack:[ns&#45;0]attack&#45;&gt;#answer(True, [ns&#45;0]attack, [ns&#45;0]run):#answer(True, [ns&#45;0]attack, [ns&#45;0]run)</title>
 <path fill="none" stroke="black" d="M628,-874.385C628,-856.016 628,-835.458 628,-822.623"/>
 </g>
-<!-- #answer_False([ns&#45;0]attack, [ns&#45;0]finish_attack_failed) -->
-<g id="node28" class="node"><title>#answer_False([ns&#45;0]attack, [ns&#45;0]finish_attack_failed)</title>
+<!-- #answer(False, [ns&#45;0]attack, [ns&#45;0]finish_attack_failed) -->
+<g id="node24" class="node"><title>#answer(False, [ns&#45;0]attack, [ns&#45;0]finish_attack_failed)</title>
 <polygon fill="#ffffff" stroke="none" points="722,-802 722,-816 755,-816 755,-802 722,-802"/>
 <text text-anchor="start" x="723" y="-806.5" font-family="Times,serif" font-size="10.00">ЛОЖЬ</text>
 </g>
-<!-- [ns&#45;0]attack&#45;&gt;#answer_False([ns&#45;0]attack, [ns&#45;0]finish_attack_failed) -->
-<g id="edge28" class="edge"><title>[ns&#45;0]attack:[ns&#45;0]attack&#45;&gt;#answer_False([ns&#45;0]attack, [ns&#45;0]finish_attack_failed):#answer_False([ns&#45;0]attack, [ns&#45;0]finish_attack_failed)</title>
+<!-- [ns&#45;0]attack&#45;&gt;#answer(False, [ns&#45;0]attack, [ns&#45;0]finish_attack_failed) -->
+<g id="edge17" class="edge"><title>[ns&#45;0]attack:[ns&#45;0]attack&#45;&gt;#answer(False, [ns&#45;0]attack, [ns&#45;0]finish_attack_failed):#answer(False, [ns&#45;0]attack, [ns&#45;0]finish_attack_failed)</title>
 <path fill="none" stroke="black" d="M669.9,-874.385C692.972,-852.572 719.309,-827.672 731.355,-816.282"/>
 </g>
 <!-- [ns&#45;0]fight -->
@@ -158,25 +158,25 @@
 <text text-anchor="start" x="651" y="-542" font-family="Times,serif" font-weight="bold" font-size="10.00">жив</text>
 <polygon fill="none" stroke="black" points="573.5,-536.5 573.5,-617.5 682.5,-617.5 682.5,-536.5 573.5,-536.5"/>
 </g>
-<!-- #answer_False([ns&#45;0]fight, [ns&#45;0]finish_attack_failed) -->
-<g id="node20" class="node"><title>#answer_False([ns&#45;0]fight, [ns&#45;0]finish_attack_failed)</title>
+<!-- #answer(False, [ns&#45;0]fight, [ns&#45;0]finish_attack_failed) -->
+<g id="node17" class="node"><title>#answer(False, [ns&#45;0]fight, [ns&#45;0]finish_attack_failed)</title>
 <polygon fill="#ffffff" stroke="none" points="677,-418 677,-432 710,-432 710,-418 677,-418"/>
 <text text-anchor="start" x="678" y="-422.5" font-family="Times,serif" font-size="10.00">ЛОЖЬ</text>
 </g>
-<!-- [ns&#45;0]fight&#45;&gt;#answer_False([ns&#45;0]fight, [ns&#45;0]finish_attack_failed) -->
-<g id="edge9" class="edge"><title>[ns&#45;0]fight:[ns&#45;0]fight&#45;&gt;#answer_False([ns&#45;0]fight, [ns&#45;0]finish_attack_failed):#answer_False([ns&#45;0]fight, [ns&#45;0]finish_attack_failed)</title>
+<!-- [ns&#45;0]fight&#45;&gt;#answer(False, [ns&#45;0]fight, [ns&#45;0]finish_attack_failed) -->
+<g id="edge1" class="edge"><title>[ns&#45;0]fight:[ns&#45;0]fight&#45;&gt;#answer(False, [ns&#45;0]fight, [ns&#45;0]finish_attack_failed):#answer(False, [ns&#45;0]fight, [ns&#45;0]finish_attack_failed)</title>
 <path fill="none" stroke="black" d="M645.248,-536.197C660.894,-500.09 682.639,-449.91 690.243,-432.361"/>
 </g>
-<!-- #answer_True([ns&#45;0]fight, [ns&#45;0]hide) -->
-<g id="node23" class="node"><title>#answer_True([ns&#45;0]fight, [ns&#45;0]hide)</title>
+<!-- #answer(True, [ns&#45;0]fight, [ns&#45;0]hide) -->
+<g id="node27" class="node"><title>#answer(True, [ns&#45;0]fight, [ns&#45;0]hide)</title>
 <polygon fill="#ffffff" stroke="none" points="542,-424 542,-438 640,-438 640,-424 542,-424"/>
 <text text-anchor="start" x="543" y="-428.5" font-family="Times,serif" font-size="10.00">ИСТИНА</text>
 <polygon fill="#eeeeee" stroke="none" points="542,-411 542,-424 640,-424 640,-411 542,-411"/>
 <text text-anchor="start" x="543" y="-416" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
 <text text-anchor="start" x="595" y="-416" font-family="Times,serif" font-size="10.00"> start_hide</text>
 </g>
-<!-- [ns&#45;0]fight&#45;&gt;#answer_True([ns&#45;0]fight, [ns&#45;0]hide) -->
-<g id="edge15" class="edge"><title>[ns&#45;0]fight:[ns&#45;0]fight&#45;&gt;#answer_True([ns&#45;0]fight, [ns&#45;0]hide):#answer_True([ns&#45;0]fight, [ns&#45;0]hide)</title>
+<!-- [ns&#45;0]fight&#45;&gt;#answer(True, [ns&#45;0]fight, [ns&#45;0]hide) -->
+<g id="edge24" class="edge"><title>[ns&#45;0]fight:[ns&#45;0]fight&#45;&gt;#answer(True, [ns&#45;0]fight, [ns&#45;0]hide):#answer(True, [ns&#45;0]fight, [ns&#45;0]hide)</title>
 <path fill="none" stroke="black" d="M618.182,-536.197C610.175,-503.736 599.362,-459.899 594.115,-438.626"/>
 </g>
 <!-- [ns&#45;0]move_to_attack -->
@@ -194,49 +194,12 @@
 <polygon fill="none" stroke="black" points="395.5,-1007 395.5,-1049 612.5,-1049 612.5,-1007 395.5,-1007"/>
 </g>
 <!-- [ns&#45;0]move_to_attack&#45;&gt;[ns&#45;0]attack -->
-<g id="edge24" class="edge"><title>[ns&#45;0]move_to_attack:[ns&#45;0]move_to_attack&#45;&gt;[ns&#45;0]attack:[ns&#45;0]attack</title>
+<g id="edge26" class="edge"><title>[ns&#45;0]move_to_attack:[ns&#45;0]move_to_attack&#45;&gt;[ns&#45;0]attack:[ns&#45;0]attack</title>
 <path fill="none" stroke="black" d="M526.455,-1006.9C540.315,-994.492 558.7,-978.035 576.014,-962.536"/>
 <polygon fill="black" stroke="black" points="578.757,-964.778 583.874,-955.5 574.088,-959.562 578.757,-964.778"/>
 </g>
-<!-- [ns&#45;0]second_moving -->
-<g id="node7" class="node"><title>[ns&#45;0]second_moving</title>
-<polygon fill="#ddffdd" stroke="none" points="147.5,-788 147.5,-830 364.5,-830 364.5,-788 147.5,-788"/>
-<text text-anchor="start" x="150" y="-820.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]second_moving</text>
-<text text-anchor="start" x="150" y="-806" font-family="Times,serif" font-size="10.00">двигаемся с караваном</text>
-<polygon fill="#eeffee" stroke="none" points="149,-789 149,-802 364,-802 364,-789 149,-789"/>
-<text text-anchor="start" x="150" y="-794" font-family="Times,serif" font-size="10.00">hero </text>
-<text text-anchor="start" x="171" y="-794" font-family="Times,serif" font-weight="bold" font-size="10.00">отправить в </text>
-<text text-anchor="start" x="229" y="-794" font-family="Times,serif" font-size="10.00"> place_4 </text>
-<text text-anchor="start" x="266" y="-794" font-family="Times,serif" font-weight="bold" font-size="10.00">и пройти </text>
-<text text-anchor="start" x="308" y="-794" font-family="Times,serif" font-size="10.00"> 50.0%</text>
-<text text-anchor="start" x="337" y="-794" font-family="Times,serif" font-weight="bold" font-size="10.00"> пути</text>
-<polygon fill="none" stroke="black" points="147.5,-788 147.5,-830 364.5,-830 364.5,-788 147.5,-788"/>
-</g>
-<!-- [ns&#45;0]second_defence -->
-<g id="node12" class="node"><title>[ns&#45;0]second_defence</title>
-<polygon fill="#ffdddd" stroke="none" points="181,-662.5 181,-743.5 331,-743.5 331,-662.5 181,-662.5"/>
-<text text-anchor="start" x="183" y="-733.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]second_defence</text>
-<text text-anchor="start" x="183" y="-719" font-family="Times,serif" font-size="10.00">вторая защита</text>
-<polygon fill="#ffeeee" stroke="none" points="182,-702 182,-715 330,-715 330,-702 182,-702"/>
-<text text-anchor="start" x="183" y="-707" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
-<text text-anchor="start" x="235" y="-707" font-family="Times,serif" font-size="10.00"> defence</text>
-<polygon fill="#ffeeee" stroke="none" points="182,-689 182,-702 330,-702 330,-689 182,-689"/>
-<text text-anchor="start" x="183" y="-694" font-family="Times,serif" font-weight="bold" font-size="10.00">сразиться с кем&#45;нибудь</text>
-<polygon fill="#ffdddd" stroke="none" points="182,-676 182,-689 330,-689 330,-676 182,-676"/>
-<text text-anchor="start" x="183" y="-681" font-family="Times,serif" font-weight="bold" font-size="10.00">условия:</text>
-<text text-anchor="start" x="183" y="-668" font-family="Times,serif" font-weight="bold" font-size="10.00">если </text>
-<polygon fill="#ffdddd" stroke="none" points="276,-663 276,-676 330,-676 330,-663 276,-663"/>
-<text text-anchor="start" x="277" y="-668" font-family="Times,serif" font-size="10.00">hero </text>
-<text text-anchor="start" x="298" y="-668" font-family="Times,serif" font-weight="bold" font-size="10.00">жив</text>
-<polygon fill="none" stroke="black" points="181,-662.5 181,-743.5 331,-743.5 331,-662.5 181,-662.5"/>
-</g>
-<!-- [ns&#45;0]second_moving&#45;&gt;[ns&#45;0]second_defence -->
-<g id="edge5" class="edge"><title>[ns&#45;0]second_moving:[ns&#45;0]second_moving&#45;&gt;[ns&#45;0]second_defence:[ns&#45;0]second_defence</title>
-<path fill="none" stroke="black" d="M256,-787.948C256,-778.172 256,-765.936 256,-753.855"/>
-<polygon fill="black" stroke="black" points="259.5,-753.8 256,-743.8 252.5,-753.8 259.5,-753.8"/>
-</g>
 <!-- [ns&#45;0]run -->
-<g id="node8" class="node"><title>[ns&#45;0]run</title>
+<g id="node7" class="node"><title>[ns&#45;0]run</title>
 <polygon fill="#ddffdd" stroke="none" points="544.5,-682 544.5,-724 711.5,-724 711.5,-682 544.5,-682"/>
 <text text-anchor="start" x="547" y="-714.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]run</text>
 <text text-anchor="start" x="547" y="-700" font-family="Times,serif" font-size="10.00">скрываемся с места преступления</text>
@@ -248,19 +211,19 @@
 <polygon fill="none" stroke="black" points="544.5,-682 544.5,-724 711.5,-724 711.5,-682 544.5,-682"/>
 </g>
 <!-- [ns&#45;0]run&#45;&gt;[ns&#45;0]fight -->
-<g id="edge6" class="edge"><title>[ns&#45;0]run:[ns&#45;0]run&#45;&gt;[ns&#45;0]fight:[ns&#45;0]fight</title>
+<g id="edge8" class="edge"><title>[ns&#45;0]run:[ns&#45;0]run&#45;&gt;[ns&#45;0]fight:[ns&#45;0]fight</title>
 <path fill="none" stroke="black" d="M628,-681.801C628,-667.21 628,-646.836 628,-627.999"/>
 <polygon fill="black" stroke="black" points="631.5,-627.738 628,-617.738 624.5,-627.738 631.5,-627.738"/>
 </g>
 <!-- [ns&#45;0]caravan_choice -->
-<g id="node9" class="node"><title>[ns&#45;0]caravan_choice</title>
+<g id="node8" class="node"><title>[ns&#45;0]caravan_choice</title>
 <polygon fill="#ddddff" stroke="none" points="345,-1344.5 345,-1373.5 489,-1373.5 489,-1344.5 345,-1344.5"/>
 <text text-anchor="start" x="347" y="-1363.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]caravan_choice</text>
 <text text-anchor="start" x="347" y="-1349" font-family="Times,serif" font-size="10.00">Решение: защитить или ограбить</text>
 <polygon fill="none" stroke="black" points="345,-1344.5 345,-1373.5 489,-1373.5 489,-1344.5 345,-1344.5"/>
 </g>
 <!-- #option([ns&#45;0]caravan_choice, [ns&#45;0]move_to_attack) -->
-<g id="node17" class="node"><title>#option([ns&#45;0]caravan_choice, [ns&#45;0]move_to_attack)</title>
+<g id="node19" class="node"><title>#option([ns&#45;0]caravan_choice, [ns&#45;0]move_to_attack)</title>
 <polygon fill="#ffffff" stroke="none" points="446,-1199 446,-1213 562,-1213 562,-1199 446,-1199"/>
 <text text-anchor="start" x="447" y="-1203.5" font-family="Times,serif" font-size="10.00">jump_attack</text>
 <polygon fill="#eeeeee" stroke="none" points="446,-1186 446,-1199 562,-1199 562,-1186 446,-1186"/>
@@ -268,7 +231,7 @@
 <text text-anchor="start" x="499" y="-1191" font-family="Times,serif" font-size="10.00"> choose_attack</text>
 </g>
 <!-- [ns&#45;0]caravan_choice&#45;&gt;#option([ns&#45;0]caravan_choice, [ns&#45;0]move_to_attack) -->
-<g id="edge1" class="edge"><title>[ns&#45;0]caravan_choice:[ns&#45;0]caravan_choice&#45;&gt;#option([ns&#45;0]caravan_choice, [ns&#45;0]move_to_attack):#option([ns&#45;0]caravan_choice, [ns&#45;0]move_to_attack)</title>
+<g id="edge5" class="edge"><title>[ns&#45;0]caravan_choice:[ns&#45;0]caravan_choice&#45;&gt;#option([ns&#45;0]caravan_choice, [ns&#45;0]move_to_attack):#option([ns&#45;0]caravan_choice, [ns&#45;0]move_to_attack)</title>
 <path fill="none" stroke="black" stroke-dasharray="1,5" d="M424.568,-1344.34C441.188,-1314.35 480.677,-1243.09 496.878,-1213.85"/>
 </g>
 <!-- #option([ns&#45;0]caravan_choice, [ns&#45;0]first_defence) -->
@@ -284,7 +247,7 @@
 <path fill="none" stroke="black" stroke-dasharray="1,5" d="M402.732,-1344.31C389.292,-1331.42 369.319,-1312.25 356.23,-1299.69"/>
 </g>
 <!-- [ns&#45;0]finish_attack_failed -->
-<g id="node10" class="node"><title>[ns&#45;0]finish_attack_failed</title>
+<g id="node9" class="node"><title>[ns&#45;0]finish_attack_failed</title>
 <polygon fill="#eeeeee" stroke="none" points="648.5,-194 648.5,-314 847.5,-314 847.5,-194 648.5,-194"/>
 <text text-anchor="start" x="651" y="-304.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]finish_attack_failed</text>
 <text text-anchor="start" x="651" y="-290" font-family="Times,serif" font-size="10.00">Герой не смог ограбить караван</text>
@@ -307,19 +270,19 @@
 <text text-anchor="start" x="763" y="-225" font-family="Times,serif" font-size="10.00">neutral</text>
 <text text-anchor="start" x="651" y="-213" font-family="Times,serif" font-weight="bold" font-size="10.00">person_4</text>
 <text text-anchor="start" x="763" y="-212" font-family="Times,serif" font-size="10.00">neutral</text>
-<text text-anchor="start" x="651" y="-200" font-family="Times,serif" font-weight="bold" font-size="10.00">place_7</text>
+<text text-anchor="start" x="651" y="-200" font-family="Times,serif" font-weight="bold" font-size="10.00">place_3</text>
 <text text-anchor="start" x="763" y="-199" font-family="Times,serif" font-size="10.00">neutral</text>
 <polygon fill="none" stroke="black" points="648.5,-194 648.5,-314 847.5,-314 847.5,-194 648.5,-194"/>
 </g>
 <!-- [ns&#45;0]finish_attack -->
-<g id="node11" class="node"><title>[ns&#45;0]finish_attack</title>
+<g id="node10" class="node"><title>[ns&#45;0]finish_attack</title>
 <polygon fill="#eeeeee" stroke="none" points="405.5,-4 405.5,-150 656.5,-150 656.5,-4 405.5,-4"/>
 <text text-anchor="start" x="408" y="-140.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]finish_attack</text>
 <text text-anchor="start" x="408" y="-126" font-family="Times,serif" font-size="10.00">Продать товар на чёрном рынке</text>
 <polygon fill="#dddddd" stroke="none" points="407,-109 407,-122 656,-122 656,-109 407,-109"/>
 <text text-anchor="start" x="408" y="-114" font-family="Times,serif" font-size="10.00">hero </text>
 <text text-anchor="start" x="429" y="-114" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
-<text text-anchor="start" x="484" y="-114" font-family="Times,serif" font-size="10.00"> place_7</text>
+<text text-anchor="start" x="484" y="-114" font-family="Times,serif" font-size="10.00"> place_3</text>
 <polygon fill="#ffffff" stroke="none" points="407,-96 407,-109 656,-109 656,-96 407,-96"/>
 <text text-anchor="start" x="408" y="-101" font-family="Times,serif" font-weight="bold" font-size="10.00">выдать награду </text>
 <text text-anchor="start" x="483" y="-101" font-family="Times,serif" font-size="10.00">  hero </text>
@@ -339,7 +302,7 @@
 <text text-anchor="start" x="554" y="-75" font-family="Times,serif" font-size="10.00"> &#45;1.00</text>
 <polygon fill="#ffffff" stroke="none" points="407,-57 407,-70 656,-70 656,-57 407,-57"/>
 <text text-anchor="start" x="408" y="-62" font-family="Times,serif" font-weight="bold" font-size="10.00">увеличить влияние </text>
-<text text-anchor="start" x="496" y="-62" font-family="Times,serif" font-size="10.00">  place_7 </text>
+<text text-anchor="start" x="496" y="-62" font-family="Times,serif" font-size="10.00">  place_3 </text>
 <text text-anchor="start" x="536" y="-62" font-family="Times,serif" font-weight="bold" font-size="10.00">на </text>
 <text text-anchor="start" x="549" y="-62" font-family="Times,serif" font-size="10.00"> 1.00</text>
 <polygon fill="#eeeeee" stroke="none" points="407,-44 407,-57 656,-57 656,-44 407,-44"/>
@@ -348,30 +311,48 @@
 <text text-anchor="start" x="533" y="-35" font-family="Times,serif" font-size="10.00">failed</text>
 <text text-anchor="start" x="408" y="-23" font-family="Times,serif" font-weight="bold" font-size="10.00">person_4</text>
 <text text-anchor="start" x="533" y="-22" font-family="Times,serif" font-size="10.00">failed</text>
-<text text-anchor="start" x="408" y="-10" font-family="Times,serif" font-weight="bold" font-size="10.00">place_7</text>
+<text text-anchor="start" x="408" y="-10" font-family="Times,serif" font-weight="bold" font-size="10.00">place_3</text>
 <text text-anchor="start" x="533" y="-9" font-family="Times,serif" font-size="10.00">successed</text>
 <polygon fill="none" stroke="black" points="405.5,-4 405.5,-150 656.5,-150 656.5,-4 405.5,-4"/>
 </g>
-<!-- #answer_False([ns&#45;0]second_defence, [ns&#45;0]finish_defence_failed) -->
-<g id="node19" class="node"><title>#answer_False([ns&#45;0]second_defence, [ns&#45;0]finish_defence_failed)</title>
+<!-- [ns&#45;0]second_defence -->
+<g id="node11" class="node"><title>[ns&#45;0]second_defence</title>
+<polygon fill="#ffdddd" stroke="none" points="181,-662.5 181,-743.5 331,-743.5 331,-662.5 181,-662.5"/>
+<text text-anchor="start" x="183" y="-733.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]second_defence</text>
+<text text-anchor="start" x="183" y="-719" font-family="Times,serif" font-size="10.00">вторая защита</text>
+<polygon fill="#ffeeee" stroke="none" points="182,-702 182,-715 330,-715 330,-702 182,-702"/>
+<text text-anchor="start" x="183" y="-707" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
+<text text-anchor="start" x="235" y="-707" font-family="Times,serif" font-size="10.00"> defence</text>
+<polygon fill="#ffeeee" stroke="none" points="182,-689 182,-702 330,-702 330,-689 182,-689"/>
+<text text-anchor="start" x="183" y="-694" font-family="Times,serif" font-weight="bold" font-size="10.00">сразиться с кем&#45;нибудь</text>
+<polygon fill="#ffdddd" stroke="none" points="182,-676 182,-689 330,-689 330,-676 182,-676"/>
+<text text-anchor="start" x="183" y="-681" font-family="Times,serif" font-weight="bold" font-size="10.00">условия:</text>
+<text text-anchor="start" x="183" y="-668" font-family="Times,serif" font-weight="bold" font-size="10.00">если </text>
+<polygon fill="#ffdddd" stroke="none" points="276,-663 276,-676 330,-676 330,-663 276,-663"/>
+<text text-anchor="start" x="277" y="-668" font-family="Times,serif" font-size="10.00">hero </text>
+<text text-anchor="start" x="298" y="-668" font-family="Times,serif" font-weight="bold" font-size="10.00">жив</text>
+<polygon fill="none" stroke="black" points="181,-662.5 181,-743.5 331,-743.5 331,-662.5 181,-662.5"/>
+</g>
+<!-- #answer(False, [ns&#45;0]second_defence, [ns&#45;0]finish_defence_failed) -->
+<g id="node18" class="node"><title>#answer(False, [ns&#45;0]second_defence, [ns&#45;0]finish_defence_failed)</title>
 <polygon fill="#ffffff" stroke="none" points="198,-570 198,-584 231,-584 231,-570 198,-570"/>
 <text text-anchor="start" x="199" y="-574.5" font-family="Times,serif" font-size="10.00">ЛОЖЬ</text>
 </g>
-<!-- [ns&#45;0]second_defence&#45;&gt;#answer_False([ns&#45;0]second_defence, [ns&#45;0]finish_defence_failed) -->
-<g id="edge7" class="edge"><title>[ns&#45;0]second_defence:[ns&#45;0]second_defence&#45;&gt;#answer_False([ns&#45;0]second_defence, [ns&#45;0]finish_defence_failed):#answer_False([ns&#45;0]second_defence, [ns&#45;0]finish_defence_failed)</title>
+<!-- [ns&#45;0]second_defence&#45;&gt;#answer(False, [ns&#45;0]second_defence, [ns&#45;0]finish_defence_failed) -->
+<g id="edge3" class="edge"><title>[ns&#45;0]second_defence:[ns&#45;0]second_defence&#45;&gt;#answer(False, [ns&#45;0]second_defence, [ns&#45;0]finish_defence_failed):#answer(False, [ns&#45;0]second_defence, [ns&#45;0]finish_defence_failed)</title>
 <path fill="none" stroke="black" d="M242.595,-662.425C232.993,-634.074 220.941,-598.492 216.128,-584.282"/>
 </g>
-<!-- #answer_True([ns&#45;0]second_defence, [ns&#45;0]finish_defence) -->
-<g id="node29" class="node"><title>#answer_True([ns&#45;0]second_defence, [ns&#45;0]finish_defence)</title>
+<!-- #answer(True, [ns&#45;0]second_defence, [ns&#45;0]finish_defence) -->
+<g id="node22" class="node"><title>#answer(True, [ns&#45;0]second_defence, [ns&#45;0]finish_defence)</title>
 <polygon fill="#ffffff" stroke="none" points="274,-570 274,-584 320,-584 320,-570 274,-570"/>
 <text text-anchor="start" x="275" y="-574.5" font-family="Times,serif" font-size="10.00">ИСТИНА</text>
 </g>
-<!-- [ns&#45;0]second_defence&#45;&gt;#answer_True([ns&#45;0]second_defence, [ns&#45;0]finish_defence) -->
-<g id="edge30" class="edge"><title>[ns&#45;0]second_defence:[ns&#45;0]second_defence&#45;&gt;#answer_True([ns&#45;0]second_defence, [ns&#45;0]finish_defence):#answer_True([ns&#45;0]second_defence, [ns&#45;0]finish_defence)</title>
+<!-- [ns&#45;0]second_defence&#45;&gt;#answer(True, [ns&#45;0]second_defence, [ns&#45;0]finish_defence) -->
+<g id="edge13" class="edge"><title>[ns&#45;0]second_defence:[ns&#45;0]second_defence&#45;&gt;#answer(True, [ns&#45;0]second_defence, [ns&#45;0]finish_defence):#answer(True, [ns&#45;0]second_defence, [ns&#45;0]finish_defence)</title>
 <path fill="none" stroke="black" d="M269.085,-662.425C278.46,-634.074 290.224,-598.492 294.923,-584.282"/>
 </g>
 <!-- [ns&#45;0]first_moving -->
-<g id="node13" class="node"><title>[ns&#45;0]first_moving</title>
+<g id="node12" class="node"><title>[ns&#45;0]first_moving</title>
 <polygon fill="#ddffdd" stroke="none" points="308.5,-1418 308.5,-1460 525.5,-1460 525.5,-1418 308.5,-1418"/>
 <text text-anchor="start" x="311" y="-1450.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]first_moving</text>
 <text text-anchor="start" x="311" y="-1436" font-family="Times,serif" font-size="10.00">двигаемся с караваном</text>
@@ -385,12 +366,12 @@
 <polygon fill="none" stroke="black" points="308.5,-1418 308.5,-1460 525.5,-1460 525.5,-1418 308.5,-1418"/>
 </g>
 <!-- [ns&#45;0]first_moving&#45;&gt;[ns&#45;0]caravan_choice -->
-<g id="edge25" class="edge"><title>[ns&#45;0]first_moving:[ns&#45;0]first_moving&#45;&gt;[ns&#45;0]caravan_choice:[ns&#45;0]caravan_choice</title>
+<g id="edge27" class="edge"><title>[ns&#45;0]first_moving:[ns&#45;0]first_moving&#45;&gt;[ns&#45;0]caravan_choice:[ns&#45;0]caravan_choice</title>
 <path fill="none" stroke="black" d="M417,-1417.91C417,-1407.49 417,-1394.68 417,-1383.76"/>
 <polygon fill="black" stroke="black" points="420.5,-1383.63 417,-1373.63 413.5,-1383.63 420.5,-1383.63"/>
 </g>
 <!-- [ns&#45;0]finish_defence_failed -->
-<g id="node14" class="node"><title>[ns&#45;0]finish_defence_failed</title>
+<g id="node13" class="node"><title>[ns&#45;0]finish_defence_failed</title>
 <polygon fill="#eeeeee" stroke="none" points="8,-365 8,-485 214,-485 214,-365 8,-365"/>
 <text text-anchor="start" x="10" y="-475.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]finish_defence_failed</text>
 <text text-anchor="start" x="10" y="-461" font-family="Times,serif" font-size="10.00">Герой не смог защитить караван</text>
@@ -413,12 +394,67 @@
 <text text-anchor="start" x="128" y="-396" font-family="Times,serif" font-size="10.00">failed</text>
 <text text-anchor="start" x="10" y="-384" font-family="Times,serif" font-weight="bold" font-size="10.00">person_4</text>
 <text text-anchor="start" x="128" y="-383" font-family="Times,serif" font-size="10.00">failed</text>
-<text text-anchor="start" x="10" y="-371" font-family="Times,serif" font-weight="bold" font-size="10.00">place_7</text>
+<text text-anchor="start" x="10" y="-371" font-family="Times,serif" font-weight="bold" font-size="10.00">place_3</text>
 <text text-anchor="start" x="128" y="-370" font-family="Times,serif" font-size="10.00">neutral</text>
 <polygon fill="none" stroke="black" points="8,-365 8,-485 214,-485 214,-365 8,-365"/>
 </g>
+<!-- [ns&#45;0]first_defence -->
+<g id="node14" class="node"><title>[ns&#45;0]first_defence</title>
+<polygon fill="#ddddff" stroke="none" points="274,-1172.5 274,-1227.5 412,-1227.5 412,-1172.5 274,-1172.5"/>
+<text text-anchor="start" x="276" y="-1217.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]first_defence</text>
+<text text-anchor="start" x="276" y="-1203" font-family="Times,serif" font-size="10.00">первая защита</text>
+<polygon fill="#eeeeff" stroke="none" points="275,-1186 275,-1199 411,-1199 411,-1186 275,-1186"/>
+<text text-anchor="start" x="276" y="-1191" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
+<text text-anchor="start" x="328" y="-1191" font-family="Times,serif" font-size="10.00"> defence</text>
+<polygon fill="#eeeeff" stroke="none" points="275,-1173 275,-1186 411,-1186 411,-1173 275,-1173"/>
+<text text-anchor="start" x="276" y="-1178" font-family="Times,serif" font-weight="bold" font-size="10.00">сразиться с кем&#45;нибудь</text>
+<polygon fill="none" stroke="black" points="274,-1172.5 274,-1227.5 412,-1227.5 412,-1172.5 274,-1172.5"/>
+</g>
+<!-- #option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue) -->
+<g id="node23" class="node"><title>#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue)</title>
+<polygon fill="#ffffff" stroke="none" points="195,-1113 195,-1127 318,-1127 318,-1113 195,-1113"/>
+<text text-anchor="start" x="196" y="-1117.5" font-family="Times,serif" font-size="10.00">jump_defence</text>
+<polygon fill="#eeeeee" stroke="none" points="195,-1100 195,-1113 318,-1113 318,-1100 195,-1100"/>
+<text text-anchor="start" x="196" y="-1105" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
+<text text-anchor="start" x="248" y="-1105" font-family="Times,serif" font-size="10.00"> choose_defence</text>
+</g>
+<!-- [ns&#45;0]first_defence&#45;&gt;#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue) -->
+<g id="edge15" class="edge"><title>[ns&#45;0]first_defence:[ns&#45;0]first_defence&#45;&gt;#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue):#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue)</title>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M315.473,-1172.42C299.941,-1157.43 281.254,-1139.38 269.025,-1127.58"/>
+</g>
+<!-- #option([ns&#45;0]first_defence, [ns&#45;0]move_to_attack) -->
+<g id="node25" class="node"><title>#option([ns&#45;0]first_defence, [ns&#45;0]move_to_attack)</title>
+<polygon fill="#ffffff" stroke="none" points="352,-1113 352,-1127 468,-1127 468,-1113 352,-1113"/>
+<text text-anchor="start" x="353" y="-1117.5" font-family="Times,serif" font-size="10.00">jump_attack</text>
+<polygon fill="#eeeeee" stroke="none" points="352,-1100 352,-1113 468,-1113 468,-1100 352,-1100"/>
+<text text-anchor="start" x="353" y="-1105" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
+<text text-anchor="start" x="405" y="-1105" font-family="Times,serif" font-size="10.00"> choose_attack</text>
+</g>
+<!-- [ns&#45;0]first_defence&#45;&gt;#option([ns&#45;0]first_defence, [ns&#45;0]move_to_attack) -->
+<g id="edge19" class="edge"><title>[ns&#45;0]first_defence:[ns&#45;0]first_defence&#45;&gt;#option([ns&#45;0]first_defence, [ns&#45;0]move_to_attack):#option([ns&#45;0]first_defence, [ns&#45;0]move_to_attack)</title>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M364.199,-1172.42C376.161,-1157.43 390.552,-1139.38 399.969,-1127.58"/>
+</g>
+<!-- [ns&#45;0]second_moving -->
+<g id="node15" class="node"><title>[ns&#45;0]second_moving</title>
+<polygon fill="#ddffdd" stroke="none" points="147.5,-788 147.5,-830 364.5,-830 364.5,-788 147.5,-788"/>
+<text text-anchor="start" x="150" y="-820.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]second_moving</text>
+<text text-anchor="start" x="150" y="-806" font-family="Times,serif" font-size="10.00">двигаемся с караваном</text>
+<polygon fill="#eeffee" stroke="none" points="149,-789 149,-802 364,-802 364,-789 149,-789"/>
+<text text-anchor="start" x="150" y="-794" font-family="Times,serif" font-size="10.00">hero </text>
+<text text-anchor="start" x="171" y="-794" font-family="Times,serif" font-weight="bold" font-size="10.00">отправить в </text>
+<text text-anchor="start" x="229" y="-794" font-family="Times,serif" font-size="10.00"> place_4 </text>
+<text text-anchor="start" x="266" y="-794" font-family="Times,serif" font-weight="bold" font-size="10.00">и пройти </text>
+<text text-anchor="start" x="308" y="-794" font-family="Times,serif" font-size="10.00"> 50.0%</text>
+<text text-anchor="start" x="337" y="-794" font-family="Times,serif" font-weight="bold" font-size="10.00"> пути</text>
+<polygon fill="none" stroke="black" points="147.5,-788 147.5,-830 364.5,-830 364.5,-788 147.5,-788"/>
+</g>
+<!-- [ns&#45;0]second_moving&#45;&gt;[ns&#45;0]second_defence -->
+<g id="edge7" class="edge"><title>[ns&#45;0]second_moving:[ns&#45;0]second_moving&#45;&gt;[ns&#45;0]second_defence:[ns&#45;0]second_defence</title>
+<path fill="none" stroke="black" d="M256,-787.948C256,-778.172 256,-765.936 256,-753.855"/>
+<polygon fill="black" stroke="black" points="259.5,-753.8 256,-743.8 252.5,-753.8 259.5,-753.8"/>
+</g>
 <!-- [ns&#45;0]hide -->
-<g id="node15" class="node"><title>[ns&#45;0]hide</title>
+<g id="node16" class="node"><title>[ns&#45;0]hide</title>
 <polygon fill="#ddffdd" stroke="none" points="447.5,-226.5 447.5,-281.5 614.5,-281.5 614.5,-226.5 447.5,-226.5"/>
 <text text-anchor="start" x="450" y="-271.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]hide</text>
 <text text-anchor="start" x="450" y="-257" font-family="Times,serif" font-size="10.00">прячемся</text>
@@ -437,81 +473,45 @@
 <path fill="none" stroke="black" d="M531,-226.421C531,-208.684 531,-184.317 531,-160.453"/>
 <polygon fill="black" stroke="black" points="534.5,-160.276 531,-150.276 527.5,-160.276 534.5,-160.276"/>
 </g>
-<!-- [ns&#45;0]first_defence -->
-<g id="node16" class="node"><title>[ns&#45;0]first_defence</title>
-<polygon fill="#ddddff" stroke="none" points="274,-1172.5 274,-1227.5 412,-1227.5 412,-1172.5 274,-1172.5"/>
-<text text-anchor="start" x="276" y="-1217.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]first_defence</text>
-<text text-anchor="start" x="276" y="-1203" font-family="Times,serif" font-size="10.00">первая защита</text>
-<polygon fill="#eeeeff" stroke="none" points="275,-1186 275,-1199 411,-1199 411,-1186 275,-1186"/>
-<text text-anchor="start" x="276" y="-1191" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
-<text text-anchor="start" x="328" y="-1191" font-family="Times,serif" font-size="10.00"> defence</text>
-<polygon fill="#eeeeff" stroke="none" points="275,-1173 275,-1186 411,-1186 411,-1173 275,-1173"/>
-<text text-anchor="start" x="276" y="-1178" font-family="Times,serif" font-weight="bold" font-size="10.00">сразиться с кем&#45;нибудь</text>
-<polygon fill="none" stroke="black" points="274,-1172.5 274,-1227.5 412,-1227.5 412,-1172.5 274,-1172.5"/>
+<!-- #answer(False, [ns&#45;0]fight, [ns&#45;0]finish_attack_failed)&#45;&gt;[ns&#45;0]finish_attack_failed -->
+<g id="edge2" class="edge"><title>#answer(False, [ns&#45;0]fight, [ns&#45;0]finish_attack_failed):#answer(False, [ns&#45;0]fight, [ns&#45;0]finish_attack_failed)&#45;&gt;[ns&#45;0]finish_attack_failed:[ns&#45;0]finish_attack_failed</title>
+<path fill="none" stroke="black" d="M694.957,-417.985C699.911,-402.764 713.415,-361.27 725.557,-323.962"/>
+<polygon fill="black" stroke="black" points="729.006,-324.674 728.772,-314.082 722.349,-322.508 729.006,-324.674"/>
 </g>
-<!-- #option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue) -->
-<g id="node22" class="node"><title>#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue)</title>
-<polygon fill="#ffffff" stroke="none" points="195,-1113 195,-1127 318,-1127 318,-1113 195,-1113"/>
-<text text-anchor="start" x="196" y="-1117.5" font-family="Times,serif" font-size="10.00">jump_defence</text>
-<polygon fill="#eeeeee" stroke="none" points="195,-1100 195,-1113 318,-1113 318,-1100 195,-1100"/>
-<text text-anchor="start" x="196" y="-1105" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
-<text text-anchor="start" x="248" y="-1105" font-family="Times,serif" font-size="10.00"> choose_defence</text>
-</g>
-<!-- [ns&#45;0]first_defence&#45;&gt;#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue) -->
-<g id="edge13" class="edge"><title>[ns&#45;0]first_defence:[ns&#45;0]first_defence&#45;&gt;#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue):#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue)</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M315.473,-1172.42C299.941,-1157.43 281.254,-1139.38 269.025,-1127.58"/>
-</g>
-<!-- #option([ns&#45;0]first_defence, [ns&#45;0]move_to_attack) -->
-<g id="node25" class="node"><title>#option([ns&#45;0]first_defence, [ns&#45;0]move_to_attack)</title>
-<polygon fill="#ffffff" stroke="none" points="352,-1113 352,-1127 468,-1127 468,-1113 352,-1113"/>
-<text text-anchor="start" x="353" y="-1117.5" font-family="Times,serif" font-size="10.00">jump_attack</text>
-<polygon fill="#eeeeee" stroke="none" points="352,-1100 352,-1113 468,-1113 468,-1100 352,-1100"/>
-<text text-anchor="start" x="353" y="-1105" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
-<text text-anchor="start" x="405" y="-1105" font-family="Times,serif" font-size="10.00"> choose_attack</text>
-</g>
-<!-- [ns&#45;0]first_defence&#45;&gt;#option([ns&#45;0]first_defence, [ns&#45;0]move_to_attack) -->
-<g id="edge19" class="edge"><title>[ns&#45;0]first_defence:[ns&#45;0]first_defence&#45;&gt;#option([ns&#45;0]first_defence, [ns&#45;0]move_to_attack):#option([ns&#45;0]first_defence, [ns&#45;0]move_to_attack)</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M364.199,-1172.42C376.161,-1157.43 390.552,-1139.38 399.969,-1127.58"/>
-</g>
-<!-- #option([ns&#45;0]caravan_choice, [ns&#45;0]move_to_attack)&#45;&gt;[ns&#45;0]move_to_attack -->
-<g id="edge2" class="edge"><title>#option([ns&#45;0]caravan_choice, [ns&#45;0]move_to_attack):#option([ns&#45;0]caravan_choice, [ns&#45;0]move_to_attack)&#45;&gt;[ns&#45;0]move_to_attack:[ns&#45;0]move_to_attack</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M504,-1186.5C504,-1159.98 504,-1097.42 504,-1059.61"/>
-<polygon fill="black" stroke="black" points="507.5,-1059.2 504,-1049.2 500.5,-1059.2 507.5,-1059.2"/>
-</g>
-<!-- #answer_True([ns&#45;0]first_defence_continue, [ns&#45;0]second_moving)&#45;&gt;[ns&#45;0]second_moving -->
-<g id="edge4" class="edge"><title>#answer_True([ns&#45;0]first_defence_continue, [ns&#45;0]second_moving):#answer_True([ns&#45;0]first_defence_continue, [ns&#45;0]second_moving)&#45;&gt;[ns&#45;0]second_moving:[ns&#45;0]second_moving</title>
-<path fill="none" stroke="black" d="M256,-907.806C256,-894.837 256,-864.075 256,-840.485"/>
-<polygon fill="black" stroke="black" points="259.5,-840.241 256,-830.241 252.5,-840.241 259.5,-840.241"/>
-</g>
-<!-- #answer_False([ns&#45;0]second_defence, [ns&#45;0]finish_defence_failed)&#45;&gt;[ns&#45;0]finish_defence_failed -->
-<g id="edge8" class="edge"><title>#answer_False([ns&#45;0]second_defence, [ns&#45;0]finish_defence_failed):#answer_False([ns&#45;0]second_defence, [ns&#45;0]finish_defence_failed)&#45;&gt;[ns&#45;0]finish_defence_failed:[ns&#45;0]finish_defence_failed</title>
+<!-- #answer(False, [ns&#45;0]second_defence, [ns&#45;0]finish_defence_failed)&#45;&gt;[ns&#45;0]finish_defence_failed -->
+<g id="edge4" class="edge"><title>#answer(False, [ns&#45;0]second_defence, [ns&#45;0]finish_defence_failed):#answer(False, [ns&#45;0]second_defence, [ns&#45;0]finish_defence_failed)&#45;&gt;[ns&#45;0]finish_defence_failed:[ns&#45;0]finish_defence_failed</title>
 <path fill="none" stroke="black" d="M209.835,-569.934C200.821,-556.808 178.617,-524.471 157.533,-493.766"/>
 <polygon fill="black" stroke="black" points="160.173,-491.429 151.627,-485.166 154.403,-495.391 160.173,-491.429"/>
 </g>
-<!-- #answer_False([ns&#45;0]fight, [ns&#45;0]finish_attack_failed)&#45;&gt;[ns&#45;0]finish_attack_failed -->
-<g id="edge10" class="edge"><title>#answer_False([ns&#45;0]fight, [ns&#45;0]finish_attack_failed):#answer_False([ns&#45;0]fight, [ns&#45;0]finish_attack_failed)&#45;&gt;[ns&#45;0]finish_attack_failed:[ns&#45;0]finish_attack_failed</title>
-<path fill="none" stroke="black" d="M694.957,-417.985C699.911,-402.764 713.415,-361.27 725.557,-323.962"/>
-<polygon fill="black" stroke="black" points="729.006,-324.674 728.772,-314.082 722.349,-322.508 729.006,-324.674"/>
+<!-- #option([ns&#45;0]caravan_choice, [ns&#45;0]move_to_attack)&#45;&gt;[ns&#45;0]move_to_attack -->
+<g id="edge6" class="edge"><title>#option([ns&#45;0]caravan_choice, [ns&#45;0]move_to_attack):#option([ns&#45;0]caravan_choice, [ns&#45;0]move_to_attack)&#45;&gt;[ns&#45;0]move_to_attack:[ns&#45;0]move_to_attack</title>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M504,-1186.5C504,-1159.98 504,-1097.42 504,-1059.61"/>
+<polygon fill="black" stroke="black" points="507.5,-1059.2 504,-1049.2 500.5,-1059.2 507.5,-1059.2"/>
+</g>
+<!-- #answer(True, [ns&#45;0]attack, [ns&#45;0]run)&#45;&gt;[ns&#45;0]run -->
+<g id="edge10" class="edge"><title>#answer(True, [ns&#45;0]attack, [ns&#45;0]run):#answer(True, [ns&#45;0]attack, [ns&#45;0]run)&#45;&gt;[ns&#45;0]run:[ns&#45;0]run</title>
+<path fill="none" stroke="black" d="M628,-795.248C628,-780.19 628,-754.635 628,-734.394"/>
+<polygon fill="black" stroke="black" points="631.5,-734.376 628,-724.376 624.5,-734.377 631.5,-734.376"/>
 </g>
 <!-- #option([ns&#45;0]caravan_choice, [ns&#45;0]first_defence)&#45;&gt;[ns&#45;0]first_defence -->
 <g id="edge12" class="edge"><title>#option([ns&#45;0]caravan_choice, [ns&#45;0]first_defence):#option([ns&#45;0]caravan_choice, [ns&#45;0]first_defence)&#45;&gt;[ns&#45;0]first_defence:[ns&#45;0]first_defence</title>
 <path fill="none" stroke="black" stroke-dasharray="1,5" d="M343,-1272.24C343,-1263.06 343,-1250.18 343,-1237.9"/>
 <polygon fill="black" stroke="black" points="346.5,-1237.81 343,-1227.81 339.5,-1237.81 346.5,-1237.81"/>
 </g>
+<!-- #answer(True, [ns&#45;0]second_defence, [ns&#45;0]finish_defence)&#45;&gt;[ns&#45;0]finish_defence -->
+<g id="edge14" class="edge"><title>#answer(True, [ns&#45;0]second_defence, [ns&#45;0]finish_defence):#answer(True, [ns&#45;0]second_defence, [ns&#45;0]finish_defence)&#45;&gt;[ns&#45;0]finish_defence:[ns&#45;0]finish_defence</title>
+<path fill="none" stroke="black" d="M300.276,-569.934C306.847,-557.765 322.336,-529.082 337.772,-500.497"/>
+<polygon fill="black" stroke="black" points="340.879,-502.109 342.55,-491.647 334.719,-498.783 340.879,-502.109"/>
+</g>
 <!-- #option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue)&#45;&gt;[ns&#45;0]first_defence_continue -->
-<g id="edge14" class="edge"><title>#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue):#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue)&#45;&gt;[ns&#45;0]first_defence_continue:[ns&#45;0]first_defence_continue</title>
+<g id="edge16" class="edge"><title>#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue):#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue)&#45;&gt;[ns&#45;0]first_defence_continue:[ns&#45;0]first_defence_continue</title>
 <path fill="none" stroke="black" stroke-dasharray="1,5" d="M256,-1100.24C256,-1091.06 256,-1078.18 256,-1065.9"/>
 <polygon fill="black" stroke="black" points="259.5,-1065.81 256,-1055.81 252.5,-1065.81 259.5,-1065.81"/>
 </g>
-<!-- #answer_True([ns&#45;0]fight, [ns&#45;0]hide)&#45;&gt;[ns&#45;0]hide -->
-<g id="edge16" class="edge"><title>#answer_True([ns&#45;0]fight, [ns&#45;0]hide):#answer_True([ns&#45;0]fight, [ns&#45;0]hide)&#45;&gt;[ns&#45;0]hide:[ns&#45;0]hide</title>
-<path fill="none" stroke="black" d="M586.49,-411.298C577.559,-386.141 557.327,-329.155 543.92,-291.392"/>
-<polygon fill="black" stroke="black" points="547.147,-290.018 540.503,-281.765 540.55,-292.36 547.147,-290.018"/>
-</g>
-<!-- #answer_False([ns&#45;0]first_defence_continue, [ns&#45;0]finish_defence_failed)&#45;&gt;[ns&#45;0]finish_defence_failed -->
-<g id="edge18" class="edge"><title>#answer_False([ns&#45;0]first_defence_continue, [ns&#45;0]finish_defence_failed):#answer_False([ns&#45;0]first_defence_continue, [ns&#45;0]finish_defence_failed)&#45;&gt;[ns&#45;0]finish_defence_failed:[ns&#45;0]finish_defence_failed</title>
-<path fill="none" stroke="black" d="M111,-695.979C111,-670.094 111,-566.373 111,-495.296"/>
-<polygon fill="black" stroke="black" points="114.5,-495.059 111,-485.059 107.5,-495.059 114.5,-495.059"/>
+<!-- #answer(False, [ns&#45;0]attack, [ns&#45;0]finish_attack_failed)&#45;&gt;[ns&#45;0]finish_attack_failed -->
+<g id="edge18" class="edge"><title>#answer(False, [ns&#45;0]attack, [ns&#45;0]finish_attack_failed):#answer(False, [ns&#45;0]attack, [ns&#45;0]finish_attack_failed)&#45;&gt;[ns&#45;0]finish_attack_failed:[ns&#45;0]finish_attack_failed</title>
+<path fill="none" stroke="black" d="M738.112,-801.79C738.951,-755.415 744.27,-461.249 746.741,-324.598"/>
+<polygon fill="black" stroke="black" points="750.247,-324.308 746.929,-314.246 743.248,-324.181 750.247,-324.308"/>
 </g>
 <!-- #option([ns&#45;0]first_defence, [ns&#45;0]move_to_attack)&#45;&gt;[ns&#45;0]move_to_attack -->
 <g id="edge20" class="edge"><title>#option([ns&#45;0]first_defence, [ns&#45;0]move_to_attack):#option([ns&#45;0]first_defence, [ns&#45;0]move_to_attack)&#45;&gt;[ns&#45;0]move_to_attack:[ns&#45;0]move_to_attack</title>
@@ -523,32 +523,32 @@
 <path fill="none" stroke="black" d="M417,-1510.96C417,-1502.2 417,-1485.38 417,-1470.31"/>
 <polygon fill="black" stroke="black" points="420.5,-1470.28 417,-1460.28 413.5,-1470.28 420.5,-1470.28"/>
 </g>
-<!-- #answer_True([ns&#45;0]attack, [ns&#45;0]run)&#45;&gt;[ns&#45;0]run -->
-<g id="edge27" class="edge"><title>#answer_True([ns&#45;0]attack, [ns&#45;0]run):#answer_True([ns&#45;0]attack, [ns&#45;0]run)&#45;&gt;[ns&#45;0]run:[ns&#45;0]run</title>
-<path fill="none" stroke="black" d="M628,-795.248C628,-780.19 628,-754.635 628,-734.394"/>
-<polygon fill="black" stroke="black" points="631.5,-734.376 628,-724.376 624.5,-734.377 631.5,-734.376"/>
+<!-- #answer(True, [ns&#45;0]fight, [ns&#45;0]hide)&#45;&gt;[ns&#45;0]hide -->
+<g id="edge25" class="edge"><title>#answer(True, [ns&#45;0]fight, [ns&#45;0]hide):#answer(True, [ns&#45;0]fight, [ns&#45;0]hide)&#45;&gt;[ns&#45;0]hide:[ns&#45;0]hide</title>
+<path fill="none" stroke="black" d="M586.49,-411.298C577.559,-386.141 557.327,-329.155 543.92,-291.392"/>
+<polygon fill="black" stroke="black" points="547.147,-290.018 540.503,-281.765 540.55,-292.36 547.147,-290.018"/>
 </g>
-<!-- #answer_False([ns&#45;0]attack, [ns&#45;0]finish_attack_failed)&#45;&gt;[ns&#45;0]finish_attack_failed -->
-<g id="edge29" class="edge"><title>#answer_False([ns&#45;0]attack, [ns&#45;0]finish_attack_failed):#answer_False([ns&#45;0]attack, [ns&#45;0]finish_attack_failed)&#45;&gt;[ns&#45;0]finish_attack_failed:[ns&#45;0]finish_attack_failed</title>
-<path fill="none" stroke="black" d="M738.112,-801.79C738.951,-755.415 744.27,-461.249 746.741,-324.598"/>
-<polygon fill="black" stroke="black" points="750.247,-324.308 746.929,-314.246 743.248,-324.181 750.247,-324.308"/>
+<!-- #answer(True, [ns&#45;0]first_defence_continue, [ns&#45;0]second_moving)&#45;&gt;[ns&#45;0]second_moving -->
+<g id="edge29" class="edge"><title>#answer(True, [ns&#45;0]first_defence_continue, [ns&#45;0]second_moving):#answer(True, [ns&#45;0]first_defence_continue, [ns&#45;0]second_moving)&#45;&gt;[ns&#45;0]second_moving:[ns&#45;0]second_moving</title>
+<path fill="none" stroke="black" d="M256,-907.806C256,-894.837 256,-864.075 256,-840.485"/>
+<polygon fill="black" stroke="black" points="259.5,-840.241 256,-830.241 252.5,-840.241 259.5,-840.241"/>
 </g>
-<!-- #answer_True([ns&#45;0]second_defence, [ns&#45;0]finish_defence)&#45;&gt;[ns&#45;0]finish_defence -->
-<g id="edge31" class="edge"><title>#answer_True([ns&#45;0]second_defence, [ns&#45;0]finish_defence):#answer_True([ns&#45;0]second_defence, [ns&#45;0]finish_defence)&#45;&gt;[ns&#45;0]finish_defence:[ns&#45;0]finish_defence</title>
-<path fill="none" stroke="black" d="M300.276,-569.934C306.847,-557.765 322.336,-529.082 337.772,-500.497"/>
-<polygon fill="black" stroke="black" points="340.879,-502.109 342.55,-491.647 334.719,-498.783 340.879,-502.109"/>
+<!-- #answer(False, [ns&#45;0]first_defence_continue, [ns&#45;0]finish_defence_failed)&#45;&gt;[ns&#45;0]finish_defence_failed -->
+<g id="edge31" class="edge"><title>#answer(False, [ns&#45;0]first_defence_continue, [ns&#45;0]finish_defence_failed):#answer(False, [ns&#45;0]first_defence_continue, [ns&#45;0]finish_defence_failed)&#45;&gt;[ns&#45;0]finish_defence_failed:[ns&#45;0]finish_defence_failed</title>
+<path fill="none" stroke="black" d="M111,-695.979C111,-670.094 111,-566.373 111,-495.296"/>
+<polygon fill="black" stroke="black" points="114.5,-495.059 111,-485.059 107.5,-495.059 114.5,-495.059"/>
 </g>
-<!-- #options_link(#option([ns&#45;0]caravan_choice, [ns&#45;0]first_defence),#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue)) -->
-<g id="node30" class="node"><title>#options_link(#option([ns&#45;0]caravan_choice, [ns&#45;0]first_defence),#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue))</title>
+<!-- #options_link(#option([ns&#45;0]caravan_choice, [ns&#45;0]first_defence)|#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue)) -->
+<g id="node30" class="node"><title>#options_link(#option([ns&#45;0]caravan_choice, [ns&#45;0]first_defence)|#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue))</title>
 <ellipse fill="#ffaaaa" stroke="black" cx="261" cy="-1359" rx="12" ry="12"/>
 <text text-anchor="middle" x="261" y="-1356.5" font-family="Times,serif" font-size="10.00">link</text>
 </g>
-<!-- #options_link(#option([ns&#45;0]caravan_choice, [ns&#45;0]first_defence),#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue))&#45;&gt;#option([ns&#45;0]caravan_choice, [ns&#45;0]first_defence) -->
-<g id="edge32" class="edge"><title>#options_link(#option([ns&#45;0]caravan_choice, [ns&#45;0]first_defence),#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue))&#45;&gt;#option([ns&#45;0]caravan_choice, [ns&#45;0]first_defence):#option([ns&#45;0]caravan_choice, [ns&#45;0]first_defence)</title>
+<!-- #options_link(#option([ns&#45;0]caravan_choice, [ns&#45;0]first_defence)|#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue))&#45;&gt;#option([ns&#45;0]caravan_choice, [ns&#45;0]first_defence) -->
+<g id="edge32" class="edge"><title>#options_link(#option([ns&#45;0]caravan_choice, [ns&#45;0]first_defence)|#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue))&#45;&gt;#option([ns&#45;0]caravan_choice, [ns&#45;0]first_defence):#option([ns&#45;0]caravan_choice, [ns&#45;0]first_defence)</title>
 <path fill="none" stroke="#ffaaaa" d="M269.775,-1350.4C283.823,-1338.24 311.504,-1314.27 328.517,-1299.54"/>
 </g>
-<!-- #options_link(#option([ns&#45;0]caravan_choice, [ns&#45;0]first_defence),#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue))&#45;&gt;#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue) -->
-<g id="edge33" class="edge"><title>#options_link(#option([ns&#45;0]caravan_choice, [ns&#45;0]first_defence),#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue))&#45;&gt;#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue):#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue)</title>
+<!-- #options_link(#option([ns&#45;0]caravan_choice, [ns&#45;0]first_defence)|#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue))&#45;&gt;#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue) -->
+<g id="edge33" class="edge"><title>#options_link(#option([ns&#45;0]caravan_choice, [ns&#45;0]first_defence)|#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue))&#45;&gt;#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue):#option([ns&#45;0]first_defence, [ns&#45;0]first_defence_continue)</title>
 <path fill="none" stroke="#ffaaaa" d="M260.56,-1346.88C259.711,-1324.92 257.855,-1274.45 257,-1232 256.235,-1194.02 256.054,-1149.1 256.012,-1127.64"/>
 </g>
 </g>
