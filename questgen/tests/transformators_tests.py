@@ -7,6 +7,9 @@ from questgen.knowledge_base import KnowledgeBase
 from questgen import facts
 from questgen import transformators
 from questgen.quests.base_quest import RESULTS
+from questgen import records
+from questgen import actions
+from questgen import requirements
 
 
 class TransformatorsTestsBase(unittest.TestCase):
@@ -646,3 +649,46 @@ class ChangeChoiceTests(TransformatorsTestsBase):
 
         self.assertEqual(set([path.option for path in self.kb.filter(facts.ChoicePath)]),
                          set([option_1.uid, option_2_1.uid]))
+
+
+class RemoveUnusedActorsTests(TransformatorsTestsBase):
+
+    def setUp(self):
+        super(RemoveUnusedActorsTests, self).setUp()
+
+
+    def test_get_actors(self):
+        class TestRecord(records.Record):
+            attr_1 = records.RecordAttribute(is_reference=True)
+            attr_2 = records.RecordAttribute(is_reference=False)
+            attr_3 = records.RecordAttribute(is_reference=True)
+
+        record = TestRecord(attr_1=1, attr_2=2, attr_3=3)
+
+        self.assertEqual(transformators._get_actors(record), set([1, 3]))
+
+
+    def test_remove_unused_actors(self):
+        self.kb += facts.Condition(uid='condition')
+        self.kb += facts.Restriction(uid='restriction')
+
+        self.kb += facts.Actor(uid='action_actor')
+        self.kb += facts.Actor(uid='requirement_actor')
+        self.kb += facts.Actor(uid='condition_actor')
+        self.kb += facts.Actor(uid='removed_actor')
+
+        self.kb += facts.State(uid='state',
+                               actions=[actions.GivePower(object='action_actor', power=1)],
+                               require=[requirements.LocatedIn(object='requirement_actor', place='requirement_actor')])
+        self.kb += facts.Question(uid='question', condition=[requirements.LocatedIn(object='condition_actor', place='condition_actor')])
+
+        transformators.remove_unused_actors(self.kb)
+
+        self.assertFalse('removed_actor' in self.kb)
+        self.assertFalse('condition' in self.kb)
+        self.assertFalse('restriction' in self.kb)
+        self.assertTrue('action_actor' in self.kb)
+        self.assertTrue('requirement_actor' in self.kb)
+        self.assertTrue('condition_actor' in self.kb)
+        self.assertTrue('state' in self.kb)
+        self.assertTrue('question' in self.kb)
