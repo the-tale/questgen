@@ -134,7 +134,7 @@ class Caravan(QuestBetween2):
                                                       type='jump_attack', start_actions=[actions.Message(type='choose_attack'),])
 
         first_defence__first_defence_continue = facts.Option(state_from=first_defence.uid, state_to=first_defence_continue.uid,
-                                                             type='jump_defence', start_actions=[actions.Message(type='choose_defence'),])
+                                                             type='jump_defence')
         first_defence__move_to_attack = facts.Option(state_from=first_defence.uid, state_to=move_to_attack.uid,
                                              type='jump_attack', start_actions=[actions.Message(type='choose_attack'),])
 
