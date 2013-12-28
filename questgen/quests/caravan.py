@@ -1,5 +1,7 @@
 # coding: utf-8
 
+import random
+
 from questgen.quests.base_quest import QuestBetween2, ROLES, RESULTS
 from questgen import facts
 from questgen import requirements
@@ -30,9 +32,12 @@ class Caravan(QuestBetween2):
                         facts.QuestParticipant(start=start.uid, participant=receiver.uid, role=ROLES.RECEIVER),
                         facts.QuestParticipant(start=start.uid, participant=black_market.uid, role=ROLES.ANTAGONIST_POSITION)]
 
+        path_percents_1 = random.uniform(0.3, 0.5)
+        path_percents_2 = random.uniform(0.6, 0.8)
+
         first_moving = facts.State(uid=ns+'first_moving',
                                     description=u'двигаемся с караваном',
-                                    actions=[actions.MoveIn(object=hero.uid, place=receiver_position.uid, percents=0.2)])
+                                    require=[requirements.LocatedOnRoad(object=hero.uid, place_from=initiator_position.uid, place_to=receiver_position.uid, percents=path_percents_1)])
 
         caravan_choice = facts.Choice(uid=ns+'caravan_choice',
                                       description=u'Решение: защитить или ограбить')
@@ -48,7 +53,7 @@ class Caravan(QuestBetween2):
 
         second_moving = facts.State(uid=ns+'second_moving',
                                     description=u'двигаемся с караваном',
-                                    actions=(actions.MoveIn(object=hero.uid, place=receiver_position.uid, percents=0.5), ))
+                                    require=[requirements.LocatedOnRoad(object=hero.uid, place_from=initiator_position.uid, place_to=receiver_position.uid, percents=path_percents_2)])
 
         second_defence = facts.Question(uid=ns+'second_defence',
                                         description=u'вторая защита',
@@ -70,7 +75,8 @@ class Caravan(QuestBetween2):
 
         move_to_attack = facts.State(uid=ns+'move_to_attack',
                                      description=u'ведём караван в засаду',
-                                     actions=(actions.MoveIn(object=hero.uid, place=receiver_position.uid, percents=0.3), ))
+                                     require=[requirements.LocatedOnRoad(object=hero.uid,
+                                                                         place_from=initiator_position.uid, place_to=receiver_position.uid, percents=path_percents_2)])
 
         attack = facts.Question(uid=ns+'attack',
                                 description=u'нападение',

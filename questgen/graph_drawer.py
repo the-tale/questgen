@@ -5,7 +5,7 @@ import gv
 from questgen import facts
 from questgen import requirements
 from questgen import actions
-
+from questgen import exceptions
 
 
 class HEAD_COLORS(object):
@@ -211,7 +211,6 @@ class Drawer(object):
 
 
     def create_label_for(self, fact):
-        # return fact.uid.encode('utf-8')
         if isinstance(fact, facts.Start):
             return self.create_label_for_start(fact)
         if isinstance(fact, facts.Finish):
@@ -226,7 +225,8 @@ class Drawer(object):
             return self.create_label_for_event(fact)
         if isinstance(fact, facts.Jump):
             return self.create_label_for_jump(fact)
-        return None
+
+        raise exceptions.CanNotCreateLabelForFactError(fact=fact)
 
     def create_label_for_start(self, start):
         return self.create_label_for_state(start,
@@ -271,9 +271,8 @@ class Drawer(object):
         requirement_colspan = 0
 
         for requirement in state.require:
-            if isinstance(requirement, requirements.LocatedIn):
-                requirement_colspan = 2
-                trs.append(tr(td(self.create_label_for_requirement(requirement), bgcolor=requirements_bgcolor, colspan=requirement_colspan)))
+            requirement_colspan = 2
+            trs.append(tr(td(self.create_label_for_requirement(requirement), bgcolor=requirements_bgcolor, colspan=requirement_colspan)))
 
         actions_colspan = 0
 
@@ -312,6 +311,10 @@ class Drawer(object):
             return self.create_label_for_has_money(requirement)
         elif isinstance(requirement, requirements.IsAlive):
             return self.create_label_for_is_alive(requirement)
+        elif isinstance(requirement, requirements.LocatedOnRoad):
+            return self.create_label_for_located_on_road(requirement)
+
+        raise exceptions.CanNotCreateLabelForRequirementError(requirement=requirement)
 
     def create_label_for_action(self, action):
         if isinstance(action, actions.Message):
@@ -322,14 +325,14 @@ class Drawer(object):
             return self.create_action_label_for_give_reward(action)
         elif isinstance(action, actions.MoveNear):
             return self.create_action_label_for_move_near(action)
-        elif isinstance(action, actions.MoveIn):
-            return self.create_action_label_for_move_in(action)
         elif isinstance(action, actions.Fight):
             return self.create_action_label_for_fight(action)
         elif isinstance(action, actions.DoNothing):
             return self.create_action_label_for_donothing(action)
         elif isinstance(action, actions.UpgradeEquipment):
             return self.create_action_label_for_upgrade_equipment(action)
+
+        raise exceptions.CanNotCreateLabelForActionError(action=action)
 
     def create_label_for_event(self, event):
         return table(tr(td(i(event.uid))),
@@ -360,6 +363,10 @@ class Drawer(object):
     def create_label_for_located_near(self, requirement):
         return u'%s <b>находится около</b>&nbsp;%s' % (requirement.object, requirement.place)
 
+    def create_label_for_located_on_road(self, requirement):
+        return (u'%s <b>прошёл</b>&nbsp;%d%%<b> дороги от</b>&nbsp;%s <b>до</b>&nbsp;%s' %
+                (requirement.object, int(requirement.percents*100), requirement.place_from, requirement.place_to))
+
     def create_label_for_has_money(self, requirement):
         return u'%s <b>имеет </b>&nbsp;%s <b>монет</b>' % (requirement.object, requirement.money)
 
@@ -370,14 +377,10 @@ class Drawer(object):
     def create_action_label_for_move_near(self, requirement):
         if requirement.terrains:
             return u'<b>отправить </b> %s<b>бродить около</b>&nbsp;%s<br/> среди ландшафтов %s' % (requirement.object, requirement.place, requirement.terrains)
+        elif requirement.place is None:
+            return u'<b>отправить </b> %s<b>бродить в округе</b><br/>' % requirement.object
         else:
             return u'<b>отправить </b> %s<b>бродить около</b>&nbsp;%s<br/>' % (requirement.object, requirement.place)
-
-    def create_action_label_for_move_in(self, requirement):
-        if requirement.percents:
-            return u'%s <b>отправить в </b>&nbsp;%s <b>и пройти </b> %.1f%%<b> пути</b>' % (requirement.object, requirement.place, requirement.percents*100)
-        else:
-            return u'%s <b>отправить в </b>&nbsp;%s' % (requirement.object, requirement.place)
 
     def create_action_label_for_message(self, message):
         return u'<b>сообщение:</b>&nbsp;%s' % message.type

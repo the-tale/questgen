@@ -106,3 +106,22 @@ class SelectorsBaseError(RollBackError): pass
 
 class NoFactSelectedError(SelectorsBaseError):
     MSG = u'can not found fact with method "%(method)s" and arguments: %(arguments)s'
+
+
+####################################################################
+# graph drawer
+####################################################################p
+
+class GraphDrawerError(QuestgenError): pass
+
+
+class CanNotCreateLabelForFactError(GraphDrawerError):
+    MSG = u'can not create label for fact: %(fact)s'
+
+
+class CanNotCreateLabelForRequirementError(GraphDrawerError):
+    MSG = u'can not create label for requirement: %(requirement)s'
+
+
+class CanNotCreateLabelForActionError(GraphDrawerError):
+    MSG = u'can not create label for action: %(action)s'

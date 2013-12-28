@@ -29,7 +29,6 @@ class Requirement(records.Record):
         return getattr(requirement_checker, self._interpreter_satisfy_method)(requirement=self)
 
 
-
 class LocatedIn(Requirement):
     object = RequirementAttribute(is_reference=True)
     place = RequirementAttribute(is_reference=True)
@@ -43,8 +42,8 @@ class LocatedNear(Requirement):
 
 class LocatedOnRoad(Requirement):
     object = RequirementAttribute(is_reference=True)
-    place_1 = RequirementAttribute(is_reference=True)
-    place_2 = RequirementAttribute(is_reference=True)
+    place_from = RequirementAttribute(is_reference=True)
+    place_to = RequirementAttribute(is_reference=True)
     percents = RequirementAttribute(default=None)
 
 

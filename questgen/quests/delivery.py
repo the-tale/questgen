@@ -1,4 +1,5 @@
 # coding: utf-8
+import random
 
 from questgen.quests.base_quest import QuestBetween2, ROLES, RESULTS
 from questgen import facts
@@ -21,11 +22,11 @@ class Delivery(QuestBetween2):
         antagonist_position = selector.place_for(objects=(antagonist.uid,))
 
         start = facts.Start(uid=ns+'start',
-                      type=cls.TYPE,
-                      nesting=nesting,
-                      description=u'Начало: доставка',
-                      require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
-                      actions=[actions.Message(type='intro')])
+                            type=cls.TYPE,
+                            nesting=nesting,
+                            description=u'Начало: доставка',
+                            require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
+                            actions=[actions.Message(type='intro')])
 
         participants = [facts.QuestParticipant(start=start.uid, participant=initiator.uid, role=ROLES.INITIATOR),
                         facts.QuestParticipant(start=start.uid, participant=receiver.uid, role=ROLES.RECEIVER),
@@ -47,6 +48,18 @@ class Delivery(QuestBetween2):
                                                 actions.GivePower(object=initiator.uid, power=1),
                                                 actions.GivePower(object=receiver.uid, power=1)])
 
+        finish_fake_delivery = facts.Finish(uid=ns+'finish_fake_delivery',
+                                            start=start.uid,
+                                            results={ initiator.uid: RESULTS.FAILED,
+                                                      receiver.uid: RESULTS.FAILED,
+                                                      antagonist.uid: RESULTS.NEUTRAL},
+                                            nesting=nesting,
+                                            description=u'Подделать письмо',
+                                            require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
+                                            actions=[actions.GiveReward(object=hero.uid, type='finish_fake_delivery', scale=2.0),
+                                                     actions.GivePower(object=initiator.uid, power=-1),
+                                                     actions.GivePower(object=receiver.uid, power=-1)])
+
         finish_steal = facts.Finish(uid=ns+'finish_steal',
                                     start=start.uid,
                                     results={ initiator.uid: RESULTS.FAILED,
@@ -56,19 +69,74 @@ class Delivery(QuestBetween2):
                                     description=u'Доставить посылку скупщику',
                                     require=[requirements.LocatedIn(object=hero.uid, place=antagonist_position.uid)],
                                     actions=[actions.GiveReward(object=hero.uid, type='finish_steal', scale=1.5),
-                                             actions.GivePower(object=initiator.uid, power=-1),
-                                             actions.GivePower(object=receiver.uid, power=-1),
+                                             actions.GivePower(object=initiator.uid, power=-1.5),
+                                             actions.GivePower(object=receiver.uid, power=-1.5),
                                              actions.GivePower(object=antagonist.uid, power=1)])
 
+        delivery_stealed = facts.State(uid=ns+'delivery_stealed',
+                                       description=u'письмо украдено',
+                                       require=[requirements.LocatedOnRoad(object=hero.uid,
+                                                                           place_from=initiator_position.uid,
+                                                                           place_to=receiver_position.uid,
+                                                                           percents=random.uniform(0.6, 0.9))],
+                                       actions=[actions.Message(type='delivery_stealed'),
+                                                actions.MoveNear(object=hero.uid)])
+
+        fight_for_stealed = facts.Question(uid=ns+'fight_for_stealed',
+                                           description=u'Сразиться с вором',
+                                           actions=[actions.Message(type='fight_thief'),
+                                                    actions.Fight(mercenary=True)],
+                                           condition=[requirements.IsAlive(object=hero.uid)])
+
+
+        finish_fight_for_stealed__hero_died = facts.Finish(uid=ns+'finish_fight_for_stealed__hero_died',
+                                                          start=start.uid,
+                                                          results={ initiator.uid: RESULTS.NEUTRAL,
+                                                                    receiver.uid: RESULTS.NEUTRAL,
+                                                                    antagonist.uid: RESULTS.NEUTRAL},
+                                                                    nesting=nesting,
+                                                          description=u'Герой не смог вернуть украденное письмо',
+                                                          actions=[actions.Message(type='finish_fight_for_stealed__hero_died')])
+
+
+        finish_fight_for_stealed__delivery = facts.Finish(uid=ns+'finish_fight_for_stealed__delivery',
+                                                          start=start.uid,
+                                                          results={ initiator.uid: RESULTS.SUCCESSED,
+                                                                    receiver.uid: RESULTS.SUCCESSED,
+                                                                    antagonist.uid: RESULTS.NEUTRAL},
+                                                          nesting=nesting,
+                                                          description=u'Доставить посылку получателю',
+                                                          require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
+                                                          actions=[actions.GiveReward(object=hero.uid, type='finish_delivery'),
+                                                                   actions.GivePower(object=initiator.uid, power=1),
+                                                                   actions.GivePower(object=receiver.uid, power=1)])
+
+
         line = [ start,
-                  delivery_choice,
-                  finish_delivery,
-                  finish_steal,
+                 delivery_choice,
+                 delivery_stealed,
+                 fight_for_stealed,
+                 finish_delivery,
+                 finish_steal,
+                 finish_fake_delivery,
+                 finish_fight_for_stealed__hero_died,
+                 finish_fight_for_stealed__delivery,
 
-                  facts.Jump(state_from=start.uid, state_to=delivery_choice.uid),
+                 facts.Jump(state_from=start.uid, state_to=delivery_choice.uid),
 
-                  facts.Option(state_from=delivery_choice.uid, state_to=finish_delivery.uid, type='delivery', start_actions=[actions.Message(type='start_delivery'),]),
-                  facts.Option(state_from=delivery_choice.uid, state_to=finish_steal.uid, type='steal', start_actions=[actions.Message(type='start_steal'),])
+                 facts.Jump(state_from=delivery_stealed.uid, state_to=fight_for_stealed.uid),
+
+                 facts.Option(state_from=delivery_choice.uid, state_to=delivery_stealed.uid, type='delivery', start_actions=[actions.Message(type='start_delivery'),]),
+                 facts.Option(state_from=delivery_choice.uid, state_to=finish_delivery.uid, type='delivery', start_actions=[actions.Message(type='start_delivery'),]),
+                 facts.Option(state_from=delivery_choice.uid, state_to=finish_steal.uid, type='steal', start_actions=[actions.Message(type='start_steal'),]),
+                 facts.Option(state_from=delivery_choice.uid, state_to=finish_fake_delivery.uid, type='fake', start_actions=[actions.Message(type='start_fake'),]),
+
+                 facts.Answer(state_from=fight_for_stealed.uid, state_to=finish_fight_for_stealed__delivery.uid,
+                              condition=True, start_actions=[actions.Message(type='delivery_returned')]),
+                 facts.Answer(state_from=fight_for_stealed.uid, state_to=finish_fight_for_stealed__hero_died.uid, condition=False),
+
+                 facts.Event(uid=ns+'delivery_variants', description=u'Варианты доставки', members=(delivery_stealed.uid, finish_delivery.uid)),
+                 facts.Event(uid=ns+'lie_variants', description=u'Варианты обмана', members=(finish_steal.uid, finish_fake_delivery.uid))
                 ]
 
         line.extend(participants)

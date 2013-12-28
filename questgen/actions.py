@@ -57,12 +57,6 @@ class MoveNear(Action):
     terrains = ActionAttribute(default=None)
 
 
-class MoveIn(Action):
-    object = ActionAttribute(is_reference=True)
-    place = ActionAttribute(is_reference=True)
-    percents = ActionAttribute()
-
-
 ACTIONS = {action_class.type_name(): action_class
            for action_class in globals().values()
            if isinstance(action_class, type) and issubclass(action_class, Action) and action_class != Action}
