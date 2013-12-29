@@ -237,6 +237,52 @@ class RemoveBrokenStatesTests(TransformatorsTestsBase):
         self.check_not_in_knowledge_base(self.kb, broken_path)
 
 
+class RemoveBrokenQuestionStatesTests(TransformatorsTestsBase):
+
+    def setUp(self):
+        super(RemoveBrokenQuestionStatesTests, self).setUp()
+
+        self.question = facts.Question(uid='state_1', condition=())
+        self.answer_1 = facts.Answer(state_from='state_1', state_to='state_2', condition=True)
+        self.answer_2 = facts.Answer(state_from='state_1', state_to='finish_1', condition=False)
+
+        self.kb += [facts.Start(uid='start', type='test', nesting=0),
+                    self.question,
+                    facts.State(uid='state_2'),
+                    facts.Finish(start='start', uid='finish_1', results={}, nesting=0),
+                    facts.Finish(start='start', uid='finish_2', results={}, nesting=0),
+                    facts.Jump(state_from='start', state_to='state_1'),
+                    self.answer_1,
+                    self.answer_2,
+                    facts.Jump(state_from='state_2', state_to='finish_2')]
+
+    def test_success(self):
+        transformators.remove_broken_states(self.kb)
+        self.check_in_knowledge_base(self.kb, [self.question, self.answer_1, self.answer_2])
+
+    def test_wrong_answers_number__more_then_2_answers(self):
+        self.kb += facts.Answer(state_from='state_1', state_to='finish_1', condition=True)
+        transformators.remove_broken_states(self.kb)
+        self.check_not_in_knowledge_base(self.kb, [self.question, self.answer_1, self.answer_2])
+
+    def test_wrong_answers_number__less_then_2_answers(self):
+        self.kb -= self.answer_1
+        transformators.remove_broken_states(self.kb)
+        self.check_not_in_knowledge_base(self.kb, [self.question, self.answer_1, self.answer_2])
+
+    def test_wrong_answers_structure__true(self):
+        self.kb -= self.answer_2
+        self.kb += facts.Answer(state_from='state_1', state_to='finish_1', condition=True)
+        transformators.remove_broken_states(self.kb)
+        self.check_not_in_knowledge_base(self.kb, [self.question, self.answer_1, self.answer_2])
+
+    def test_wrong_answers_structure__false(self):
+        self.kb -= self.answer_1
+        self.kb += facts.Answer(state_from='state_1', state_to='state_2', condition=False)
+        transformators.remove_broken_states(self.kb)
+        self.check_not_in_knowledge_base(self.kb, [self.question, self.answer_1, self.answer_2])
+
+
 class RemoveRestrictedStatesTests(TransformatorsTestsBase):
 
     def setUp(self):

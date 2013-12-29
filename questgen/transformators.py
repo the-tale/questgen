@@ -115,10 +115,23 @@ def remove_broken_states(knowledge_base):
         for state in knowledge_base.filter(facts.State):
             if isinstance(state, facts.Start) and state.is_external:
                 pass
+
             elif not filter(lambda jump: jump.state_to == state.uid, knowledge_base.filter(facts.Jump)):
                 states_to_remove.add(state)
+
             elif isinstance(state, facts.Finish) and state.is_external:
                 pass
+
+            elif isinstance(state, facts.Question):
+                answers = [answer for answer in knowledge_base.filter(facts.Answer) if answer.state_from == state.uid]
+
+                if len(answers) == 2:
+                    if ( (answers[0].condition and not answers[1].condition) or
+                         (not answers[0].condition and answers[1].condition) ):
+                        continue
+
+                states_to_remove.add(state)
+
             elif not filter(lambda jump: jump.state_from == state.uid, knowledge_base.filter(facts.Jump)):
                 states_to_remove.add(state)
 
