@@ -32,8 +32,9 @@ class Caravan(QuestBetween2):
                         facts.QuestParticipant(start=start.uid, participant=receiver.uid, role=ROLES.RECEIVER),
                         facts.QuestParticipant(start=start.uid, participant=black_market.uid, role=ROLES.ANTAGONIST_POSITION)]
 
-        path_percents_1 = random.uniform(0.3, 0.5)
-        path_percents_2 = random.uniform(0.6, 0.8)
+        path_percents_1 = random.uniform(0.1, 0.3)
+        path_percents_2 = random.uniform(0.4, 0.6)
+        path_percents_3 = random.uniform(0.7, 0.9)
 
         first_moving = facts.State(uid=ns+'first_moving',
                                     description=u'двигаемся с караваном',
@@ -44,6 +45,8 @@ class Caravan(QuestBetween2):
 
         first_defence = facts.Choice(uid=ns+'first_defence',
                                      description=u'первая защита',
+                                     require=[requirements.LocatedOnRoad(object=hero.uid,
+                                                                         place_from=initiator_position.uid, place_to=receiver_position.uid, percents=path_percents_2)],
                                      actions=(actions.Message(type='defence'),
                                               actions.Fight(), ))
 
@@ -53,7 +56,7 @@ class Caravan(QuestBetween2):
 
         second_moving = facts.State(uid=ns+'second_moving',
                                     description=u'двигаемся с караваном',
-                                    require=[requirements.LocatedOnRoad(object=hero.uid, place_from=initiator_position.uid, place_to=receiver_position.uid, percents=path_percents_2)])
+                                    require=[requirements.LocatedOnRoad(object=hero.uid, place_from=initiator_position.uid, place_to=receiver_position.uid, percents=path_percents_3)])
 
         second_defence = facts.Question(uid=ns+'second_defence',
                                         description=u'вторая защита',
@@ -114,8 +117,8 @@ class Caravan(QuestBetween2):
 
         finish_defence_failed = facts.Finish(uid=ns+'finish_defence_failed',
                                              start=start.uid,
-                                             results={ initiator.uid: RESULTS.FAILED,
-                                                       receiver.uid: RESULTS.FAILED,
+                                             results={ initiator.uid: RESULTS.NEUTRAL,
+                                                       receiver.uid: RESULTS.NEUTRAL,
                                                        black_market.uid: RESULTS.NEUTRAL },
                                              nesting=nesting,
                                              description=u'Герой не смог защитить караван',

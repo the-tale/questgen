@@ -55,13 +55,11 @@ class CollectDebt(QuestBetween2):
 
         finish_attack_failed = facts.Finish(uid=ns+'finish_attack_failed',
                                             start=start.uid,
-                                            results={ initiator.uid: RESULTS.FAILED,
-                                                      receiver.uid: RESULTS.SUCCESSED},
+                                            results={ initiator.uid: RESULTS.NEUTRAL,
+                                                      receiver.uid: RESULTS.NEUTRAL},
                                             nesting=nesting,
                                             description=u'не удалось выбить долг',
-                                            actions=[actions.Message(type='finish_attack_failed'),
-                                                     actions.GivePower(object=initiator.uid, power=-1),
-                                                     actions.GivePower(object=receiver.uid, power=1)])
+                                            actions=[actions.Message(type='finish_attack_failed')])
 
         help = facts.State(uid=ns+'help',
                            description=u'помочь должнику',
