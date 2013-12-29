@@ -105,7 +105,19 @@ class RemoveBrokenStatesTests(TransformatorsTestsBase):
                        facts.Finish(uid='st_finish', results={}, nesting=0, start='start'),
                        facts.Jump(state_from='start', state_to='st_finish') ]
         self.kb += facts_list
-        transformators.activate_events(self.kb)
+        transformators.remove_broken_states(self.kb)
+        self.check_in_knowledge_base(self.kb, facts_list)
+
+
+
+    def test_remove_fake_finish(self):
+        facts_list = [ facts.Start(uid='start', type='test', nesting=0),
+                       facts.Finish(uid='st_finish', results={}, nesting=0, start='start'),
+                       facts.Jump(state_from='start', state_to='st_finish') ]
+        fake_finish = facts.Finish(uid='st_fake_finish', results={}, nesting=0, start='start')
+        self.kb += [fake_finish] + facts_list
+        transformators.remove_broken_states(self.kb)
+        self.check_not_in_knowledge_base(self.kb, [fake_finish])
         self.check_in_knowledge_base(self.kb, facts_list)
 
     def test_single_broken_state(self):

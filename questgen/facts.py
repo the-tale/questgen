@@ -169,6 +169,9 @@ class Finish(State):
     def is_external(self): return self.nesting == 0
 
 
+class FakeFinish(Finish):
+    pass
+
 #############
 # Choice
 #############

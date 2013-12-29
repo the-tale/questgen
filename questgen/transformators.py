@@ -109,6 +109,8 @@ def remove_broken_states(knowledge_base):
     # print [s.uid for s in knowledge_base.filter(facts.State)]
     # print '------------'
 
+    knowledge_base -= list(knowledge_base.filter(facts.FakeFinish))
+
     while True:
         states_to_remove = set()
 

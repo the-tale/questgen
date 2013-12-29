@@ -9,67 +9,39 @@
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 580)">
 <title>quest</title>
 <polygon fill="white" stroke="white" points="-4,4 -4,-580 240,-580 240,4 -4,4"/>
-<!-- [ns&#45;0]drunk_song -->
-<g id="node1" class="node"><title>[ns&#45;0]drunk_song</title>
-<polygon fill="#ddffdd" stroke="none" points="52,-230.5 52,-285.5 184,-285.5 184,-230.5 52,-230.5"/>
-<text text-anchor="start" x="54" y="-275.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]drunk_song</text>
-<text text-anchor="start" x="54" y="-261" font-family="Times,serif" font-size="10.00">спеть пьяную песню</text>
-<polygon fill="#eeffee" stroke="none" points="53,-244 53,-257 183,-257 183,-244 53,-244"/>
-<text text-anchor="start" x="54" y="-249" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
-<text text-anchor="start" x="106" y="-249" font-family="Times,serif" font-size="10.00"> drunk_song</text>
-<polygon fill="#eeffee" stroke="none" points="53,-231 53,-244 183,-244 183,-231 53,-231"/>
-<text text-anchor="start" x="54" y="-236" font-family="Times,serif" font-weight="bold" font-size="10.00">заняться </text>
-<text text-anchor="start" x="97" y="-236" font-family="Times,serif" font-size="10.00">  drunk_song</text>
-<polygon fill="none" stroke="black" points="52,-230.5 52,-285.5 184,-285.5 184,-230.5 52,-230.5"/>
-</g>
 <!-- [ns&#45;0]remember_names -->
-<g id="node2" class="node"><title>[ns&#45;0]remember_names</title>
-<polygon fill="#ddffdd" stroke="none" points="34.5,-130.5 34.5,-185.5 201.5,-185.5 201.5,-130.5 34.5,-130.5"/>
-<text text-anchor="start" x="37" y="-175.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]remember_names</text>
-<text text-anchor="start" x="37" y="-161" font-family="Times,serif" font-size="10.00">вспоминать имена друзей</text>
-<polygon fill="#eeffee" stroke="none" points="36,-144 36,-157 201,-157 201,-144 36,-144"/>
-<text text-anchor="start" x="37" y="-149" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
-<text text-anchor="start" x="89" y="-149" font-family="Times,serif" font-size="10.00"> remember_names</text>
-<polygon fill="#eeffee" stroke="none" points="36,-131 36,-144 201,-144 201,-131 36,-131"/>
-<text text-anchor="start" x="37" y="-136" font-family="Times,serif" font-weight="bold" font-size="10.00">заняться </text>
-<text text-anchor="start" x="80" y="-136" font-family="Times,serif" font-size="10.00">  remember_names</text>
-<polygon fill="none" stroke="black" points="34.5,-130.5 34.5,-185.5 201.5,-185.5 201.5,-130.5 34.5,-130.5"/>
+<g id="node1" class="node"><title>[ns&#45;0]remember_names</title>
+<polygon fill="#ddffdd" stroke="none" points="34.5,-230.5 34.5,-285.5 201.5,-285.5 201.5,-230.5 34.5,-230.5"/>
+<text text-anchor="start" x="37" y="-275.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]remember_names</text>
+<text text-anchor="start" x="37" y="-261" font-family="Times,serif" font-size="10.00">вспоминать имена друзей</text>
+<polygon fill="#eeffee" stroke="none" points="36,-244 36,-257 201,-257 201,-244 36,-244"/>
+<text text-anchor="start" x="37" y="-249" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
+<text text-anchor="start" x="89" y="-249" font-family="Times,serif" font-size="10.00"> remember_names</text>
+<polygon fill="#eeffee" stroke="none" points="36,-231 36,-244 201,-244 201,-231 36,-231"/>
+<text text-anchor="start" x="37" y="-236" font-family="Times,serif" font-weight="bold" font-size="10.00">заняться </text>
+<text text-anchor="start" x="80" y="-236" font-family="Times,serif" font-size="10.00">  remember_names</text>
+<polygon fill="none" stroke="black" points="34.5,-230.5 34.5,-285.5 201.5,-285.5 201.5,-230.5 34.5,-230.5"/>
 </g>
-<!-- [ns&#45;0]drunk_song&#45;&gt;[ns&#45;0]remember_names -->
-<g id="edge5" class="edge"><title>[ns&#45;0]drunk_song:[ns&#45;0]drunk_song&#45;&gt;[ns&#45;0]remember_names:[ns&#45;0]remember_names</title>
+<!-- [ns&#45;0]search_old_friends -->
+<g id="node5" class="node"><title>[ns&#45;0]search_old_friends</title>
+<polygon fill="#ddffdd" stroke="none" points="29.5,-130.5 29.5,-185.5 206.5,-185.5 206.5,-130.5 29.5,-130.5"/>
+<text text-anchor="start" x="32" y="-175.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]search_old_friends</text>
+<text text-anchor="start" x="32" y="-161" font-family="Times,serif" font-size="10.00">искать старого друга</text>
+<polygon fill="#eeffee" stroke="none" points="31,-144 31,-157 206,-157 206,-144 31,-144"/>
+<text text-anchor="start" x="32" y="-149" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
+<text text-anchor="start" x="84" y="-149" font-family="Times,serif" font-size="10.00"> search_old_friends</text>
+<polygon fill="#eeffee" stroke="none" points="31,-131 31,-144 206,-144 206,-131 31,-131"/>
+<text text-anchor="start" x="32" y="-136" font-family="Times,serif" font-weight="bold" font-size="10.00">заняться </text>
+<text text-anchor="start" x="75" y="-136" font-family="Times,serif" font-size="10.00">  search_old_friends</text>
+<polygon fill="none" stroke="black" points="29.5,-130.5 29.5,-185.5 206.5,-185.5 206.5,-130.5 29.5,-130.5"/>
+</g>
+<!-- [ns&#45;0]remember_names&#45;&gt;[ns&#45;0]search_old_friends -->
+<g id="edge2" class="edge"><title>[ns&#45;0]remember_names:[ns&#45;0]remember_names&#45;&gt;[ns&#45;0]search_old_friends:[ns&#45;0]search_old_friends</title>
 <path fill="none" stroke="black" d="M118,-230.48C118,-219.803 118,-207.309 118,-195.779"/>
 <polygon fill="black" stroke="black" points="121.5,-195.541 118,-185.541 114.5,-195.541 121.5,-195.541"/>
 </g>
-<!-- [ns&#45;0]finish -->
-<g id="node4" class="node"><title>[ns&#45;0]finish</title>
-<polygon fill="#eeeeee" stroke="none" points="7.5,-4.5 7.5,-85.5 228.5,-85.5 228.5,-4.5 7.5,-4.5"/>
-<text text-anchor="start" x="10" y="-75.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]finish</text>
-<text text-anchor="start" x="10" y="-61" font-family="Times,serif" font-size="10.00">завершить посещение города</text>
-<polygon fill="#ffffff" stroke="none" points="9,-44 9,-57 228,-57 228,-44 9,-44"/>
-<text text-anchor="start" x="10" y="-49" font-family="Times,serif" font-weight="bold" font-size="10.00">выдать награду </text>
-<text text-anchor="start" x="85" y="-49" font-family="Times,serif" font-size="10.00">  hero </text>
-<text text-anchor="start" x="110" y="-49" font-family="Times,serif" font-weight="bold" font-size="10.00">типа </text>
-<text text-anchor="start" x="134" y="-49" font-family="Times,serif" font-size="10.00"> finish </text>
-<text text-anchor="start" x="162" y="-49" font-family="Times,serif" font-weight="bold" font-size="10.00">в размере</text>
-<text text-anchor="start" x="205" y="-49" font-family="Times,serif" font-size="10.00"> 1.00</text>
-<polygon fill="#ffffff" stroke="none" points="9,-31 9,-44 228,-44 228,-31 9,-31"/>
-<text text-anchor="start" x="10" y="-36" font-family="Times,serif" font-weight="bold" font-size="10.00">увеличить влияние </text>
-<text text-anchor="start" x="98" y="-36" font-family="Times,serif" font-size="10.00">  place_2 </text>
-<text text-anchor="start" x="138" y="-36" font-family="Times,serif" font-weight="bold" font-size="10.00">на </text>
-<text text-anchor="start" x="151" y="-36" font-family="Times,serif" font-size="10.00"> 1.00</text>
-<polygon fill="#eeeeee" stroke="none" points="9,-18 9,-31 228,-31 228,-18 9,-18"/>
-<text text-anchor="start" x="10" y="-23" font-family="Times,serif" font-weight="bold" font-size="10.00">результаты:</text>
-<text text-anchor="start" x="10" y="-10" font-family="Times,serif" font-weight="bold" font-size="10.00">place_2</text>
-<text text-anchor="start" x="120" y="-9" font-family="Times,serif" font-size="10.00">successed</text>
-<polygon fill="none" stroke="black" points="7.5,-4.5 7.5,-85.5 228.5,-85.5 228.5,-4.5 7.5,-4.5"/>
-</g>
-<!-- [ns&#45;0]remember_names&#45;&gt;[ns&#45;0]finish -->
-<g id="edge3" class="edge"><title>[ns&#45;0]remember_names:[ns&#45;0]remember_names&#45;&gt;[ns&#45;0]finish:[ns&#45;0]finish</title>
-<path fill="none" stroke="black" d="M118,-130.413C118,-120.095 118,-107.927 118,-96.0902"/>
-<polygon fill="black" stroke="black" points="121.5,-95.8285 118,-85.8286 114.5,-95.8286 121.5,-95.8285"/>
-</g>
 <!-- [ns&#45;0]start -->
-<g id="node3" class="node"><title>[ns&#45;0]start</title>
+<g id="node2" class="node"><title>[ns&#45;0]start</title>
 <polygon fill="#eeeeee" stroke="none" points="44.5,-516.5 44.5,-571.5 191.5,-571.5 191.5,-516.5 44.5,-516.5"/>
 <text text-anchor="start" x="47" y="-561.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]start</text>
 <text text-anchor="start" x="132.5" y="-561.5" font-family="Times,serif" font-weight="bold" font-size="10.00">hometown</text>
@@ -99,8 +71,31 @@
 <path fill="none" stroke="black" d="M118,-516.189C118,-505.542 118,-493.241 118,-482.275"/>
 <polygon fill="black" stroke="black" points="121.5,-482.266 118,-472.266 114.5,-482.267 121.5,-482.266"/>
 </g>
+<!-- [ns&#45;0]finish -->
+<g id="node3" class="node"><title>[ns&#45;0]finish</title>
+<polygon fill="#eeeeee" stroke="none" points="7.5,-4.5 7.5,-85.5 228.5,-85.5 228.5,-4.5 7.5,-4.5"/>
+<text text-anchor="start" x="10" y="-75.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]finish</text>
+<text text-anchor="start" x="10" y="-61" font-family="Times,serif" font-size="10.00">завершить посещение города</text>
+<polygon fill="#ffffff" stroke="none" points="9,-44 9,-57 228,-57 228,-44 9,-44"/>
+<text text-anchor="start" x="10" y="-49" font-family="Times,serif" font-weight="bold" font-size="10.00">выдать награду </text>
+<text text-anchor="start" x="85" y="-49" font-family="Times,serif" font-size="10.00">  hero </text>
+<text text-anchor="start" x="110" y="-49" font-family="Times,serif" font-weight="bold" font-size="10.00">типа </text>
+<text text-anchor="start" x="134" y="-49" font-family="Times,serif" font-size="10.00"> finish </text>
+<text text-anchor="start" x="162" y="-49" font-family="Times,serif" font-weight="bold" font-size="10.00">в размере</text>
+<text text-anchor="start" x="205" y="-49" font-family="Times,serif" font-size="10.00"> 1.00</text>
+<polygon fill="#ffffff" stroke="none" points="9,-31 9,-44 228,-44 228,-31 9,-31"/>
+<text text-anchor="start" x="10" y="-36" font-family="Times,serif" font-weight="bold" font-size="10.00">увеличить влияние </text>
+<text text-anchor="start" x="98" y="-36" font-family="Times,serif" font-size="10.00">  place_2 </text>
+<text text-anchor="start" x="138" y="-36" font-family="Times,serif" font-weight="bold" font-size="10.00">на </text>
+<text text-anchor="start" x="151" y="-36" font-family="Times,serif" font-size="10.00"> 1.00</text>
+<polygon fill="#eeeeee" stroke="none" points="9,-18 9,-31 228,-31 228,-18 9,-18"/>
+<text text-anchor="start" x="10" y="-23" font-family="Times,serif" font-weight="bold" font-size="10.00">результаты:</text>
+<text text-anchor="start" x="10" y="-10" font-family="Times,serif" font-weight="bold" font-size="10.00">place_2</text>
+<text text-anchor="start" x="120" y="-9" font-family="Times,serif" font-size="10.00">successed</text>
+<polygon fill="none" stroke="black" points="7.5,-4.5 7.5,-85.5 228.5,-85.5 228.5,-4.5 7.5,-4.5"/>
+</g>
 <!-- [ns&#45;0]stagger_streets -->
-<g id="node5" class="node"><title>[ns&#45;0]stagger_streets</title>
+<g id="node4" class="node"><title>[ns&#45;0]stagger_streets</title>
 <polygon fill="#ddffdd" stroke="none" points="42,-330.5 42,-385.5 194,-385.5 194,-330.5 42,-330.5"/>
 <text text-anchor="start" x="44" y="-375.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]stagger_streets</text>
 <text text-anchor="start" x="44" y="-361" font-family="Times,serif" font-size="10.00">пошататься по улицам</text>
@@ -112,10 +107,15 @@
 <text text-anchor="start" x="87" y="-336" font-family="Times,serif" font-size="10.00">  stagger_streets</text>
 <polygon fill="none" stroke="black" points="42,-330.5 42,-385.5 194,-385.5 194,-330.5 42,-330.5"/>
 </g>
-<!-- [ns&#45;0]stagger_streets&#45;&gt;[ns&#45;0]drunk_song -->
-<g id="edge2" class="edge"><title>[ns&#45;0]stagger_streets:[ns&#45;0]stagger_streets&#45;&gt;[ns&#45;0]drunk_song:[ns&#45;0]drunk_song</title>
+<!-- [ns&#45;0]stagger_streets&#45;&gt;[ns&#45;0]remember_names -->
+<g id="edge3" class="edge"><title>[ns&#45;0]stagger_streets:[ns&#45;0]stagger_streets&#45;&gt;[ns&#45;0]remember_names:[ns&#45;0]remember_names</title>
 <path fill="none" stroke="black" d="M118,-330.48C118,-319.803 118,-307.309 118,-295.779"/>
 <polygon fill="black" stroke="black" points="121.5,-295.541 118,-285.541 114.5,-295.541 121.5,-295.541"/>
+</g>
+<!-- [ns&#45;0]search_old_friends&#45;&gt;[ns&#45;0]finish -->
+<g id="edge5" class="edge"><title>[ns&#45;0]search_old_friends:[ns&#45;0]search_old_friends&#45;&gt;[ns&#45;0]finish:[ns&#45;0]finish</title>
+<path fill="none" stroke="black" d="M118,-130.413C118,-120.095 118,-107.927 118,-96.0902"/>
+<polygon fill="black" stroke="black" points="121.5,-95.8285 118,-85.8286 114.5,-95.8286 121.5,-95.8285"/>
 </g>
 <!-- [ns&#45;0]arriving&#45;&gt;[ns&#45;0]stagger_streets -->
 <g id="edge1" class="edge"><title>[ns&#45;0]arriving:[ns&#45;0]arriving&#45;&gt;[ns&#45;0]stagger_streets:[ns&#45;0]stagger_streets</title>

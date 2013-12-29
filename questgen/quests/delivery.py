@@ -60,6 +60,14 @@ class Delivery(QuestBetween2):
                                                      actions.GivePower(object=initiator.uid, power=-1),
                                                      actions.GivePower(object=receiver.uid, power=-1)])
 
+        fake_delivery_dummy_state = facts.FakeFinish(uid=ns+'dummy_state',
+                                                     start=start.uid,
+                                                     results={ initiator.uid: RESULTS.NEUTRAL,
+                                                               receiver.uid: RESULTS.NEUTRAL,
+                                                               antagonist.uid: RESULTS.NEUTRAL},
+                                                     nesting=nesting,
+                                                     description=u'заглушка, чтобы можно было управлять появлением подделки письма')
+
         finish_steal = facts.Finish(uid=ns+'finish_steal',
                                     start=start.uid,
                                     results={ initiator.uid: RESULTS.FAILED,
@@ -119,6 +127,7 @@ class Delivery(QuestBetween2):
                  finish_delivery,
                  finish_steal,
                  finish_fake_delivery,
+                 fake_delivery_dummy_state,
                  finish_fight_for_stealed__hero_died,
                  finish_fight_for_stealed__delivery,
 
@@ -130,13 +139,14 @@ class Delivery(QuestBetween2):
                  facts.Option(state_from=delivery_choice.uid, state_to=finish_delivery.uid, type='delivery', start_actions=[actions.Message(type='start_delivery'),]),
                  facts.Option(state_from=delivery_choice.uid, state_to=finish_steal.uid, type='steal', start_actions=[actions.Message(type='start_steal'),]),
                  facts.Option(state_from=delivery_choice.uid, state_to=finish_fake_delivery.uid, type='fake', start_actions=[actions.Message(type='start_fake'),]),
+                 facts.Option(state_from=delivery_choice.uid, state_to=fake_delivery_dummy_state.uid, type='dummy_lie'),
 
                  facts.Answer(state_from=fight_for_stealed.uid, state_to=finish_fight_for_stealed__delivery.uid,
                               condition=True, start_actions=[actions.Message(type='delivery_returned')]),
                  facts.Answer(state_from=fight_for_stealed.uid, state_to=finish_fight_for_stealed__hero_died.uid, condition=False),
 
                  facts.Event(uid=ns+'delivery_variants', description=u'Варианты доставки', members=(delivery_stealed.uid, finish_delivery.uid)),
-                 facts.Event(uid=ns+'lie_variants', description=u'Варианты обмана', members=(finish_steal.uid, finish_fake_delivery.uid))
+                 facts.Event(uid=ns+'lie_variants', description=u'Варианты обмана', members=(fake_delivery_dummy_state.uid, finish_fake_delivery.uid))
                 ]
 
         line.extend(participants)

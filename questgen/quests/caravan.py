@@ -47,12 +47,12 @@ class Caravan(QuestBetween2):
                                      description=u'первая защита',
                                      require=[requirements.LocatedOnRoad(object=hero.uid,
                                                                          place_from=initiator_position.uid, place_to=receiver_position.uid, percents=path_percents_2)],
-                                     actions=(actions.Message(type='defence'),
-                                              actions.Fight(), ))
+                                     actions=[actions.Message(type='defence')])
 
         first_defence_continue = facts.Question(uid=ns+'first_defence_continue',
                                                 description=u'удалось ли защитить караван?',
-                                                condition=(requirements.IsAlive(object=hero.uid),))
+                                                condition=[requirements.IsAlive(object=hero.uid)],
+                                                actions=[actions.Fight()])
 
         second_moving = facts.State(uid=ns+'second_moving',
                                     description=u'двигаемся с караваном',
