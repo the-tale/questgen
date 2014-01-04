@@ -47,8 +47,11 @@ class Selector(object):
 
     def heroes(self): return list(h for h in self._kb.filter(facts.Hero))
 
-    def new_place(self, candidates=None, terrains=None):
+    def new_place(self, candidates=None, terrains=None, types=None):
         places = (place for place in self._kb.filter(facts.Place) if place.uid not in self._reserved)
+
+        if types is not None:
+            places = (place for place in places if place.type in types)
 
         if candidates is not None:
             places = (place for place in places if place.uid in candidates)
@@ -60,7 +63,7 @@ class Selector(object):
         places = list(places)
 
         if not places:
-            raise exceptions.NoFactSelectedError(method='new_place', arguments={'terrains': terrains})
+            raise exceptions.NoFactSelectedError(method='new_place', arguments={'terrains': terrains, 'types': types})
 
         place = random.choice(places)
         self._reserved.add(place.uid)

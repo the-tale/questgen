@@ -5,6 +5,7 @@ from questgen import exceptions
 from questgen import actions
 from questgen import requirements
 from questgen import records
+from questgen import relations
 
 
 class FactAttribute(records.RecordAttribute):
@@ -130,6 +131,7 @@ class Hero(Actor): pass
 
 class Place(Actor):
     terrains = FactAttribute(default=None)
+    type = FactAttribute(default=None)
 
 class Person(Actor):
     profession = FactAttribute(default=None)

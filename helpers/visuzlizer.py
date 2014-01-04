@@ -5,6 +5,7 @@ from questgen import facts
 from questgen.graph_drawer import Drawer
 from questgen.selectors import Selector
 from questgen import restrictions
+from questgen import relations
 
 from questgen.quests.quests_base import QuestsBase
 from questgen.quests.spying import Spying
@@ -20,10 +21,10 @@ from questgen.quests.complex import Complex
 from questgen.quests.help_friend import HelpFriend
 from questgen.quests.interfere_enemy import InterfereEnemy
 from questgen.quests.help import Help
+from questgen.quests.pilgrimage import Pilgrimage
 
-from questgen.relations import PROFESSION
 
-QUESTS = [Spying, Hunt, Hometown, SearchSmith, Delivery, Caravan, CollectDebt, HelpFriend, InterfereEnemy, Help, Simple, Simplest, Complex]
+QUESTS = [Spying, Hunt, Hometown, SearchSmith, Delivery, Caravan, CollectDebt, HelpFriend, InterfereEnemy, Help, Simple, Simplest, Complex, Pilgrimage]
 
 qb = QuestsBase()
 qb += [Simple]
@@ -45,18 +46,18 @@ for Quest in QUESTS:
             facts.Place(uid='place_7', terrains=(2,)),
             facts.Place(uid='place_8', terrains=(2,)),
             facts.Place(uid='place_9', terrains=(1,)),
-            facts.Place(uid='place_10', terrains=(2,)),
+            facts.Place(uid='place_10', terrains=(2,), type=relations.PLACE_TYPE.HOLY_CITY),
 
-            facts.Person(uid='person_1', profession=PROFESSION.NONE),
-            facts.Person(uid='person_2', profession=PROFESSION.BLACKSMITH),
-            facts.Person(uid='person_3', profession=PROFESSION.NONE),
-            facts.Person(uid='person_4', profession=PROFESSION.NONE),
-            facts.Person(uid='person_5', profession=PROFESSION.NONE),
-            facts.Person(uid='person_6', profession=PROFESSION.NONE),
-            facts.Person(uid='person_7', profession=PROFESSION.NONE),
-            facts.Person(uid='person_8', profession=PROFESSION.NONE),
-            facts.Person(uid='person_9', profession=PROFESSION.NONE),
-            facts.Person(uid='person_10', profession=PROFESSION.NONE),
+            facts.Person(uid='person_1', profession=relations.PROFESSION.NONE),
+            facts.Person(uid='person_2', profession=relations.PROFESSION.BLACKSMITH),
+            facts.Person(uid='person_3', profession=relations.PROFESSION.ROGUE),
+            facts.Person(uid='person_4', profession=relations.PROFESSION.NONE),
+            facts.Person(uid='person_5', profession=relations.PROFESSION.NONE),
+            facts.Person(uid='person_6', profession=relations.PROFESSION.NONE),
+            facts.Person(uid='person_7', profession=relations.PROFESSION.NONE),
+            facts.Person(uid='person_8', profession=relations.PROFESSION.NONE),
+            facts.Person(uid='person_9', profession=relations.PROFESSION.NONE),
+            facts.Person(uid='person_10', profession=relations.PROFESSION.NONE),
 
             facts.LocatedIn(object='person_1', place='place_1'),
             facts.LocatedIn(object='person_2', place='place_2'),

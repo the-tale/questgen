@@ -5,6 +5,8 @@ from questgen.quests.base_quest import QuestBetween2, ROLES, RESULTS
 from questgen import facts
 from questgen import requirements
 from questgen import actions
+from questgen import relations
+from questgen import exceptions
 
 
 class Delivery(QuestBetween2):
@@ -18,7 +20,11 @@ class Delivery(QuestBetween2):
 
         ns = selector._kb.get_next_ns()
 
-        antagonist = selector.new_person(first_initiator=False)
+        try:
+            antagonist = selector.new_person(first_initiator=False, professions=[relations.PROFESSION.ROGUE])
+        except exceptions.NoFactSelectedError:
+            antagonist = selector.new_person(first_initiator=False)
+
         antagonist_position = selector.place_for(objects=(antagonist.uid,))
 
         start = facts.Start(uid=ns+'start',

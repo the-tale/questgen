@@ -16,9 +16,9 @@ class SelectordsTests(unittest.TestCase):
         self.kb += [ facts.Hero(uid='hero'),
                      facts.Hero(uid='hero_2'),
 
-                     facts.Place(uid='place_1', terrains=(1,)),
-                     facts.Place(uid='place_2', terrains=(0,)),
-                     facts.Place(uid='place_3', terrains=(0,)),
+                     facts.Place(uid='place_1', terrains=(1,), type=11),
+                     facts.Place(uid='place_2', terrains=(0,), type=22),
+                     facts.Place(uid='place_3', terrains=(0,), type=33),
 
                      facts.Person(uid='person_1', profession=0),
                      facts.Person(uid='person_2', profession=1),
@@ -62,6 +62,11 @@ class SelectordsTests(unittest.TestCase):
         self.assertRaises(exceptions.NoFactSelectedError, self.selector.new_place, candidates=())
         self.assertEqual(self.selector.new_place(candidates=['place_1']).uid, 'place_1')
         self.assertTrue(self.selector.new_place(candidates=['place_2', 'place_3']).uid in ['place_2', 'place_3'])
+
+    def test_new_place__types(self):
+        self.assertRaises(exceptions.NoFactSelectedError, self.selector.new_place, candidates=())
+        self.assertEqual(self.selector.new_place(types=[11]).uid, 'place_1')
+        self.assertTrue(self.selector.new_place(types=[22, 33]).uid in ['place_2', 'place_3'])
 
     def test_place_for(self):
         self.assertEqual(self.selector._reserved, set())

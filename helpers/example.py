@@ -67,7 +67,7 @@ def create_quest():
 
             facts.Person(uid='person_1', profession=PROFESSION.NONE), # есть персонаж с идентификатором perons_1 и без профессии
             facts.Person(uid='person_2', profession=PROFESSION.BLACKSMITH),
-            facts.Person(uid='person_3', profession=PROFESSION.NONE),
+            facts.Person(uid='person_3', profession=PROFESSION.ROGUE),
             facts.Person(uid='person_4', profession=PROFESSION.NONE),
             facts.Person(uid='person_5', profession=PROFESSION.NONE),
             facts.Person(uid='person_6', profession=PROFESSION.NONE),

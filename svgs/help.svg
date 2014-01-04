@@ -32,11 +32,11 @@
 <text text-anchor="start" x="65" y="-390" font-family="Times,serif" font-size="10.00">завершить задание удачно</text>
 <polygon fill="#eeeeee" stroke="none" points="64,-373 64,-386 218,-386 218,-373 64,-373"/>
 <text text-anchor="start" x="65" y="-378" font-family="Times,serif" font-weight="bold" font-size="10.00">результаты:</text>
-<text text-anchor="start" x="65" y="-365" font-family="Times,serif" font-weight="bold" font-size="10.00">person_8</text>
+<text text-anchor="start" x="65" y="-365" font-family="Times,serif" font-weight="bold" font-size="10.00">person_7</text>
 <text text-anchor="start" x="162" y="-364" font-family="Times,serif" font-size="10.00">successed</text>
 <text text-anchor="start" x="65" y="-352" font-family="Times,serif" font-weight="bold" font-size="10.00">person_9</text>
 <text text-anchor="start" x="162" y="-351" font-family="Times,serif" font-size="10.00">successed</text>
-<text text-anchor="start" x="65" y="-339" font-family="Times,serif" font-weight="bold" font-size="10.00">place_8</text>
+<text text-anchor="start" x="65" y="-339" font-family="Times,serif" font-weight="bold" font-size="10.00">place_7</text>
 <text text-anchor="start" x="162" y="-338" font-family="Times,serif" font-size="10.00">successed</text>
 <text text-anchor="start" x="65" y="-326" font-family="Times,serif" font-weight="bold" font-size="10.00">place_9</text>
 <text text-anchor="start" x="162" y="-325" font-family="Times,serif" font-size="10.00">successed</text>
@@ -54,11 +54,11 @@
 <text text-anchor="start" x="255" y="-390" font-family="Times,serif" font-size="10.00">завершить задание плохо</text>
 <polygon fill="#eeeeee" stroke="none" points="254,-373 254,-386 390,-386 390,-373 254,-373"/>
 <text text-anchor="start" x="255" y="-378" font-family="Times,serif" font-weight="bold" font-size="10.00">результаты:</text>
-<text text-anchor="start" x="255" y="-365" font-family="Times,serif" font-weight="bold" font-size="10.00">person_8</text>
+<text text-anchor="start" x="255" y="-365" font-family="Times,serif" font-weight="bold" font-size="10.00">person_7</text>
 <text text-anchor="start" x="336" y="-364" font-family="Times,serif" font-size="10.00">failed</text>
 <text text-anchor="start" x="255" y="-352" font-family="Times,serif" font-weight="bold" font-size="10.00">person_9</text>
 <text text-anchor="start" x="336" y="-351" font-family="Times,serif" font-size="10.00">failed</text>
-<text text-anchor="start" x="255" y="-339" font-family="Times,serif" font-weight="bold" font-size="10.00">place_8</text>
+<text text-anchor="start" x="255" y="-339" font-family="Times,serif" font-weight="bold" font-size="10.00">place_7</text>
 <text text-anchor="start" x="336" y="-338" font-family="Times,serif" font-size="10.00">failed</text>
 <text text-anchor="start" x="255" y="-326" font-family="Times,serif" font-weight="bold" font-size="10.00">place_9</text>
 <text text-anchor="start" x="336" y="-325" font-family="Times,serif" font-size="10.00">failed</text>
