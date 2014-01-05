@@ -93,7 +93,7 @@ for Quest in QUESTS:
                                  restrictions.NoCirclesInStateJumpGraph(),
                                  # restrictions.MultipleJumpsFromNormalState(),
                                  restrictions.ChoicesConsistency(),
-                                 restrictions.QuestionsConsistency(),
+                                 # restrictions.QuestionsConsistency(),
                                  restrictions.FinishResultsConsistency()])
         pass
     except Exception:

@@ -708,6 +708,53 @@ class ChangeChoiceTests(TransformatorsTestsBase):
         self.assertEqual(set([path.option for path in self.kb.filter(facts.ChoicePath)]),
                          set([option_1.uid, option_2_1.uid]))
 
+    def test_linked_choices__without_path(self):
+        # in some cases, not all linked choices can have default path
+        start = facts.Start(uid='start', type='test', nesting=0)
+        choice_1 = facts.Choice(uid='choice_1')
+        choice_2 = facts.Choice(uid='choice_2')
+        finish_1 = facts.Finish(uid='finish_1', results={}, nesting=0, start='start')
+        finish_2 = facts.Finish(uid='finish_2', results={}, nesting=0, start='start')
+
+        option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
+        option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
+
+        option_2_1 = facts.Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1')
+        option_2_2 = facts.Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2')
+
+        facts_list = [ start,
+                  choice_1,
+                  choice_2,
+                  finish_1,
+                  finish_2,
+
+                  option_1,
+                  option_2,
+                  option_2_1,
+                  option_2_2,
+
+                  facts.OptionsLink(options=(option_1.uid, option_2_1.uid)),
+                  facts.OptionsLink(options=(option_2.uid, option_2_2.uid))
+                ]
+
+        self.kb += facts_list
+
+        choices = [facts.ChoicePath(choice=choice_1.uid, option=option_2.uid, default=True)] # defaul path specified only for one choice
+
+        self.kb += choices
+
+        transformators.change_choice(self.kb, option_1.uid, default=False)
+
+        self.check_in_knowledge_base(self.kb, facts_list)
+        self.check_not_in_knowledge_base(self.kb, choices)
+
+        self.assertEqual(len(list(self.kb.filter(facts.ChoicePath))), 2)
+        self.assertEqual(len(set([path.choice for path in self.kb.filter(facts.ChoicePath)])), 2)
+
+        self.assertEqual(set([path.option for path in self.kb.filter(facts.ChoicePath)]),
+                         set([option_1.uid, option_2_1.uid]))
+
+
 
 class RemoveUnusedActorsTests(TransformatorsTestsBase):
 

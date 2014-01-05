@@ -8,6 +8,17 @@ from questgen import actions
 from questgen import exceptions
 
 
+def link_colors_generator():
+    color_elements = ['55', 'aa', 'ff']
+
+    for r in color_elements:
+        for g in color_elements:
+            for b in color_elements:
+                yield '#%s%s%s' % (r, g, b)
+
+
+link_colors = link_colors_generator()
+
 class HEAD_COLORS(object):
     START = '#eeeeee'
     STATE = '#ddffdd'
@@ -32,7 +43,7 @@ class HEAD_COLORS(object):
 
     SUBQUEST_SUBGRAPH = '#%02xffff'
 
-    LINK = '#ffaaaa'
+    # LINK = '#ffaaaa'
 
     JUMP = '#ffffff'
     JUMP_ACTIONS_START = '#eeeeee'
@@ -75,15 +86,15 @@ class SubGraph(object):
             subgraph.draw(graph, nodes, nesting=0)
 
     def draw(self, graph, nodes, nesting):
-        subgraph = gv.graph(graph, self.uid)
-        gv.setv(subgraph, 'label', self.uid)
+        subgraph = gv.graph(graph, self.uid.encode('utf-8'))
+        gv.setv(subgraph, 'label', self.uid.encode('utf-8'))
         # gv.setv(subgraph, 'rank', 'same')
         gv.setv(subgraph, 'shape', 'box')
         gv.setv(subgraph, 'bgcolor', self.color % (150+nesting*25) if '%' in self.color else self.color)
 
         for node_uid in self.members:
             if node_uid in nodes:
-                gv.node(subgraph, node_uid)
+                gv.node(subgraph, node_uid.encode('utf-8'))
 
         for child in self.children:
             child.draw(subgraph, nodes, nesting=nesting+1)
@@ -100,7 +111,7 @@ class Drawer(object):
         self.linked_edges = set()
 
     def add_node(self, fact):
-        node = gv.node(self.graph, fact.uid)
+        node = gv.node(self.graph, fact.uid.encode('utf-8'))
         gv.setv(node, 'shape', 'plaintext')
         gv.setv(node, 'label', self.create_label_for(fact).encode('utf-8'))
         gv.setv(node, 'fontsize', '10')
@@ -110,7 +121,7 @@ class Drawer(object):
         return node
 
     def _add_edge(self, jump):
-        node = gv.node(self.graph, jump.uid)
+        node = gv.node(self.graph, jump.uid.encode('utf-8'))
 
         gv.setv(node, 'shape', 'plaintext')
         gv.setv(node, 'label', self.create_label_for(jump).encode('utf-8'))
@@ -122,13 +133,13 @@ class Drawer(object):
         edge_2 = gv.edge(node, self.nodes[jump.state_to])
 
         gv.setv(edge_1, 'dir', 'none')
-        gv.setv(edge_1, 'tailport', jump.state_from)
-        gv.setv(edge_1, 'headport', jump.uid)
+        gv.setv(edge_1, 'tailport', jump.state_from.encode('utf-8'))
+        gv.setv(edge_1, 'headport', jump.uid.encode('utf-8'))
         gv.setv(edge_1, 'weight', '40')
         gv.setv(edge_1, 'minlen', '1')
 
-        gv.setv(edge_2, 'tailport', jump.uid)
-        gv.setv(edge_2, 'headport', jump.state_to)
+        gv.setv(edge_2, 'tailport', jump.uid.encode('utf-8'))
+        gv.setv(edge_2, 'headport', jump.state_to.encode('utf-8'))
         gv.setv(edge_2, 'weight', '40')
         gv.setv(edge_2, 'minlen', '1')
 
@@ -141,8 +152,8 @@ class Drawer(object):
 
     def _add_empty_edge(self, jump):
         edge = gv.edge(self.nodes[jump.state_from], self.nodes[jump.state_to])
-        gv.setv(edge, 'headport', jump.state_to)
-        gv.setv(edge, 'tailport', jump.state_from)
+        gv.setv(edge, 'headport', jump.state_to.encode('utf-8'))
+        gv.setv(edge, 'tailport', jump.state_from.encode('utf-8'))
         gv.setv(edge, 'weight', '20')
         gv.setv(edge, 'minlen', '1')
 
@@ -154,25 +165,33 @@ class Drawer(object):
             self._add_empty_edge(jump)
 
     def add_link(self, link):
-        node = gv.node(self.graph, link.uid)
-        gv.setv(node, 'shape', 'circle')
-        gv.setv(node, 'label', 'link')
-        gv.setv(node, 'fontsize', '10')
-        gv.setv(node, 'style', 'filled')
-        gv.setv(node, 'fillcolor', HEAD_COLORS.LINK)
-        gv.setv(node, 'fixedsize', 'true')
-        gv.setv(node, 'width', '0.33')
 
-        self.nodes[link.uid] = node
+        color = link_colors.next()
 
         for option_uid in link.options:
-            self.linked_edges.add(option_uid)
-            edge = gv.edge(node, option_uid)
-            gv.setv(edge, 'dir', 'none')
-            gv.setv(edge, 'color', HEAD_COLORS.LINK)
-            gv.setv(edge, 'minlen', '1')
-            gv.setv(edge, 'headport', option_uid)
-            gv.setv(edge, 'weight', '10')
+            option = self.nodes[option_uid]
+            gv.setv(option, 'style', 'filled')
+            gv.setv(option, 'color', color)
+
+        # node = gv.node(self.graph, link.uid)
+        # gv.setv(node, 'shape', 'circle')
+        # gv.setv(node, 'label', 'link')
+        # gv.setv(node, 'fontsize', '10')
+        # gv.setv(node, 'style', 'filled')
+        # gv.setv(node, 'fillcolor', HEAD_COLORS.LINK)
+        # gv.setv(node, 'fixedsize', 'true')
+        # gv.setv(node, 'width', '0.33')
+
+        # self.nodes[link.uid] = node
+
+        # for option_uid in link.options:
+        #     self.linked_edges.add(option_uid)
+        #     edge = gv.edge(node, option_uid)
+        #     gv.setv(edge, 'dir', 'none')
+        #     gv.setv(edge, 'color', HEAD_COLORS.LINK)
+        #     gv.setv(edge, 'minlen', '1')
+        #     gv.setv(edge, 'headport', option_uid)
+        #     gv.setv(edge, 'weight', '10')
 
     def draw(self, path):
 

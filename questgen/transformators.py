@@ -26,6 +26,7 @@ def activate_events(knowledge_base):
     knowledge_base -= set(removed_facts) - set(choosen_facts)
 
 
+# here we MUST already have correct graph
 def determine_default_choices(knowledge_base):
     processed_choices = set()
     linked_options = {}
@@ -46,6 +47,13 @@ def determine_default_choices(knowledge_base):
         options_choices = [option
                            for option in knowledge_base.filter(facts.Option)
                            if option.state_from == choice.uid and option.uid not in restricted_options]
+
+        if not options_choices:
+            # if there no valid options (in valuid graph), then all options where cancels by other chocices
+            # and we will no go to that state by defaul states (quest author responded for this)
+            # TODO: make restriction, that check if we have full default path
+            continue
+
 
         default_option = random.choice(options_choices)
 
@@ -83,9 +91,7 @@ def change_choice(knowledge_base, new_option_uid, default):
 
     choice_uid = knowledge_base[new_option_uid].state_from
 
-    old_path = (path for path in knowledge_base.filter(facts.ChoicePath) if path.choice == choice_uid).next()
-
-    knowledge_base -= old_path
+    knowledge_base -= [path for path in knowledge_base.filter(facts.ChoicePath) if path.choice == choice_uid]
     knowledge_base += facts.ChoicePath(choice=choice_uid, option=new_option_uid, default=default)
 
     links = [link for link in knowledge_base.filter(facts.OptionsLink) if new_option_uid in link.options]
@@ -95,9 +101,8 @@ def change_choice(knowledge_base, new_option_uid, default):
             if new_option_uid == linked_option_uid:
                 continue
             linked_choice_uid = knowledge_base[linked_option_uid].state_from
-            old_path = (path for path in knowledge_base.filter(facts.ChoicePath) if path.choice == linked_choice_uid).next()
 
-            knowledge_base -= old_path
+            knowledge_base -= [path for path in knowledge_base.filter(facts.ChoicePath) if path.choice == linked_choice_uid]
             knowledge_base += facts.ChoicePath(choice=linked_choice_uid, option=linked_option_uid, default=default)
 
     return True

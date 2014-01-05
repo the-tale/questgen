@@ -39,10 +39,25 @@ class Spying(QuestBetween2):
                                actions=[actions.MoveNear(object=hero.uid, place=receiver_position.uid)])
 
         continue_spying = facts.State(uid=ns+'continue_spying',
-                                description=u'Продолжить шпионаж',
+                                      description=u'Продолжить шпионаж')
+
+        success_spying = facts.State(uid=ns+'success_spying',
+                                description=u'шпионим без происшествий',
                                 require=[requirements.LocatedNear(object=hero.uid, place=receiver_position.uid)],
-                                actions=[actions.MoveNear(object=hero.uid, place=receiver_position.uid),
-                                         actions.Message(type='continue_spying')])
+                                actions=[actions.Message(type='success_spying'),
+                                         actions.MoveNear(object=hero.uid, place=receiver_position.uid)])
+
+        witness = facts.State(uid=ns+'witness',
+                              description=u'героя заметил один из работников цели',
+                              require=[requirements.LocatedNear(object=hero.uid, place=receiver_position.uid)],
+                              actions=[actions.Message(type='witness'),
+                                       actions.MoveNear(object=hero.uid, place=receiver_position.uid)  ])
+
+        witness_fight = facts.Question(uid=ns+'witness_fight',
+                                       description=u'удалось ли победить свидетеля?',
+                                       condition=[requirements.IsAlive(object=hero.uid)],
+                                       actions=[actions.Message(type='witness_fight'),
+                                                actions.Fight(mercenary=True)])
 
         open_up = facts.State(uid=ns+'open_up',
                         description=u'Раскрыться',
@@ -60,6 +75,27 @@ class Spying(QuestBetween2):
                                    actions=[actions.GiveReward(object=hero.uid, type='report_data'),
                                             actions.GivePower(object=initiator.uid, power=1),
                                             actions.GivePower(object=receiver.uid, power=-1)])
+
+        finish_spying_choice = facts.Choice(uid=ns+'finish_spying_choice',
+                                            description=u'Варианты выбора завершения шпионажа')
+
+        blackmail_finish = facts.Finish(uid=ns+'blackmail_finish',
+                                        start=start.uid,
+                                        results={initiator.uid: RESULTS.NEUTRAL,
+                                                 receiver.uid: RESULTS.FAILED},
+                                        nesting=nesting,
+                                        description=u'Шантажировать самостоятельно',
+                                        require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
+                                        actions=[actions.GiveReward(object=hero.uid, type='blackmail_finish', scale=1.25),
+                                                 actions.GivePower(object=receiver.uid, power=-1)])
+
+        witness_failed = facts.Finish(uid=ns+'witness_failed',
+                                      start=start.uid,
+                                      results={initiator.uid: RESULTS.NEUTRAL,
+                                               receiver.uid: RESULTS.NEUTRAL},
+                                      nesting=nesting,
+                                      description=u'свидетель смог скрыться',
+                                      actions=[actions.Message(type='witness_failed') ])
 
         open_up_finish = facts.Finish(uid=ns+'open_up_finish',
                                       start=start.uid,
@@ -84,37 +120,76 @@ class Spying(QuestBetween2):
                                               actions.GivePower(object=receiver.uid, power=1.5)])
 
         start_spying__spying_middle = facts.Option(state_from=start_spying.uid, state_to=spying_middle.uid, type='spy', start_actions=[actions.Message(type='start_spying'),])
+        start_spying__spying_middle__blackmail = facts.Option(state_from=start_spying.uid,
+                                                              state_to=spying_middle.uid,
+                                                              type='blackmail',
+                                                              start_actions=[actions.Message(type='start_spying'),])
         start_spying__open_up = facts.Option(state_from=start_spying.uid, state_to=open_up.uid, type='open_up', start_actions=[actions.Message(type='start_open_up'),])
 
         spying_middle__continue_spying = facts.Option(state_from=spying_middle.uid, state_to=continue_spying.uid, type='spy')
+        spying_middle__continue_spying__blackmail = facts.Option(state_from=spying_middle.uid, state_to=continue_spying.uid, type='blackmail')
         spying_middle__open_up = facts.Option(state_from=spying_middle.uid, state_to=open_up.uid, type='open_up', start_actions=[actions.Message(type='start_open_up'),])
+
+        finish_spying__report_data = facts.Option(state_from=finish_spying_choice.uid,
+                                                  state_to=report_data.uid,
+                                                  type='spy',
+                                                  start_actions=[actions.Message(type='go_report_data')])
+        finish_spying__blackmail = facts.Option(state_from=finish_spying_choice.uid,
+                                                state_to=blackmail_finish.uid,
+                                                type='blackmail',
+                                                start_actions=[actions.Message(type='go_blackmail')])
 
 
         line = [ start,
                   start_spying,
                   spying_middle,
+                  success_spying,
                   continue_spying,
                   open_up,
                   report_data,
                   open_up_finish,
                   open_up_lying,
+                  witness,
+                  witness_fight,
+                  witness_failed,
+                  finish_spying_choice,
+                  blackmail_finish,
 
                   facts.Jump(state_from=start.uid, state_to=start_spying.uid),
 
+                  facts.Jump(state_from=continue_spying.uid, state_to=success_spying.uid),
+                  facts.Jump(state_from=continue_spying.uid, state_to=witness.uid),
+
                   start_spying__spying_middle,
+                  start_spying__spying_middle__blackmail,
                   start_spying__open_up,
 
                   spying_middle__continue_spying,
+                  spying_middle__continue_spying__blackmail,
                   spying_middle__open_up,
 
-                  facts.Jump(state_from=continue_spying.uid, state_to=report_data.uid, start_actions=[actions.Message(type='move_to_report_data'),]),
+                  finish_spying__report_data,
+                  finish_spying__blackmail,
+
+                  facts.Jump(state_from=success_spying.uid, state_to=finish_spying_choice.uid), #, start_actions=[actions.Message(type='move_to_report_data'),]),
+
+                  facts.Jump(state_from=witness.uid, state_to=witness_fight.uid),
 
                   facts.Jump(state_from=open_up.uid, state_to=open_up_finish.uid),
                   facts.Jump(state_from=open_up.uid, state_to=open_up_lying.uid, start_actions=[actions.Message(type='move_to_report_lie'),]),
 
-                  facts.OptionsLink(options=(start_spying__spying_middle.uid, spying_middle__continue_spying.uid)),
+                  facts.OptionsLink(options=(start_spying__spying_middle.uid,
+                                             spying_middle__continue_spying.uid,
+                                             finish_spying__report_data.uid)),
+                  facts.OptionsLink(options=(start_spying__spying_middle__blackmail.uid,
+                                             spying_middle__continue_spying__blackmail.uid,
+                                             finish_spying__blackmail.uid)),
 
-                  facts.Event(uid=ns+'open_up_variants', description=u'Варианты окончания раскрытия', members=(open_up_finish.uid, open_up_lying.uid))
+                  facts.Answer(state_from=witness_fight.uid, state_to=finish_spying_choice.uid, condition=True),
+                  facts.Answer(state_from=witness_fight.uid, state_to=witness_failed.uid, condition=False),
+
+                  facts.Event(uid=ns+'open_up_variants', description=u'Варианты окончания раскрытия', members=(open_up_finish.uid, open_up_lying.uid)),
+                  facts.Event(uid=ns+'spying_variants', description=u'Варианты событий при шпионаже', members=(success_spying.uid, witness.uid)),
                 ]
 
         line.extend(participants)

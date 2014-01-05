@@ -5,7 +5,6 @@ from questgen import exceptions
 from questgen import actions
 from questgen import requirements
 from questgen import records
-from questgen import relations
 
 
 class FactAttribute(records.RecordAttribute):
@@ -182,7 +181,7 @@ class Choice(State): pass
 
 
 class Option(Jump):
-    type = FactAttribute()
+    type = FactAttribute(is_uid=True)
 
 
 class OptionsLink(Fact):
