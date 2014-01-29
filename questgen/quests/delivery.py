@@ -85,7 +85,7 @@ class Delivery(QuestBetween2):
                                     actions=[actions.GiveReward(object=hero.uid, type='finish_steal', scale=1.5),
                                              actions.GivePower(object=initiator.uid, power=-1.5),
                                              actions.GivePower(object=receiver.uid, power=-1.5),
-                                             actions.GivePower(object=antagonist.uid, power=1)])
+                                             actions.GivePower(object=antagonist.uid, power=0.25)])
 
         delivery_stealed = facts.State(uid=ns+'delivery_stealed',
                                        description=u'письмо украдено',
