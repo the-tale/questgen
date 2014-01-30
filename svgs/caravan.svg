@@ -41,7 +41,7 @@
 <text text-anchor="start" x="719" y="-389" font-family="Times,serif" font-size="10.00">successed</text>
 <text text-anchor="start" x="590" y="-377" font-family="Times,serif" font-weight="bold" font-size="10.00">person_6</text>
 <text text-anchor="start" x="719" y="-376" font-family="Times,serif" font-size="10.00">successed</text>
-<text text-anchor="start" x="590" y="-364" font-family="Times,serif" font-weight="bold" font-size="10.00">place_4</text>
+<text text-anchor="start" x="590" y="-364" font-family="Times,serif" font-weight="bold" font-size="10.00">place_2</text>
 <text text-anchor="start" x="719" y="-363" font-family="Times,serif" font-size="10.00">neutral</text>
 <polygon fill="none" stroke="black" points="587.5,-358.5 587.5,-491.5 846.5,-491.5 846.5,-358.5 587.5,-358.5"/>
 </g>
@@ -189,7 +189,7 @@
 <polygon fill="#cceecc" stroke="none" points="112,-1014 112,-1027 321,-1027 321,-1014 112,-1014"/>
 <text text-anchor="start" x="113" y="-1019" font-family="Times,serif" font-size="10.00">hero </text>
 <text text-anchor="start" x="134" y="-1019" font-family="Times,serif" font-weight="bold" font-size="10.00">прошёл</text>
-<text text-anchor="start" x="168" y="-1019" font-family="Times,serif" font-size="10.00"> 59%</text>
+<text text-anchor="start" x="168" y="-1019" font-family="Times,serif" font-size="10.00"> 44%</text>
 <text text-anchor="start" x="190" y="-1019" font-family="Times,serif" font-weight="bold" font-size="10.00"> дороги от</text>
 <text text-anchor="start" x="236" y="-1019" font-family="Times,serif" font-size="10.00"> place_1 </text>
 <text text-anchor="start" x="273" y="-1019" font-family="Times,serif" font-weight="bold" font-size="10.00">до</text>
@@ -273,7 +273,7 @@
 <text text-anchor="start" x="122" y="-225" font-family="Times,serif" font-size="10.00">neutral</text>
 <text text-anchor="start" x="10" y="-213" font-family="Times,serif" font-weight="bold" font-size="10.00">person_6</text>
 <text text-anchor="start" x="122" y="-212" font-family="Times,serif" font-size="10.00">neutral</text>
-<text text-anchor="start" x="10" y="-200" font-family="Times,serif" font-weight="bold" font-size="10.00">place_4</text>
+<text text-anchor="start" x="10" y="-200" font-family="Times,serif" font-weight="bold" font-size="10.00">place_2</text>
 <text text-anchor="start" x="122" y="-199" font-family="Times,serif" font-size="10.00">neutral</text>
 <polygon fill="none" stroke="black" points="7.5,-194 7.5,-314 206.5,-314 206.5,-194 7.5,-194"/>
 </g>
@@ -285,7 +285,7 @@
 <polygon fill="#dddddd" stroke="none" points="193,-109 193,-122 442,-122 442,-109 193,-109"/>
 <text text-anchor="start" x="194" y="-114" font-family="Times,serif" font-size="10.00">hero </text>
 <text text-anchor="start" x="215" y="-114" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
-<text text-anchor="start" x="270" y="-114" font-family="Times,serif" font-size="10.00"> place_4</text>
+<text text-anchor="start" x="270" y="-114" font-family="Times,serif" font-size="10.00"> place_2</text>
 <polygon fill="#ffffff" stroke="none" points="193,-96 193,-109 442,-109 442,-96 193,-96"/>
 <text text-anchor="start" x="194" y="-101" font-family="Times,serif" font-weight="bold" font-size="10.00">выдать награду </text>
 <text text-anchor="start" x="269" y="-101" font-family="Times,serif" font-size="10.00">  hero </text>
@@ -305,7 +305,7 @@
 <text text-anchor="start" x="340" y="-75" font-family="Times,serif" font-size="10.00"> &#45;1.00</text>
 <polygon fill="#ffffff" stroke="none" points="193,-57 193,-70 442,-70 442,-57 193,-57"/>
 <text text-anchor="start" x="194" y="-62" font-family="Times,serif" font-weight="bold" font-size="10.00">увеличить влияние </text>
-<text text-anchor="start" x="282" y="-62" font-family="Times,serif" font-size="10.00">  place_4 </text>
+<text text-anchor="start" x="282" y="-62" font-family="Times,serif" font-size="10.00">  place_2 </text>
 <text text-anchor="start" x="322" y="-62" font-family="Times,serif" font-weight="bold" font-size="10.00">на </text>
 <text text-anchor="start" x="335" y="-62" font-family="Times,serif" font-size="10.00"> 1.00</text>
 <polygon fill="#eeeeee" stroke="none" points="193,-44 193,-57 442,-57 442,-44 193,-44"/>
@@ -314,7 +314,7 @@
 <text text-anchor="start" x="319" y="-35" font-family="Times,serif" font-size="10.00">failed</text>
 <text text-anchor="start" x="194" y="-23" font-family="Times,serif" font-weight="bold" font-size="10.00">person_6</text>
 <text text-anchor="start" x="319" y="-22" font-family="Times,serif" font-size="10.00">failed</text>
-<text text-anchor="start" x="194" y="-10" font-family="Times,serif" font-weight="bold" font-size="10.00">place_4</text>
+<text text-anchor="start" x="194" y="-10" font-family="Times,serif" font-weight="bold" font-size="10.00">place_2</text>
 <text text-anchor="start" x="319" y="-9" font-family="Times,serif" font-size="10.00">successed</text>
 <polygon fill="none" stroke="black" points="191.5,-4 191.5,-150 442.5,-150 442.5,-4 191.5,-4"/>
 </g>
@@ -362,7 +362,7 @@
 <polygon fill="#cceecc" stroke="none" points="186,-1431 186,-1444 395,-1444 395,-1431 186,-1431"/>
 <text text-anchor="start" x="187" y="-1436" font-family="Times,serif" font-size="10.00">hero </text>
 <text text-anchor="start" x="208" y="-1436" font-family="Times,serif" font-weight="bold" font-size="10.00">прошёл</text>
-<text text-anchor="start" x="242" y="-1436" font-family="Times,serif" font-size="10.00"> 21%</text>
+<text text-anchor="start" x="242" y="-1436" font-family="Times,serif" font-size="10.00"> 12%</text>
 <text text-anchor="start" x="264" y="-1436" font-family="Times,serif" font-weight="bold" font-size="10.00"> дороги от</text>
 <text text-anchor="start" x="310" y="-1436" font-family="Times,serif" font-size="10.00"> place_1 </text>
 <text text-anchor="start" x="347" y="-1436" font-family="Times,serif" font-weight="bold" font-size="10.00">до</text>
@@ -398,7 +398,7 @@
 <text text-anchor="start" x="467" y="-396" font-family="Times,serif" font-size="10.00">neutral</text>
 <text text-anchor="start" x="349" y="-384" font-family="Times,serif" font-weight="bold" font-size="10.00">person_6</text>
 <text text-anchor="start" x="467" y="-383" font-family="Times,serif" font-size="10.00">neutral</text>
-<text text-anchor="start" x="349" y="-371" font-family="Times,serif" font-weight="bold" font-size="10.00">place_4</text>
+<text text-anchor="start" x="349" y="-371" font-family="Times,serif" font-weight="bold" font-size="10.00">place_2</text>
 <text text-anchor="start" x="467" y="-370" font-family="Times,serif" font-size="10.00">neutral</text>
 <polygon fill="none" stroke="black" points="347,-365 347,-485 553,-485 553,-365 347,-365"/>
 </g>
@@ -410,7 +410,7 @@
 <polygon fill="#ccccee" stroke="none" points="310,-1198 310,-1211 519,-1211 519,-1198 310,-1198"/>
 <text text-anchor="start" x="311" y="-1203" font-family="Times,serif" font-size="10.00">hero </text>
 <text text-anchor="start" x="332" y="-1203" font-family="Times,serif" font-weight="bold" font-size="10.00">прошёл</text>
-<text text-anchor="start" x="366" y="-1203" font-family="Times,serif" font-size="10.00"> 59%</text>
+<text text-anchor="start" x="366" y="-1203" font-family="Times,serif" font-size="10.00"> 44%</text>
 <text text-anchor="start" x="388" y="-1203" font-family="Times,serif" font-weight="bold" font-size="10.00"> дороги от</text>
 <text text-anchor="start" x="434" y="-1203" font-family="Times,serif" font-size="10.00"> place_1 </text>
 <text text-anchor="start" x="471" y="-1203" font-family="Times,serif" font-weight="bold" font-size="10.00">до</text>
@@ -450,7 +450,7 @@
 <polygon fill="#cceecc" stroke="none" points="488,-789 488,-802 697,-802 697,-789 488,-789"/>
 <text text-anchor="start" x="489" y="-794" font-family="Times,serif" font-size="10.00">hero </text>
 <text text-anchor="start" x="510" y="-794" font-family="Times,serif" font-weight="bold" font-size="10.00">прошёл</text>
-<text text-anchor="start" x="544" y="-794" font-family="Times,serif" font-size="10.00"> 72%</text>
+<text text-anchor="start" x="544" y="-794" font-family="Times,serif" font-size="10.00"> 75%</text>
 <text text-anchor="start" x="566" y="-794" font-family="Times,serif" font-weight="bold" font-size="10.00"> дороги от</text>
 <text text-anchor="start" x="612" y="-794" font-family="Times,serif" font-size="10.00"> place_1 </text>
 <text text-anchor="start" x="649" y="-794" font-family="Times,serif" font-weight="bold" font-size="10.00">до</text>
