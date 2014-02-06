@@ -69,8 +69,8 @@ class Complex(QuestBetween2):
                  finish_paid,
 
                  facts.Jump(state_from=start.uid, state_to=arriving.uid),
-                 facts.Option(state_from=arriving.uid, state_to=finish_not_paid.uid, type='not_paid'),
-                 facts.Option(state_from=arriving.uid, state_to=tax.uid, type='pay_tax'),
+                 facts.Option(state_from=arriving.uid, state_to=finish_not_paid.uid, type='not_paid', markers=()),
+                 facts.Option(state_from=arriving.uid, state_to=tax.uid, type='pay_tax', markers=()),
                  facts.Answer(state_from=tax.uid, state_to=finish_paid.uid, condition=True),
                  facts.Answer(state_from=tax.uid, state_to=finish_not_paid.uid, condition=False) ]
 

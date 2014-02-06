@@ -6,6 +6,7 @@ from questgen import facts
 from questgen import requirements
 from questgen import actions
 from questgen import exceptions
+from questgen import relations
 
 
 def link_colors_generator():
@@ -48,6 +49,7 @@ class HEAD_COLORS(object):
     JUMP = '#ffffff'
     JUMP_ACTIONS_START = '#eeeeee'
     JUMP_ACTIONS_END = '#dddddd'
+    JUMP_MARKER = '#aadddd'
 
 
 class SubGraph(object):
@@ -367,6 +369,15 @@ class Drawer(object):
 
         if hasattr(jump, 'condition'):
             trs.append(tr(td(u'ИСТИНА' if jump.condition else u'ЛОЖЬ', bgcolor=HEAD_COLORS.JUMP)))
+
+        if hasattr(jump, 'markers') and jump.markers:
+            strings = {relations.OPTION_MARKERS.HONORABLE: u'[честь]',
+                       relations.OPTION_MARKERS.DISHONORABLE: u'[бесчестие]',
+                       relations.OPTION_MARKERS.AGGRESSIVE: u'[агрессия]',
+                       relations.OPTION_MARKERS.UNAGGRESSIVE: u'[миролюбие]'}
+
+            for marker in jump.markers:
+                trs.append(tr(td(strings[marker], bgcolor=HEAD_COLORS.JUMP_MARKER)))
 
         for action in jump.start_actions:
             trs.append(tr(td(self.create_label_for_action(action), bgcolor=HEAD_COLORS.JUMP_ACTIONS_START)))

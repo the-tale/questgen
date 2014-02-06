@@ -4,6 +4,7 @@ from questgen.quests.base_quest import QuestBetween2, ROLES, RESULTS
 from questgen import facts
 from questgen import requirements
 from questgen import actions
+from questgen import relations
 
 
 class Spying(QuestBetween2):
@@ -119,24 +120,32 @@ class Spying(QuestBetween2):
                                               actions.GivePower(object=initiator.uid, power=-1.5),
                                               actions.GivePower(object=receiver.uid, power=1.5)])
 
-        start_spying__spying_middle = facts.Option(state_from=start_spying.uid, state_to=spying_middle.uid, type='spy', start_actions=[actions.Message(type='start_spying'),])
+        start_spying__spying_middle = facts.Option(state_from=start_spying.uid, state_to=spying_middle.uid, type='spy',
+                                                   markers=[relations.OPTION_MARKERS.HONORABLE], start_actions=[actions.Message(type='start_spying'),])
         start_spying__spying_middle__blackmail = facts.Option(state_from=start_spying.uid,
                                                               state_to=spying_middle.uid,
                                                               type='blackmail',
+                                                              markers=[relations.OPTION_MARKERS.DISHONORABLE],
                                                               start_actions=[actions.Message(type='start_spying'),])
-        start_spying__open_up = facts.Option(state_from=start_spying.uid, state_to=open_up.uid, type='open_up', start_actions=[actions.Message(type='start_open_up'),])
+        start_spying__open_up = facts.Option(state_from=start_spying.uid, state_to=open_up.uid, type='open_up',
+                                             markers=[relations.OPTION_MARKERS.DISHONORABLE], start_actions=[actions.Message(type='start_open_up'),])
 
-        spying_middle__continue_spying = facts.Option(state_from=spying_middle.uid, state_to=continue_spying.uid, type='spy')
-        spying_middle__continue_spying__blackmail = facts.Option(state_from=spying_middle.uid, state_to=continue_spying.uid, type='blackmail')
-        spying_middle__open_up = facts.Option(state_from=spying_middle.uid, state_to=open_up.uid, type='open_up', start_actions=[actions.Message(type='start_open_up'),])
+        spying_middle__continue_spying = facts.Option(state_from=spying_middle.uid, state_to=continue_spying.uid, type='spy',
+                                                      markers=[relations.OPTION_MARKERS.HONORABLE])
+        spying_middle__continue_spying__blackmail = facts.Option(state_from=spying_middle.uid, state_to=continue_spying.uid, type='blackmail',
+                                                                 markers=[relations.OPTION_MARKERS.DISHONORABLE])
+        spying_middle__open_up = facts.Option(state_from=spying_middle.uid, state_to=open_up.uid, type='open_up',
+                                              markers=[relations.OPTION_MARKERS.DISHONORABLE], start_actions=[actions.Message(type='start_open_up'),])
 
         finish_spying__report_data = facts.Option(state_from=finish_spying_choice.uid,
                                                   state_to=report_data.uid,
                                                   type='spy',
+                                                  markers=[relations.OPTION_MARKERS.HONORABLE],
                                                   start_actions=[actions.Message(type='go_report_data')])
         finish_spying__blackmail = facts.Option(state_from=finish_spying_choice.uid,
                                                 state_to=blackmail_finish.uid,
                                                 type='blackmail',
+                                                markers=[relations.OPTION_MARKERS.DISHONORABLE],
                                                 start_actions=[actions.Message(type='go_blackmail')])
 
 

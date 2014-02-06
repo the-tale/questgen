@@ -27,10 +27,13 @@ def activate_events(knowledge_base):
 
 
 # here we MUST already have correct graph
-def determine_default_choices(knowledge_base):
+def determine_default_choices(knowledge_base, preferred_markers=()):
+    '''
+    '''
     processed_choices = set()
     linked_options = {}
     restricted_options = set() # options, that can not be used as default
+    preferred_markers = set(preferred_markers)
 
     for link in knowledge_base.filter(facts.OptionsLink):
         for option_uid in link.options:
@@ -54,8 +57,15 @@ def determine_default_choices(knowledge_base):
             # TODO: make restriction, that check if we have full default path
             continue
 
+        filtered_options_choices = []
 
-        default_option = random.choice(options_choices)
+        if preferred_markers:
+            filtered_options_choices = [candidate for candidate in options_choices if set(candidate.markers) & preferred_markers]
+
+        if not filtered_options_choices:
+            filtered_options_choices = options_choices
+
+        default_option = random.choice(filtered_options_choices)
 
         if default_option.uid in linked_options:
             for linked_option_uid in linked_options[default_option.uid].options:

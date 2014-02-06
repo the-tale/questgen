@@ -5,6 +5,7 @@ from questgen import facts
 from questgen import logic
 from questgen import requirements
 from questgen import actions
+from questgen import relations
 
 
 class CollectDebt(QuestBetween2):
@@ -96,8 +97,8 @@ class CollectDebt(QuestBetween2):
 
                  choose_method,
 
-                 facts.Option(state_from=choose_method.uid, state_to=attack.uid, type='attack'),
-                 facts.Option(state_from=choose_method.uid, state_to=help.uid, type='help'),
+                 facts.Option(state_from=choose_method.uid, state_to=attack.uid, type='attack', markers=[relations.OPTION_MARKERS.AGGRESSIVE]),
+                 facts.Option(state_from=choose_method.uid, state_to=help.uid, type='help', markers=[relations.OPTION_MARKERS.UNAGGRESSIVE]),
 
                  help,
                  attack,

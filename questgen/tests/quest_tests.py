@@ -99,6 +99,21 @@ class QuestsTests(unittest.TestCase):
                                       restrictions.RequirementsConsistency(),
                                       restrictions.ActionsConsistency()])
 
+    def check_linked_options_has_similar_markers(self, quest_class):
+        self.kb += quest_class.construct_from_place(nesting=0, selector=self.selector, start_place=self.selector.new_place(candidates=('place_1',)))
+
+        for options_link in self.kb.filter(facts.OptionsLink):
+
+            makrers = None
+
+            for option_uid in options_link.options:
+                option = self.kb[option_uid]
+
+                if makrers is None:
+                    makrers = set(option.markers)
+
+                self.assertEqual(makrers, set(option.markers))
+
 
 def create_test_quest_method(quest_class):
     def test_method(self):
@@ -108,7 +123,18 @@ def create_test_quest_method(quest_class):
 
     return test_method
 
+def create_test_linked_options_has_similar_markers(quest_class):
+    def test_method(self):
+        self.check_linked_options_has_similar_markers(quest_class)
+
+    test_method.__name__ = 'test_%s_linked_options_has_similar_markers' % quest_class.TYPE
+
+    return test_method
+
 
 for Quest in QUESTS:
     method = create_test_quest_method(Quest)
+    setattr(QuestsTests, method.__name__, method)
+
+    method = create_test_linked_options_has_similar_markers(Quest)
     setattr(QuestsTests, method.__name__, method)

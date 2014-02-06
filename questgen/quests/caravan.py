@@ -6,6 +6,7 @@ from questgen.quests.base_quest import QuestBetween2, ROLES, RESULTS
 from questgen import facts
 from questgen import requirements
 from questgen import actions
+from questgen import relations
 
 
 class Caravan(QuestBetween2):
@@ -137,15 +138,15 @@ class Caravan(QuestBetween2):
                                                      actions.GivePower(object=initiator.uid, power=1),
                                                      actions.GivePower(object=receiver.uid, power=1)])
 
-        caravan_choice__first_defence = facts.Option(state_from=caravan_choice.uid, state_to=first_defence.uid,
-                                                     type='jump_defence', start_actions=[actions.Message(type='choose_defence'),])
-        caravan_choice__move_to_attack = facts.Option(state_from=caravan_choice.uid, state_to=move_to_attack.uid,
-                                                      type='jump_attack', start_actions=[actions.Message(type='choose_attack'),])
+        caravan_choice__first_defence = facts.Option(state_from=caravan_choice.uid, state_to=first_defence.uid, type='jump_defence',
+                                                     markers=[relations.OPTION_MARKERS.HONORABLE], start_actions=[actions.Message(type='choose_defence'),])
+        caravan_choice__move_to_attack = facts.Option(state_from=caravan_choice.uid, state_to=move_to_attack.uid, type='jump_attack',
+                                                     markers=[relations.OPTION_MARKERS.DISHONORABLE], start_actions=[actions.Message(type='choose_attack'),])
 
-        first_defence__first_defence_continue = facts.Option(state_from=first_defence.uid, state_to=first_defence_continue.uid,
-                                                             type='jump_defence')
-        first_defence__move_to_attack = facts.Option(state_from=first_defence.uid, state_to=move_to_attack.uid,
-                                             type='jump_attack', start_actions=[actions.Message(type='choose_attack'),])
+        first_defence__first_defence_continue = facts.Option(state_from=first_defence.uid, state_to=first_defence_continue.uid, type='jump_defence',
+                                                             markers=[relations.OPTION_MARKERS.HONORABLE], )
+        first_defence__move_to_attack = facts.Option(state_from=first_defence.uid, state_to=move_to_attack.uid, type='jump_attack',
+                                                     markers=[relations.OPTION_MARKERS.DISHONORABLE], start_actions=[actions.Message(type='choose_attack'),])
 
         line = [ start,
 

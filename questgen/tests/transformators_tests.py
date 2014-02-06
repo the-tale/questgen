@@ -10,6 +10,7 @@ from questgen.quests.base_quest import RESULTS
 from questgen import records
 from questgen import actions
 from questgen import requirements
+from questgen import relations
 
 
 class TransformatorsTestsBase(unittest.TestCase):
@@ -186,10 +187,10 @@ class RemoveBrokenStatesTests(TransformatorsTestsBase):
         choice_1 = facts.Choice(uid='choice_1')
         choice_2 = facts.Choice(uid='choice_2')
 
-        o_1_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='o')
-        o_1_f1 = facts.Option(state_from=choice_1.uid, state_to='st_finish_1', type='o')
-        o_2_f1 = facts.Option(state_from=choice_2.uid, state_to='st_finish_1', type='o')
-        o_2_f2 = facts.Option(state_from=choice_2.uid, state_to='st_finish_2', type='o')
+        o_1_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='o', markers=())
+        o_1_f1 = facts.Option(state_from=choice_1.uid, state_to='st_finish_1', type='o', markers=())
+        o_2_f1 = facts.Option(state_from=choice_2.uid, state_to='st_finish_1', type='o', markers=())
+        o_2_f2 = facts.Option(state_from=choice_2.uid, state_to='st_finish_2', type='o', markers=())
 
         facts_list = [ facts.Start(uid='start', type='test', nesting=0),
                        facts.Jump(state_from='start', state_to=choice_1.uid),
@@ -455,18 +456,74 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
         finish_1 = facts.Finish(uid='finish_1', results={}, nesting=0, start='start')
         finish_2 = facts.Finish(uid='finish_2', results={}, nesting=0, start='start')
 
+        option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1', markers=())
+        option_2 = facts.Option(state_from=choice_1.uid, state_to=finish_2.uid, type='opt_2', markers=())
+
         facts_list = [ start,
                   choice_1,
                   finish_1,
                   finish_2,
-                  facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1'),
-                  facts.Option(state_from=choice_1.uid, state_to=finish_2.uid, type='opt_2') ]
+                  option_1,
+                  option_2]
         self.kb += facts_list
         transformators.determine_default_choices(self.kb)
         self.check_in_knowledge_base(self.kb, facts_list)
         self.assertEqual(len(list(self.kb.filter(facts.OptionsLink))), 0)
         self.assertEqual(len(list(self.kb.filter(facts.ChoicePath))), 1)
         self.assertEqual(len(set([path.choice for path in self.kb.filter(facts.ChoicePath)])), 1)
+        self.assertTrue(self.kb.filter(facts.ChoicePath).next().option in set([option_1.uid, option_2.uid]))
+
+    def test_one_choice__no_markers(self):
+        start = facts.Start(uid='start', type='test', nesting=0)
+        choice_1 = facts.Choice(uid='choice_1')
+        finish_1 = facts.Finish(uid='finish_1', results={}, nesting=0, start='start')
+        finish_2 = facts.Finish(uid='finish_2', results={}, nesting=0, start='start')
+
+        option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1', markers=[relations.OPTION_MARKERS.DISHONORABLE])
+        option_2 = facts.Option(state_from=choice_1.uid, state_to=finish_2.uid, type='opt_2', markers=[relations.OPTION_MARKERS.AGGRESSIVE])
+
+        facts_list = [ start,
+                       choice_1,
+                       finish_1,
+                       finish_2,
+                       option_1,
+                       option_2 ]
+
+        self.kb += facts_list
+
+        for i in xrange(100):
+            transformators.determine_default_choices(self.kb, preferred_markers=[relations.OPTION_MARKERS.HONORABLE])
+            self.check_in_knowledge_base(self.kb, facts_list)
+            self.assertEqual(len(list(self.kb.filter(facts.OptionsLink))), 0)
+            self.assertEqual(len(list(self.kb.filter(facts.ChoicePath))), 1)
+            self.assertEqual(len(set([path.choice for path in self.kb.filter(facts.ChoicePath)])), 1)
+            self.assertTrue(self.kb.filter(facts.ChoicePath).next().option in set([option_1.uid, option_2.uid]))
+
+            self.kb -= self.kb.filter(facts.ChoicePath)
+
+    def test_one_choice__marked(self):
+        start = facts.Start(uid='start', type='test', nesting=0)
+        choice_1 = facts.Choice(uid='choice_1')
+        finish_1 = facts.Finish(uid='finish_1', results={}, nesting=0, start='start')
+        finish_2 = facts.Finish(uid='finish_2', results={}, nesting=0, start='start')
+        marked_option = facts.Option(state_from=choice_1.uid, state_to=finish_2.uid, type='opt_2', markers=[relations.OPTION_MARKERS.HONORABLE])
+
+        facts_list = [ start,
+                  choice_1,
+                  finish_1,
+                  finish_2,
+                  facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1', markers=()),
+                  marked_option ]
+        self.kb += facts_list
+
+        for i in xrange(100):
+            transformators.determine_default_choices(self.kb, preferred_markers=[relations.OPTION_MARKERS.HONORABLE])
+            self.check_in_knowledge_base(self.kb, facts_list)
+            self.assertEqual(len(list(self.kb.filter(facts.OptionsLink))), 0)
+            self.assertEqual(len(list(self.kb.filter(facts.ChoicePath))), 1)
+            self.assertEqual(self.kb.filter(facts.ChoicePath).next().option, marked_option.uid)
+
+            self.kb -= self.kb.filter(facts.ChoicePath)
 
     def test_two_choices(self):
         start = facts.Start(uid='start', type='test', nesting=0)
@@ -475,11 +532,11 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
         finish_1 = facts.Finish(uid='finish_1', results={}, nesting=0, start='start')
         finish_2 = facts.Finish(uid='finish_2', results={}, nesting=0, start='start')
 
-        option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
-        option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
+        option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1', markers=())
+        option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2', markers=())
 
-        option_2_1 = facts.Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1')
-        option_2_2 = facts.Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2')
+        option_2_1 = facts.Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1', markers=())
+        option_2_2 = facts.Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2', markers=())
 
         facts_list = [ start,
                   choice_1,
@@ -493,11 +550,15 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
                   option_2_2]
 
         self.kb += facts_list
-        transformators.determine_default_choices(self.kb)
-        self.check_in_knowledge_base(self.kb, facts_list)
-        self.assertEqual(len(list(self.kb.filter(facts.OptionsLink))), 0)
-        self.assertEqual(len(list(self.kb.filter(facts.ChoicePath))), 2)
-        self.assertEqual(len(set([path.choice for path in self.kb.filter(facts.ChoicePath)])), 2)
+
+        for i in xrange(100):
+            transformators.determine_default_choices(self.kb)
+            self.check_in_knowledge_base(self.kb, facts_list)
+            self.assertEqual(len(list(self.kb.filter(facts.OptionsLink))), 0)
+            self.assertEqual(len(list(self.kb.filter(facts.ChoicePath))), 2)
+            self.assertEqual(len(set([path.choice for path in self.kb.filter(facts.ChoicePath)])), 2)
+
+            self.kb -= self.kb.filter(facts.ChoicePath)
 
 
     def test_linked_choices(self):
@@ -507,11 +568,11 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
         finish_1 = facts.Finish(uid='finish_1', results={}, nesting=0, start='start')
         finish_2 = facts.Finish(uid='finish_2', results={}, nesting=0, start='start')
 
-        option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
-        option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
+        option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1', markers=())
+        option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2', markers=())
 
-        option_2_1 = facts.Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1')
-        option_2_2 = facts.Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2')
+        option_2_1 = facts.Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1', markers=())
+        option_2_2 = facts.Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2', markers=())
 
         facts_list = [ start,
                   choice_1,
@@ -543,11 +604,11 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
         finish_1 = facts.Finish(uid='finish_1', results={}, nesting=0, start='start')
         finish_2 = facts.Finish(uid='finish_2', results={}, nesting=0, start='start')
 
-        option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
-        option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
+        option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1', markers=())
+        option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2', markers=())
 
-        option_2_1 = facts.Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1')
-        option_2_2 = facts.Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2')
+        option_2_1 = facts.Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1', markers=())
+        option_2_2 = facts.Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2', markers=())
 
         facts_list = [ start,
                   choice_1,
@@ -579,11 +640,11 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
             finish_1 = facts.Finish(uid='finish_1', results={}, nesting=0, start='start')
             finish_2 = facts.Finish(uid='finish_2', results={}, nesting=0, start='start')
 
-            option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
-            option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
+            option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1', markers=())
+            option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2', markers=())
 
-            option_2_1 = facts.Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1')
-            option_2_2 = facts.Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2')
+            option_2_1 = facts.Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1', markers=())
+            option_2_2 = facts.Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2', markers=())
 
             facts_list = [ start,
                            facts.Jump(state_from=start.uid, state_to=choice_1.uid),
@@ -624,11 +685,11 @@ class ChangeChoiceTests(TransformatorsTestsBase):
         finish_1 = facts.Finish(uid='finish_1', results={}, nesting=0, start='start')
         finish_2 = facts.Finish(uid='finish_2', results={}, nesting=0, start='start')
 
-        option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
-        option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
+        option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1', markers=())
+        option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2', markers=())
 
-        option_2_1 = facts.Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1')
-        option_2_2 = facts.Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2')
+        option_2_1 = facts.Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1', markers=())
+        option_2_2 = facts.Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2', markers=())
 
         facts_list = [ start,
                   choice_1,
@@ -669,11 +730,11 @@ class ChangeChoiceTests(TransformatorsTestsBase):
         finish_1 = facts.Finish(uid='finish_1', results={}, nesting=0, start='start')
         finish_2 = facts.Finish(uid='finish_2', results={}, nesting=0, start='start')
 
-        option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
-        option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
+        option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1', markers=())
+        option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2', markers=())
 
-        option_2_1 = facts.Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1')
-        option_2_2 = facts.Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2')
+        option_2_1 = facts.Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1', markers=())
+        option_2_2 = facts.Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2', markers=())
 
         facts_list = [ start,
                   choice_1,
@@ -716,11 +777,11 @@ class ChangeChoiceTests(TransformatorsTestsBase):
         finish_1 = facts.Finish(uid='finish_1', results={}, nesting=0, start='start')
         finish_2 = facts.Finish(uid='finish_2', results={}, nesting=0, start='start')
 
-        option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1')
-        option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2')
+        option_1 = facts.Option(state_from=choice_1.uid, state_to=finish_1.uid, type='opt_1', markers=())
+        option_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_2', markers=())
 
-        option_2_1 = facts.Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1')
-        option_2_2 = facts.Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2')
+        option_2_1 = facts.Option(state_from=choice_2.uid, state_to=finish_1.uid, type='opt_2_1', markers=())
+        option_2_2 = facts.Option(state_from=choice_2.uid, state_to=finish_2.uid, type='opt_2_2', markers=())
 
         facts_list = [ start,
                   choice_1,

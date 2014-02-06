@@ -32,13 +32,13 @@
 <text text-anchor="start" x="221" y="-546" font-family="Times,serif" font-size="10.00">завершить задание плохо</text>
 <polygon fill="#eeeeee" stroke="none" points="220,-529 220,-542 356,-542 356,-529 220,-529"/>
 <text text-anchor="start" x="221" y="-534" font-family="Times,serif" font-weight="bold" font-size="10.00">результаты:</text>
-<text text-anchor="start" x="221" y="-521" font-family="Times,serif" font-weight="bold" font-size="10.00">person_10</text>
+<text text-anchor="start" x="221" y="-521" font-family="Times,serif" font-weight="bold" font-size="10.00">person_5</text>
 <text text-anchor="start" x="302" y="-520" font-family="Times,serif" font-size="10.00">failed</text>
-<text text-anchor="start" x="221" y="-508" font-family="Times,serif" font-weight="bold" font-size="10.00">person_9</text>
+<text text-anchor="start" x="221" y="-508" font-family="Times,serif" font-weight="bold" font-size="10.00">person_6</text>
 <text text-anchor="start" x="302" y="-507" font-family="Times,serif" font-size="10.00">failed</text>
-<text text-anchor="start" x="221" y="-495" font-family="Times,serif" font-weight="bold" font-size="10.00">place_10</text>
+<text text-anchor="start" x="221" y="-495" font-family="Times,serif" font-weight="bold" font-size="10.00">place_5</text>
 <text text-anchor="start" x="302" y="-494" font-family="Times,serif" font-size="10.00">failed</text>
-<text text-anchor="start" x="221" y="-482" font-family="Times,serif" font-weight="bold" font-size="10.00">place_9</text>
+<text text-anchor="start" x="221" y="-482" font-family="Times,serif" font-weight="bold" font-size="10.00">place_6</text>
 <text text-anchor="start" x="302" y="-481" font-family="Times,serif" font-size="10.00">failed</text>
 <polygon fill="none" stroke="black" points="219,-476 219,-570 357,-570 357,-476 219,-476"/>
 </g>
@@ -54,13 +54,13 @@
 <text text-anchor="start" x="393" y="-546" font-family="Times,serif" font-size="10.00">завершить задание удачно</text>
 <polygon fill="#eeeeee" stroke="none" points="392,-529 392,-542 546,-542 546,-529 392,-529"/>
 <text text-anchor="start" x="393" y="-534" font-family="Times,serif" font-weight="bold" font-size="10.00">результаты:</text>
-<text text-anchor="start" x="393" y="-521" font-family="Times,serif" font-weight="bold" font-size="10.00">person_10</text>
+<text text-anchor="start" x="393" y="-521" font-family="Times,serif" font-weight="bold" font-size="10.00">person_5</text>
 <text text-anchor="start" x="490" y="-520" font-family="Times,serif" font-size="10.00">successed</text>
-<text text-anchor="start" x="393" y="-508" font-family="Times,serif" font-weight="bold" font-size="10.00">person_9</text>
+<text text-anchor="start" x="393" y="-508" font-family="Times,serif" font-weight="bold" font-size="10.00">person_6</text>
 <text text-anchor="start" x="490" y="-507" font-family="Times,serif" font-size="10.00">successed</text>
-<text text-anchor="start" x="393" y="-495" font-family="Times,serif" font-weight="bold" font-size="10.00">place_10</text>
+<text text-anchor="start" x="393" y="-495" font-family="Times,serif" font-weight="bold" font-size="10.00">place_5</text>
 <text text-anchor="start" x="490" y="-494" font-family="Times,serif" font-size="10.00">successed</text>
-<text text-anchor="start" x="393" y="-482" font-family="Times,serif" font-weight="bold" font-size="10.00">place_9</text>
+<text text-anchor="start" x="393" y="-482" font-family="Times,serif" font-weight="bold" font-size="10.00">place_6</text>
 <text text-anchor="start" x="490" y="-481" font-family="Times,serif" font-size="10.00">successed</text>
 <polygon fill="none" stroke="black" points="391,-476 391,-570 547,-570 547,-476 391,-476"/>
 </g>
@@ -71,41 +71,41 @@
 </g>
 <!-- [ns&#45;0]start -->
 <g id="node2" class="node"><title>[ns&#45;0]start</title>
-<polygon fill="#eeeeee" stroke="none" points="161.5,-1024 161.5,-1092 296.5,-1092 296.5,-1024 161.5,-1024"/>
-<text text-anchor="start" x="164" y="-1082.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]start</text>
-<text text-anchor="start" x="237" y="-1082.5" font-family="Times,serif" font-weight="bold" font-size="10.00">collect_debt</text>
-<text text-anchor="start" x="164" y="-1068" font-family="Times,serif" font-size="10.00">Начало: выбить долг</text>
-<polygon fill="#dddddd" stroke="none" points="163,-1051 163,-1064 296,-1064 296,-1051 163,-1051"/>
-<text text-anchor="start" x="164" y="-1056" font-family="Times,serif" font-size="10.00">hero </text>
-<text text-anchor="start" x="185" y="-1056" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
-<text text-anchor="start" x="240" y="-1056" font-family="Times,serif" font-size="10.00"> place_1</text>
-<polygon fill="#dddddd" stroke="none" points="163,-1038 163,-1051 296,-1051 296,-1038 163,-1038"/>
-<text text-anchor="start" x="164" y="-1043" font-family="Times,serif" font-size="10.00">person_9 </text>
-<text text-anchor="start" x="204" y="-1043" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
-<text text-anchor="start" x="259" y="-1043" font-family="Times,serif" font-size="10.00"> place_9</text>
-<polygon fill="#ffffff" stroke="none" points="163,-1025 163,-1038 296,-1038 296,-1025 163,-1025"/>
-<text text-anchor="start" x="164" y="-1030" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
-<text text-anchor="start" x="216" y="-1030" font-family="Times,serif" font-size="10.00"> intro</text>
-<polygon fill="none" stroke="black" points="161.5,-1024 161.5,-1092 296.5,-1092 296.5,-1024 161.5,-1024"/>
+<polygon fill="#eeeeee" stroke="none" points="159.5,-1024 159.5,-1092 294.5,-1092 294.5,-1024 159.5,-1024"/>
+<text text-anchor="start" x="162" y="-1082.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]start</text>
+<text text-anchor="start" x="235" y="-1082.5" font-family="Times,serif" font-weight="bold" font-size="10.00">collect_debt</text>
+<text text-anchor="start" x="162" y="-1068" font-family="Times,serif" font-size="10.00">Начало: выбить долг</text>
+<polygon fill="#dddddd" stroke="none" points="161,-1051 161,-1064 294,-1064 294,-1051 161,-1051"/>
+<text text-anchor="start" x="162" y="-1056" font-family="Times,serif" font-size="10.00">hero </text>
+<text text-anchor="start" x="183" y="-1056" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
+<text text-anchor="start" x="238" y="-1056" font-family="Times,serif" font-size="10.00"> place_1</text>
+<polygon fill="#dddddd" stroke="none" points="161,-1038 161,-1051 294,-1051 294,-1038 161,-1038"/>
+<text text-anchor="start" x="162" y="-1043" font-family="Times,serif" font-size="10.00">person_6 </text>
+<text text-anchor="start" x="202" y="-1043" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
+<text text-anchor="start" x="257" y="-1043" font-family="Times,serif" font-size="10.00"> place_6</text>
+<polygon fill="#ffffff" stroke="none" points="161,-1025 161,-1038 294,-1038 294,-1025 161,-1025"/>
+<text text-anchor="start" x="162" y="-1030" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
+<text text-anchor="start" x="214" y="-1030" font-family="Times,serif" font-size="10.00"> intro</text>
+<polygon fill="none" stroke="black" points="159.5,-1024 159.5,-1092 294.5,-1092 294.5,-1024 159.5,-1024"/>
 </g>
 <!-- [ns&#45;0]choose_method -->
 <g id="node5" class="node"><title>[ns&#45;0]choose_method</title>
-<polygon fill="#ddddff" stroke="none" points="146,-924.5 146,-979.5 312,-979.5 312,-924.5 146,-924.5"/>
-<text text-anchor="start" x="148" y="-969.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]choose_method</text>
-<text text-anchor="start" x="148" y="-955" font-family="Times,serif" font-size="10.00">Выбрать метод получения долга</text>
-<polygon fill="#ccccee" stroke="none" points="147,-938 147,-951 311,-951 311,-938 147,-938"/>
-<text text-anchor="start" x="148" y="-943" font-family="Times,serif" font-size="10.00">hero </text>
-<text text-anchor="start" x="169" y="-943" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
-<text text-anchor="start" x="224" y="-943" font-family="Times,serif" font-size="10.00"> place_9</text>
-<polygon fill="#eeeeff" stroke="none" points="147,-925 147,-938 311,-938 311,-925 147,-925"/>
-<text text-anchor="start" x="148" y="-930" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
-<text text-anchor="start" x="200" y="-930" font-family="Times,serif" font-size="10.00"> move_to_receiver</text>
-<polygon fill="none" stroke="black" points="146,-924.5 146,-979.5 312,-979.5 312,-924.5 146,-924.5"/>
+<polygon fill="#ddddff" stroke="none" points="144,-924.5 144,-979.5 310,-979.5 310,-924.5 144,-924.5"/>
+<text text-anchor="start" x="146" y="-969.5" font-family="Times,serif" font-style="italic" font-size="10.00">[ns&#45;0]choose_method</text>
+<text text-anchor="start" x="146" y="-955" font-family="Times,serif" font-size="10.00">Выбрать метод получения долга</text>
+<polygon fill="#ccccee" stroke="none" points="145,-938 145,-951 309,-951 309,-938 145,-938"/>
+<text text-anchor="start" x="146" y="-943" font-family="Times,serif" font-size="10.00">hero </text>
+<text text-anchor="start" x="167" y="-943" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
+<text text-anchor="start" x="222" y="-943" font-family="Times,serif" font-size="10.00"> place_6</text>
+<polygon fill="#eeeeff" stroke="none" points="145,-925 145,-938 309,-938 309,-925 145,-925"/>
+<text text-anchor="start" x="146" y="-930" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
+<text text-anchor="start" x="198" y="-930" font-family="Times,serif" font-size="10.00"> move_to_receiver</text>
+<polygon fill="none" stroke="black" points="144,-924.5 144,-979.5 310,-979.5 310,-924.5 144,-924.5"/>
 </g>
 <!-- [ns&#45;0]start&#45;&gt;[ns&#45;0]choose_method -->
 <g id="edge5" class="edge"><title>[ns&#45;0]start:[ns&#45;0]start&#45;&gt;[ns&#45;0]choose_method:[ns&#45;0]choose_method</title>
-<path fill="none" stroke="black" d="M229,-1023.81C229,-1013 229,-1000.93 229,-989.867"/>
-<polygon fill="black" stroke="black" points="232.5,-989.639 229,-979.639 225.5,-989.639 232.5,-989.639"/>
+<path fill="none" stroke="black" d="M227,-1023.81C227,-1013 227,-1000.93 227,-989.867"/>
+<polygon fill="black" stroke="black" points="230.5,-989.639 227,-979.639 223.5,-989.639 230.5,-989.639"/>
 </g>
 <!-- [ns&#45;0]attack -->
 <g id="node3" class="node"><title>[ns&#45;0]attack</title>
@@ -115,7 +115,7 @@
 <polygon fill="#eecccc" stroke="none" points="132,-306 132,-319 283,-319 283,-306 132,-306"/>
 <text text-anchor="start" x="133" y="-311" font-family="Times,serif" font-size="10.00">hero </text>
 <text text-anchor="start" x="154" y="-311" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
-<text text-anchor="start" x="209" y="-311" font-family="Times,serif" font-size="10.00"> place_9</text>
+<text text-anchor="start" x="209" y="-311" font-family="Times,serif" font-size="10.00"> place_6</text>
 <polygon fill="#ffeeee" stroke="none" points="132,-293 132,-306 283,-306 283,-293 132,-293"/>
 <text text-anchor="start" x="133" y="-298" font-family="Times,serif" font-weight="bold" font-size="10.00">сообщение:</text>
 <text text-anchor="start" x="185" y="-298" font-family="Times,serif" font-size="10.00"> attack</text>
@@ -176,34 +176,38 @@
 <text text-anchor="start" x="375" y="-62" font-family="Times,serif" font-size="10.00"> 1.00</text>
 <polygon fill="#ffffff" stroke="none" points="228,-44 228,-57 523,-57 523,-44 228,-44"/>
 <text text-anchor="start" x="229" y="-49" font-family="Times,serif" font-weight="bold" font-size="10.00">увеличить влияние </text>
-<text text-anchor="start" x="317" y="-49" font-family="Times,serif" font-size="10.00">  person_9 </text>
+<text text-anchor="start" x="317" y="-49" font-family="Times,serif" font-size="10.00">  person_6 </text>
 <text text-anchor="start" x="362" y="-49" font-family="Times,serif" font-weight="bold" font-size="10.00">на </text>
 <text text-anchor="start" x="375" y="-49" font-family="Times,serif" font-size="10.00"> &#45;1.00</text>
 <polygon fill="#eeeeee" stroke="none" points="228,-31 228,-44 523,-44 523,-31 228,-31"/>
 <text text-anchor="start" x="229" y="-36" font-family="Times,serif" font-weight="bold" font-size="10.00">результаты:</text>
 <text text-anchor="start" x="229" y="-23" font-family="Times,serif" font-weight="bold" font-size="10.00">person_1</text>
 <text text-anchor="start" x="377" y="-22" font-family="Times,serif" font-size="10.00">successed</text>
-<text text-anchor="start" x="229" y="-10" font-family="Times,serif" font-weight="bold" font-size="10.00">person_9</text>
+<text text-anchor="start" x="229" y="-10" font-family="Times,serif" font-weight="bold" font-size="10.00">person_6</text>
 <text text-anchor="start" x="377" y="-9" font-family="Times,serif" font-size="10.00">failed</text>
 <polygon fill="none" stroke="black" points="226.5,-4 226.5,-124 523.5,-124 523.5,-4 226.5,-4"/>
 </g>
 <!-- #option([ns&#45;0]choose_method, [ns&#45;0]attack, attack) -->
 <g id="node14" class="node"><title>#option([ns&#45;0]choose_method, [ns&#45;0]attack, attack)</title>
-<polygon fill="#ffffff" stroke="none" points="176,-859 176,-873 204,-873 204,-859 176,-859"/>
-<text text-anchor="start" x="177" y="-863.5" font-family="Times,serif" font-size="10.00">attack</text>
+<polygon fill="#ffffff" stroke="none" points="159,-865 159,-879 206,-879 206,-865 159,-865"/>
+<text text-anchor="start" x="160" y="-869.5" font-family="Times,serif" font-size="10.00">attack</text>
+<polygon fill="#aadddd" stroke="none" points="159,-852 159,-865 206,-865 206,-852 159,-852"/>
+<text text-anchor="start" x="160" y="-856" font-family="Times,serif" font-size="10.00">[агрессия]</text>
 </g>
 <!-- [ns&#45;0]choose_method&#45;&gt;#option([ns&#45;0]choose_method, [ns&#45;0]attack, attack) -->
 <g id="edge8" class="edge"><title>[ns&#45;0]choose_method:[ns&#45;0]choose_method&#45;&gt;#option([ns&#45;0]choose_method, [ns&#45;0]attack, attack):#option([ns&#45;0]choose_method, [ns&#45;0]attack, attack)</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M216.66,-924.422C208.269,-906.349 197.825,-883.853 192.868,-873.177"/>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M212.762,-924.422C204.728,-909.426 195.062,-891.383 188.737,-879.576"/>
 </g>
 <!-- #option([ns&#45;0]choose_method, [ns&#45;0]help, help) -->
 <g id="node16" class="node"><title>#option([ns&#45;0]choose_method, [ns&#45;0]help, help)</title>
-<polygon fill="#ffffff" stroke="none" points="257,-859 257,-873 279,-873 279,-859 257,-859"/>
-<text text-anchor="start" x="258" y="-863.5" font-family="Times,serif" font-size="10.00">help</text>
+<polygon fill="#ffffff" stroke="none" points="243,-865 243,-879 301,-879 301,-865 243,-865"/>
+<text text-anchor="start" x="244" y="-869.5" font-family="Times,serif" font-size="10.00">help</text>
+<polygon fill="#aadddd" stroke="none" points="243,-852 243,-865 301,-865 301,-852 243,-852"/>
+<text text-anchor="start" x="244" y="-856" font-family="Times,serif" font-size="10.00">[миролюбие]</text>
 </g>
 <!-- [ns&#45;0]choose_method&#45;&gt;#option([ns&#45;0]choose_method, [ns&#45;0]help, help) -->
 <g id="edge12" class="edge"><title>[ns&#45;0]choose_method:[ns&#45;0]choose_method&#45;&gt;#option([ns&#45;0]choose_method, [ns&#45;0]help, help):#option([ns&#45;0]choose_method, [ns&#45;0]help, help)</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M241.34,-924.422C249.731,-906.349 260.175,-883.853 265.132,-873.177"/>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M241.238,-924.422C249.272,-909.426 258.938,-891.383 265.263,-879.576"/>
 </g>
 <!-- #jump([ns&#45;1]finish_failed, [ns&#45;0]attack) -->
 <g id="node12" class="node"><title>#jump([ns&#45;1]finish_failed, [ns&#45;0]attack)</title>
@@ -237,7 +241,7 @@
 <text text-anchor="start" x="10" y="-55" font-family="Times,serif" font-weight="bold" font-size="10.00">результаты:</text>
 <text text-anchor="start" x="10" y="-42" font-family="Times,serif" font-weight="bold" font-size="10.00">person_1</text>
 <text text-anchor="start" x="122" y="-41" font-family="Times,serif" font-size="10.00">neutral</text>
-<text text-anchor="start" x="10" y="-29" font-family="Times,serif" font-weight="bold" font-size="10.00">person_9</text>
+<text text-anchor="start" x="10" y="-29" font-family="Times,serif" font-weight="bold" font-size="10.00">person_6</text>
 <text text-anchor="start" x="122" y="-28" font-family="Times,serif" font-size="10.00">neutral</text>
 <polygon fill="none" stroke="black" points="8,-23.5 8,-104.5 192,-104.5 192,-23.5 8,-23.5"/>
 </g>
@@ -249,7 +253,7 @@
 <polygon fill="#cceecc" stroke="none" points="218,-767 218,-780 333,-780 333,-767 218,-767"/>
 <text text-anchor="start" x="219" y="-772" font-family="Times,serif" font-size="10.00">hero </text>
 <text text-anchor="start" x="240" y="-772" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
-<text text-anchor="start" x="295" y="-772" font-family="Times,serif" font-size="10.00"> place_9</text>
+<text text-anchor="start" x="295" y="-772" font-family="Times,serif" font-size="10.00"> place_6</text>
 <polygon fill="none" stroke="black" points="216.5,-766 216.5,-808 333.5,-808 333.5,-766 216.5,-766"/>
 </g>
 <!-- #jump([ns&#45;0]help, [ns&#45;1]start) -->
@@ -285,14 +289,14 @@
 <text text-anchor="start" x="495" y="-298" font-family="Times,serif" font-size="10.00"> 1.00</text>
 <polygon fill="#ffffff" stroke="none" points="348,-280 348,-293 591,-293 591,-280 348,-280"/>
 <text text-anchor="start" x="349" y="-285" font-family="Times,serif" font-weight="bold" font-size="10.00">увеличить влияние </text>
-<text text-anchor="start" x="437" y="-285" font-family="Times,serif" font-size="10.00">  person_9 </text>
+<text text-anchor="start" x="437" y="-285" font-family="Times,serif" font-size="10.00">  person_6 </text>
 <text text-anchor="start" x="482" y="-285" font-family="Times,serif" font-weight="bold" font-size="10.00">на </text>
 <text text-anchor="start" x="495" y="-285" font-family="Times,serif" font-size="10.00"> 1.00</text>
 <polygon fill="#eeeeee" stroke="none" points="348,-267 348,-280 591,-280 591,-267 348,-267"/>
 <text text-anchor="start" x="349" y="-272" font-family="Times,serif" font-weight="bold" font-size="10.00">результаты:</text>
 <text text-anchor="start" x="349" y="-259" font-family="Times,serif" font-weight="bold" font-size="10.00">person_1</text>
 <text text-anchor="start" x="471" y="-258" font-family="Times,serif" font-size="10.00">successed</text>
-<text text-anchor="start" x="349" y="-246" font-family="Times,serif" font-weight="bold" font-size="10.00">person_9</text>
+<text text-anchor="start" x="349" y="-246" font-family="Times,serif" font-weight="bold" font-size="10.00">person_6</text>
 <text text-anchor="start" x="471" y="-245" font-family="Times,serif" font-size="10.00">successed</text>
 <polygon fill="none" stroke="black" points="346.5,-240 346.5,-360 591.5,-360 591.5,-240 346.5,-240"/>
 </g>
@@ -313,7 +317,7 @@
 </g>
 <!-- #option([ns&#45;0]choose_method, [ns&#45;0]attack, attack)&#45;&gt;[ns&#45;0]attack -->
 <g id="edge9" class="edge"><title>#option([ns&#45;0]choose_method, [ns&#45;0]attack, attack):#option([ns&#45;0]choose_method, [ns&#45;0]attack, attack)&#45;&gt;[ns&#45;0]attack:[ns&#45;0]attack</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M189.106,-858.774C186.169,-837.749 177,-767.431 177,-709 177,-709 177,-709 177,-522 177,-465.603 186.712,-401.84 195.084,-357.349"/>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M181.326,-852.467C179.961,-825.985 177,-762.382 177,-709 177,-709 177,-709 177,-522 177,-465.603 186.712,-401.84 195.084,-357.349"/>
 <polygon fill="black" stroke="black" points="198.562,-357.797 197.01,-347.316 191.687,-356.476 198.562,-357.797"/>
 </g>
 <!-- #answer(False, [ns&#45;0]attack, [ns&#45;0]finish_attack_failed)&#45;&gt;[ns&#45;0]finish_attack_failed -->
@@ -323,8 +327,8 @@
 </g>
 <!-- #option([ns&#45;0]choose_method, [ns&#45;0]help, help)&#45;&gt;[ns&#45;0]help -->
 <g id="edge13" class="edge"><title>#option([ns&#45;0]choose_method, [ns&#45;0]help, help):#option([ns&#45;0]choose_method, [ns&#45;0]help, help)&#45;&gt;[ns&#45;0]help:[ns&#45;0]help</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M268.549,-858.958C269.345,-850.201 270.875,-833.379 272.244,-818.312"/>
-<polygon fill="black" stroke="black" points="275.736,-818.557 273.156,-808.281 268.765,-817.923 275.736,-818.557"/>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M272.495,-852.285C272.856,-843.035 273.359,-830.108 273.821,-818.271"/>
+<polygon fill="black" stroke="black" points="277.318,-818.397 274.21,-808.269 270.324,-818.125 277.318,-818.397"/>
 </g>
 <!-- #answer(True, [ns&#45;0]attack, [ns&#45;0]finish_attack_successed)&#45;&gt;[ns&#45;0]finish_attack_successed -->
 <g id="edge16" class="edge"><title>#answer(True, [ns&#45;0]attack, [ns&#45;0]finish_attack_successed):#answer(True, [ns&#45;0]attack, [ns&#45;0]finish_attack_successed)&#45;&gt;[ns&#45;0]finish_attack_successed:[ns&#45;0]finish_attack_successed</title>

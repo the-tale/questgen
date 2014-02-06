@@ -182,6 +182,7 @@ class Choice(State): pass
 
 class Option(Jump):
     type = FactAttribute(is_uid=True)
+    markers = FactAttribute()
 
 
 class OptionsLink(Fact):

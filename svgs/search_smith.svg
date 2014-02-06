@@ -34,11 +34,11 @@
 <text text-anchor="start" x="34" y="-346" font-family="Times,serif" font-weight="bold" font-size="10.00">результаты:</text>
 <text text-anchor="start" x="34" y="-333" font-family="Times,serif" font-weight="bold" font-size="10.00">person_2</text>
 <text text-anchor="start" x="131" y="-332" font-family="Times,serif" font-size="10.00">successed</text>
-<text text-anchor="start" x="34" y="-320" font-family="Times,serif" font-weight="bold" font-size="10.00">person_9</text>
+<text text-anchor="start" x="34" y="-320" font-family="Times,serif" font-weight="bold" font-size="10.00">person_6</text>
 <text text-anchor="start" x="131" y="-319" font-family="Times,serif" font-size="10.00">successed</text>
 <text text-anchor="start" x="34" y="-307" font-family="Times,serif" font-weight="bold" font-size="10.00">place_2</text>
 <text text-anchor="start" x="131" y="-306" font-family="Times,serif" font-size="10.00">successed</text>
-<text text-anchor="start" x="34" y="-294" font-family="Times,serif" font-weight="bold" font-size="10.00">place_9</text>
+<text text-anchor="start" x="34" y="-294" font-family="Times,serif" font-weight="bold" font-size="10.00">place_6</text>
 <text text-anchor="start" x="131" y="-293" font-family="Times,serif" font-size="10.00">successed</text>
 <polygon fill="none" stroke="black" points="32,-288 32,-382 188,-382 188,-288 32,-288"/>
 </g>
@@ -56,11 +56,11 @@
 <text text-anchor="start" x="224" y="-346" font-family="Times,serif" font-weight="bold" font-size="10.00">результаты:</text>
 <text text-anchor="start" x="224" y="-333" font-family="Times,serif" font-weight="bold" font-size="10.00">person_2</text>
 <text text-anchor="start" x="305" y="-332" font-family="Times,serif" font-size="10.00">failed</text>
-<text text-anchor="start" x="224" y="-320" font-family="Times,serif" font-weight="bold" font-size="10.00">person_9</text>
+<text text-anchor="start" x="224" y="-320" font-family="Times,serif" font-weight="bold" font-size="10.00">person_6</text>
 <text text-anchor="start" x="305" y="-319" font-family="Times,serif" font-size="10.00">failed</text>
 <text text-anchor="start" x="224" y="-307" font-family="Times,serif" font-weight="bold" font-size="10.00">place_2</text>
 <text text-anchor="start" x="305" y="-306" font-family="Times,serif" font-size="10.00">failed</text>
-<text text-anchor="start" x="224" y="-294" font-family="Times,serif" font-weight="bold" font-size="10.00">place_9</text>
+<text text-anchor="start" x="224" y="-294" font-family="Times,serif" font-weight="bold" font-size="10.00">place_6</text>
 <text text-anchor="start" x="305" y="-293" font-family="Times,serif" font-size="10.00">failed</text>
 <polygon fill="none" stroke="black" points="222,-288 222,-382 360,-382 360,-288 222,-288"/>
 </g>

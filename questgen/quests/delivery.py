@@ -83,9 +83,9 @@ class Delivery(QuestBetween2):
                                     description=u'Доставить посылку скупщику',
                                     require=[requirements.LocatedIn(object=hero.uid, place=antagonist_position.uid)],
                                     actions=[actions.GiveReward(object=hero.uid, type='finish_steal', scale=1.5),
-                                             actions.GivePower(object=initiator.uid, power=-1.5),
-                                             actions.GivePower(object=receiver.uid, power=-1.5),
-                                             actions.GivePower(object=antagonist.uid, power=0.25)])
+                                             actions.GivePower(object=initiator.uid, power=-1),
+                                             actions.GivePower(object=receiver.uid, power=-1),
+                                             actions.GivePower(object=antagonist.uid, power=0.15)])
 
         delivery_stealed = facts.State(uid=ns+'delivery_stealed',
                                        description=u'письмо украдено',
@@ -141,11 +141,16 @@ class Delivery(QuestBetween2):
 
                  facts.Jump(state_from=delivery_stealed.uid, state_to=fight_for_stealed.uid),
 
-                 facts.Option(state_from=delivery_choice.uid, state_to=delivery_stealed.uid, type='delivery', start_actions=[actions.Message(type='start_delivery'),]),
-                 facts.Option(state_from=delivery_choice.uid, state_to=finish_delivery.uid, type='delivery', start_actions=[actions.Message(type='start_delivery'),]),
-                 facts.Option(state_from=delivery_choice.uid, state_to=finish_steal.uid, type='steal', start_actions=[actions.Message(type='start_steal'),]),
-                 facts.Option(state_from=delivery_choice.uid, state_to=finish_fake_delivery.uid, type='fake', start_actions=[actions.Message(type='start_fake'),]),
-                 facts.Option(state_from=delivery_choice.uid, state_to=fake_delivery_dummy_state.uid, type='dummy_lie'),
+                 facts.Option(state_from=delivery_choice.uid, state_to=delivery_stealed.uid, type='delivery',
+                              markers=[relations.OPTION_MARKERS.HONORABLE], start_actions=[actions.Message(type='start_delivery'),]),
+                 facts.Option(state_from=delivery_choice.uid, state_to=finish_delivery.uid, type='delivery',
+                              markers=[relations.OPTION_MARKERS.HONORABLE], start_actions=[actions.Message(type='start_delivery'),]),
+                 facts.Option(state_from=delivery_choice.uid, state_to=finish_steal.uid, type='steal',
+                              markers=[relations.OPTION_MARKERS.DISHONORABLE], start_actions=[actions.Message(type='start_steal'),]),
+                 facts.Option(state_from=delivery_choice.uid, state_to=finish_fake_delivery.uid, type='fake',
+                              markers=[relations.OPTION_MARKERS.DISHONORABLE], start_actions=[actions.Message(type='start_fake'),]),
+                 facts.Option(state_from=delivery_choice.uid, state_to=fake_delivery_dummy_state.uid,
+                              markers=[], type='dummy_lie'),
 
                  facts.Answer(state_from=fight_for_stealed.uid, state_to=finish_fight_for_stealed__delivery.uid,
                               condition=True, start_actions=[actions.Message(type='delivery_returned')]),

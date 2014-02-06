@@ -245,8 +245,8 @@ class MultipleJumpsFromNormalStateTests(RestrictionsTestsBase):
                     facts.Finish(start='start', uid='finish_1', results={}, nesting=0),
                     facts.Finish(start='start', uid='finish_2', results={}, nesting=0),
                     facts.Jump(state_from='start', state_to='state_1'),
-                    facts.Option(state_from='state_1', state_to='state_2', type='opt_1'),
-                    facts.Option(state_from='state_1', state_to='finish_1', type='opt_2'),
+                    facts.Option(state_from='state_1', state_to='state_2', type='opt_1', markers=()),
+                    facts.Option(state_from='state_1', state_to='finish_1', type='opt_2', markers=()),
                     facts.Answer(state_from='state_3', state_to='finish_1', condition=True),
                     facts.Answer(state_from='state_3', state_to='finish_2', condition=False)  ]
 
@@ -270,15 +270,15 @@ class ChoicesConsistencyTests(RestrictionsTestsBase):
                     facts.Finish(start='start', uid='finish_1', results={}, nesting=0),
                     facts.Finish(start='start', uid='finish_2', results={}, nesting=0),
                     facts.Jump(state_from='start', state_to='state_1'),
-                    facts.Option(state_from='state_1', state_to='state_2', type='opt_1'),
-                    facts.Option(state_from='state_1', state_to='finish_1', type='opt_2'),
+                    facts.Option(state_from='state_1', state_to='state_2', type='opt_1', markers=()),
+                    facts.Option(state_from='state_1', state_to='finish_1', type='opt_2', markers=()),
                     facts.Jump(state_from='state_2', state_to='finish_2')]
 
     def test_success(self):
         self.restriction.validate(self.kb)
 
     def test_option_like_jump(self):
-        self.kb += facts.Option(state_from='state_2', state_to='finish_1', type='opt_3')
+        self.kb += facts.Option(state_from='state_2', state_to='finish_1', type='opt_3', markers=())
         self.assertRaises(self.restriction.OptionLikeJumpError, self.restriction.validate, self.kb)
 
     def test_jump_like_option(self):

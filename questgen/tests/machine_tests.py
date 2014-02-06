@@ -45,8 +45,8 @@ class MachineTests(unittest.TestCase):
 
     def test_get_available_jumps__for_choice_state(self):
         choice = facts.Choice(uid='choice')
-        option_1 = facts.Option(state_from=choice.uid, state_to=self.state_1.uid, type='opt_1')
-        option_2 = facts.Option(state_from=choice.uid, state_to=self.state_2.uid, type='opt_2')
+        option_1 = facts.Option(state_from=choice.uid, state_to=self.state_1.uid, type='opt_1', markers=())
+        option_2 = facts.Option(state_from=choice.uid, state_to=self.state_2.uid, type='opt_2', markers=())
         path = facts.ChoicePath(choice=choice.uid, option=option_2.uid, default=True)
         self.kb += (choice, option_1, option_2, path)
 
@@ -279,8 +279,8 @@ class MachineTests(unittest.TestCase):
 
     def test_sync_pointer(self):
         choice = facts.Choice(uid='choice')
-        option_1 = facts.Option(state_from=choice.uid, state_to=self.state_1.uid, type='opt_1')
-        option_2 = facts.Option(state_from=choice.uid, state_to=self.state_2.uid, type='opt_2')
+        option_1 = facts.Option(state_from=choice.uid, state_to=self.state_1.uid, type='opt_1', markers=())
+        option_2 = facts.Option(state_from=choice.uid, state_to=self.state_2.uid, type='opt_2', markers=())
         path = facts.ChoicePath(choice=choice.uid, option=option_2.uid, default=True)
         pointer = facts.Pointer(state=choice.uid, jump=option_1.uid)
 
@@ -328,8 +328,8 @@ class MachineTests(unittest.TestCase):
 
     def test_get_nearest_choice__choice(self):
         choice = facts.Choice(uid='choice')
-        option_1 = facts.Option(state_from=choice.uid, state_to=self.state_1.uid, type='opt_1')
-        option_2 = facts.Option(state_from=choice.uid, state_to=self.state_2.uid, type='opt_2')
+        option_1 = facts.Option(state_from=choice.uid, state_to=self.state_1.uid, type='opt_1', markers=())
+        option_2 = facts.Option(state_from=choice.uid, state_to=self.state_2.uid, type='opt_2', markers=())
         path = facts.ChoicePath(choice=choice.uid, option=option_2.uid, default=True)
         self.kb += (choice,
                     option_1,
@@ -346,12 +346,12 @@ class MachineTests(unittest.TestCase):
         choice_1 = facts.Choice(uid='choice_1')
 
         choice_2 = facts.Choice(uid='choice_2')
-        option_2_1 = facts.Option(state_from=choice_2.uid, state_to=self.state_1.uid, type='opt_2_1')
-        option_2_2 = facts.Option(state_from=choice_2.uid, state_to=self.state_2.uid, type='opt_2_2')
+        option_2_1 = facts.Option(state_from=choice_2.uid, state_to=self.state_1.uid, type='opt_2_1', markers=())
+        option_2_2 = facts.Option(state_from=choice_2.uid, state_to=self.state_2.uid, type='opt_2_2', markers=())
         path_2 = facts.ChoicePath(choice=choice_2.uid, option=option_2_2.uid, default=True)
 
-        option_1_1 = facts.Option(state_from=choice_1.uid, state_to=self.state_1.uid, type='opt_1_1')
-        option_1_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_1_2')
+        option_1_1 = facts.Option(state_from=choice_1.uid, state_to=self.state_1.uid, type='opt_1_1', markers=())
+        option_1_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_1_2', markers=())
         path_1 = facts.ChoicePath(choice=choice_1.uid, option=option_1_2.uid, default=True)
 
         self.kb += (choice_1,
@@ -375,12 +375,12 @@ class MachineTests(unittest.TestCase):
         choice_1 = facts.Choice(uid='choice_1')
 
         choice_2 = facts.Choice(uid='choice_2')
-        option_2_1 = facts.Option(state_from=choice_2.uid, state_to=self.state_1.uid, type='opt_2_1')
-        option_2_2 = facts.Option(state_from=choice_2.uid, state_to=self.state_2.uid, type='opt_2_2')
+        option_2_1 = facts.Option(state_from=choice_2.uid, state_to=self.state_1.uid, type='opt_2_1', markers=())
+        option_2_2 = facts.Option(state_from=choice_2.uid, state_to=self.state_2.uid, type='opt_2_2', markers=())
         path_2 = facts.ChoicePath(choice=choice_2.uid, option=option_2_2.uid, default=True)
 
-        option_1_1 = facts.Option(state_from=choice_1.uid, state_to=self.state_1.uid, type='opt_1_1')
-        option_1_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_1_2')
+        option_1_1 = facts.Option(state_from=choice_1.uid, state_to=self.state_1.uid, type='opt_1_1', markers=())
+        option_1_2 = facts.Option(state_from=choice_1.uid, state_to=choice_2.uid, type='opt_1_2', markers=())
         path_1 = facts.ChoicePath(choice=choice_1.uid, option=option_1_2.uid, default=True)
 
         self.kb += (choice_1,
@@ -404,8 +404,8 @@ class MachineTests(unittest.TestCase):
 
     def test_get_nearest_choice__choice_after_finish(self):
         choice = facts.Choice(uid='choice')
-        option_1 = facts.Option(state_from=choice.uid, state_to=self.state_1.uid, type='opt_1')
-        option_2 = facts.Option(state_from=choice.uid, state_to=self.state_2.uid, type='opt_2')
+        option_1 = facts.Option(state_from=choice.uid, state_to=self.state_1.uid, type='opt_1', markers=())
+        option_2 = facts.Option(state_from=choice.uid, state_to=self.state_2.uid, type='opt_2', markers=())
         path = facts.ChoicePath(choice=choice.uid, option=option_2.uid, default=True)
         self.kb += (choice,
                     option_1,
@@ -418,8 +418,8 @@ class MachineTests(unittest.TestCase):
 
     def test_get_nearest_choice__choice_after_question(self):
         choice = facts.Choice(uid='choice')
-        option_1 = facts.Option(state_from=choice.uid, state_to=self.state_1.uid, type='opt_1')
-        option_2 = facts.Option(state_from=choice.uid, state_to=self.state_2.uid, type='opt_2')
+        option_1 = facts.Option(state_from=choice.uid, state_to=self.state_1.uid, type='opt_1', markers=())
+        option_2 = facts.Option(state_from=choice.uid, state_to=self.state_2.uid, type='opt_2', markers=())
         path = facts.ChoicePath(choice=choice.uid, option=option_2.uid, default=True)
 
         question = facts.Question(uid='question', condition=())
@@ -436,8 +436,8 @@ class MachineTests(unittest.TestCase):
 
     def test_get_nearest_choice__choice_after_start(self):
         choice = facts.Choice(uid='choice')
-        option_1 = facts.Option(state_from=choice.uid, state_to=self.state_1.uid, type='opt_1')
-        option_2 = facts.Option(state_from=choice.uid, state_to=self.state_2.uid, type='opt_2')
+        option_1 = facts.Option(state_from=choice.uid, state_to=self.state_1.uid, type='opt_1', markers=())
+        option_2 = facts.Option(state_from=choice.uid, state_to=self.state_2.uid, type='opt_2', markers=())
         path = facts.ChoicePath(choice=choice.uid, option=option_2.uid, default=True)
         start_2 = facts.Start(uid='start_2', type='test', nesting=0)
         self.kb += (choice,
