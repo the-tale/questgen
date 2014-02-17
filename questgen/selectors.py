@@ -63,7 +63,11 @@ class Selector(object):
         places = list(places)
 
         if not places:
-            raise exceptions.NoFactSelectedError(method='new_place', arguments={'terrains': terrains, 'types': types})
+            raise exceptions.NoFactSelectedError(method='new_place',
+                                                 arguments={'terrains': terrains,
+                                                            'types': types,
+                                                            'candidates': candidates},
+                                                 reserved=self._reserved)
 
         place = random.choice(places)
         self._reserved.add(place.uid)
@@ -101,7 +105,14 @@ class Selector(object):
         persons = list(persons)
 
         if not persons:
-            raise exceptions.NoFactSelectedError(method='new_person', arguments=None)
+            raise exceptions.NoFactSelectedError(method='new_person',
+                                                 arguments={'first_initiator': first_initiator,
+                                                            'candidates': candidates,
+                                                            'professions': professions,
+                                                            'places': places,
+                                                            'restrict_places': restrict_places,
+                                                            'restrict_persons': restrict_persons},
+                                                 reserved=self._reserved)
 
         person = random.choice(persons)
         self._reserved.add(person.uid)

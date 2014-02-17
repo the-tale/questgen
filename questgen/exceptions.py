@@ -105,7 +105,7 @@ class NoQuestChoicesRollBackError(RollBackError):
 class SelectorsBaseError(RollBackError): pass
 
 class NoFactSelectedError(SelectorsBaseError):
-    MSG = u'can not found fact with method "%(method)s" and arguments: %(arguments)s'
+    MSG = u'can not found fact with method "%(method)s" and arguments: %(arguments)s — with reserve: %(reserved)s'
 
 
 ####################################################################

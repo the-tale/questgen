@@ -54,9 +54,11 @@
 <text text-anchor="start" x="205" y="-49" font-family="Times,serif" font-size="10.00"> 1.00</text>
 <polygon fill="#ffffff" stroke="none" points="9,-31 9,-44 228,-44 228,-31 9,-31"/>
 <text text-anchor="start" x="10" y="-36" font-family="Times,serif" font-weight="bold" font-size="10.00">увеличить влияние </text>
-<text text-anchor="start" x="98" y="-36" font-family="Times,serif" font-size="10.00">  place_10 </text>
-<text text-anchor="start" x="143" y="-36" font-family="Times,serif" font-weight="bold" font-size="10.00">на </text>
-<text text-anchor="start" x="156" y="-36" font-family="Times,serif" font-size="10.00"> 1.00</text>
+<text text-anchor="start" x="98" y="-36" font-family="Times,serif" font-size="10.00">  </text>
+<text text-anchor="start" x="103" y="-36" font-family="Times,serif" font-size="10.00" fill="#000000">place_10</text>
+<text text-anchor="start" x="141" y="-36" font-family="Times,serif" font-size="10.00"> </text>
+<text text-anchor="start" x="144" y="-36" font-family="Times,serif" font-weight="bold" font-size="10.00">на </text>
+<text text-anchor="start" x="157" y="-36" font-family="Times,serif" font-size="10.00"> 1.00</text>
 <polygon fill="#eeeeee" stroke="none" points="9,-18 9,-31 228,-31 228,-18 9,-18"/>
 <text text-anchor="start" x="10" y="-23" font-family="Times,serif" font-weight="bold" font-size="10.00">результаты:</text>
 <text text-anchor="start" x="10" y="-10" font-family="Times,serif" font-weight="bold" font-size="10.00">place_10</text>

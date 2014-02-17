@@ -17,6 +17,7 @@ class Restriction(object):
 class AlwaysSuccess(Restriction):
     def validate(self, knowledge_base): pass
 
+
 class AlwaysError(Restriction):
 
     class Error(exceptions.RollBackError):

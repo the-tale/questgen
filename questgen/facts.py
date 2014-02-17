@@ -311,6 +311,17 @@ class NotFirstInitiator(Restriction):
     person = FactAttribute(is_reference=True, is_uid=True)
 
 
+######################
+# Markers classes
+######################
+
+class Marker(Fact): pass
+
+class ProfessionMarker(Marker):
+    person = FactAttribute(is_reference=True, is_uid=True)
+    profession = FactAttribute(default=None)
+
+
 FACTS = {fact_class.type_name(): fact_class
          for fact_class in globals().values()
          if isinstance(fact_class, type) and issubclass(fact_class, Fact)}

@@ -89,7 +89,7 @@
 <text text-anchor="start" x="40" y="-597" font-family="Times,serif" font-weight="bold" font-size="10.00">отправить </text>
 <text text-anchor="start" x="90" y="-597" font-family="Times,serif" font-size="10.00"> hero</text>
 <text text-anchor="start" x="111" y="-597" font-family="Times,serif" font-weight="bold" font-size="10.00">бродить около</text>
-<text text-anchor="start" x="177" y="-597" font-family="Times,serif" font-size="10.00"> place_2</text>
+<text text-anchor="start" x="177" y="-597" font-family="Times,serif" font-size="10.00"> place_3</text>
 <text text-anchor="start" x="77" y="-587" font-family="Times,serif" font-size="10.00"> среди ландшафтов (0,)</text>
 <polygon fill="none" stroke="black" points="37.5,-582.5 37.5,-633.5 214.5,-633.5 214.5,-582.5 37.5,-582.5"/>
 </g>
@@ -107,7 +107,7 @@
 <text text-anchor="start" x="40" y="-329" font-family="Times,serif" font-weight="bold" font-size="10.00">отправить </text>
 <text text-anchor="start" x="90" y="-329" font-family="Times,serif" font-size="10.00"> hero</text>
 <text text-anchor="start" x="111" y="-329" font-family="Times,serif" font-weight="bold" font-size="10.00">бродить около</text>
-<text text-anchor="start" x="177" y="-329" font-family="Times,serif" font-size="10.00"> place_2</text>
+<text text-anchor="start" x="177" y="-329" font-family="Times,serif" font-size="10.00"> place_3</text>
 <text text-anchor="start" x="77" y="-319" font-family="Times,serif" font-size="10.00"> среди ландшафтов (0,)</text>
 <polygon fill="none" stroke="black" points="37.5,-314.5 37.5,-365.5 214.5,-365.5 214.5,-314.5 37.5,-314.5"/>
 </g>
@@ -124,7 +124,7 @@
 <polygon fill="#cceecc" stroke="none" points="55,-751 55,-764 197,-764 197,-751 55,-751"/>
 <text text-anchor="start" x="56" y="-756" font-family="Times,serif" font-size="10.00">hero </text>
 <text text-anchor="start" x="77" y="-756" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
-<text text-anchor="start" x="132" y="-756" font-family="Times,serif" font-size="10.00"> place_2</text>
+<text text-anchor="start" x="132" y="-756" font-family="Times,serif" font-size="10.00"> place_3</text>
 <polygon fill="none" stroke="black" points="54,-750 54,-792 198,-792 198,-750 54,-750"/>
 </g>
 <!-- #jump([ns&#45;0]start_hunting, [ns&#45;0]hunt_0) -->
@@ -145,7 +145,7 @@
 <polygon fill="#dddddd" stroke="none" points="9,-57 9,-70 244,-70 244,-57 9,-57"/>
 <text text-anchor="start" x="10" y="-62" font-family="Times,serif" font-size="10.00">hero </text>
 <text text-anchor="start" x="31" y="-62" font-family="Times,serif" font-weight="bold" font-size="10.00">находится в</text>
-<text text-anchor="start" x="86" y="-62" font-family="Times,serif" font-size="10.00"> place_2</text>
+<text text-anchor="start" x="86" y="-62" font-family="Times,serif" font-size="10.00"> place_3</text>
 <polygon fill="#ffffff" stroke="none" points="9,-44 9,-57 244,-57 244,-44 9,-44"/>
 <text text-anchor="start" x="10" y="-49" font-family="Times,serif" font-weight="bold" font-size="10.00">выдать награду </text>
 <text text-anchor="start" x="85" y="-49" font-family="Times,serif" font-size="10.00">  hero </text>
@@ -155,12 +155,14 @@
 <text text-anchor="start" x="220" y="-49" font-family="Times,serif" font-size="10.00"> 1.00</text>
 <polygon fill="#ffffff" stroke="none" points="9,-31 9,-44 244,-44 244,-31 9,-31"/>
 <text text-anchor="start" x="10" y="-36" font-family="Times,serif" font-weight="bold" font-size="10.00">увеличить влияние </text>
-<text text-anchor="start" x="98" y="-36" font-family="Times,serif" font-size="10.00">  place_2 </text>
-<text text-anchor="start" x="138" y="-36" font-family="Times,serif" font-weight="bold" font-size="10.00">на </text>
-<text text-anchor="start" x="151" y="-36" font-family="Times,serif" font-size="10.00"> 1.00</text>
+<text text-anchor="start" x="98" y="-36" font-family="Times,serif" font-size="10.00">  </text>
+<text text-anchor="start" x="103" y="-36" font-family="Times,serif" font-size="10.00" fill="#000000">place_3</text>
+<text text-anchor="start" x="136" y="-36" font-family="Times,serif" font-size="10.00"> </text>
+<text text-anchor="start" x="139" y="-36" font-family="Times,serif" font-weight="bold" font-size="10.00">на </text>
+<text text-anchor="start" x="152" y="-36" font-family="Times,serif" font-size="10.00"> 1.00</text>
 <polygon fill="#eeeeee" stroke="none" points="9,-18 9,-31 244,-31 244,-18 9,-18"/>
 <text text-anchor="start" x="10" y="-23" font-family="Times,serif" font-weight="bold" font-size="10.00">результаты:</text>
-<text text-anchor="start" x="10" y="-10" font-family="Times,serif" font-weight="bold" font-size="10.00">place_2</text>
+<text text-anchor="start" x="10" y="-10" font-family="Times,serif" font-weight="bold" font-size="10.00">place_3</text>
 <text text-anchor="start" x="128" y="-9" font-family="Times,serif" font-size="10.00">successed</text>
 <polygon fill="none" stroke="black" points="7.5,-4 7.5,-98 244.5,-98 244.5,-4 7.5,-4"/>
 </g>

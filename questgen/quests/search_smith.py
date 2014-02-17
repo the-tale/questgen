@@ -119,4 +119,6 @@ class SearchSmith(QuestBetween2):
         line.extend(help_quest)
         line.extend(help_extra)
 
+        line.append(facts.ProfessionMarker(person=receiver.uid, profession=receiver.profession))
+
         return line

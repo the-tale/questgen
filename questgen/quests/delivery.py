@@ -20,8 +20,11 @@ class Delivery(QuestBetween2):
 
         ns = selector._kb.get_next_ns()
 
+        antagonist_marker = None
+
         try:
             antagonist = selector.new_person(first_initiator=False, professions=[relations.PROFESSION.ROGUE])
+            antagonist_marker = facts.ProfessionMarker(person=antagonist.uid, profession=antagonist.profession)
         except exceptions.NoFactSelectedError:
             antagonist = selector.new_person(first_initiator=False)
 
@@ -85,7 +88,7 @@ class Delivery(QuestBetween2):
                                     actions=[actions.GiveReward(object=hero.uid, type='finish_steal', scale=1.5),
                                              actions.GivePower(object=initiator.uid, power=-1),
                                              actions.GivePower(object=receiver.uid, power=-1),
-                                             actions.GivePower(object=antagonist.uid, power=0.15)])
+                                             actions.GivePower(object=antagonist.uid, power=1.0)])
 
         delivery_stealed = facts.State(uid=ns+'delivery_stealed',
                                        description=u'письмо украдено',
@@ -161,5 +164,8 @@ class Delivery(QuestBetween2):
                 ]
 
         line.extend(participants)
+
+        if antagonist_marker:
+            line.append(antagonist_marker)
 
         return line

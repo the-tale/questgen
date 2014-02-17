@@ -51,6 +51,10 @@ class HEAD_COLORS(object):
     JUMP_ACTIONS_END = '#dddddd'
     JUMP_MARKER = '#aadddd'
 
+class TEXT_COLORS:
+    NORMAL = '#000000'
+    PROFESSION = '#aa55aa'
+
 
 class SubGraph(object):
 
@@ -416,7 +420,9 @@ class Drawer(object):
         return u'<b>сообщение:</b>&nbsp;%s' % message.type
 
     def create_action_label_for_give_power(self, give_power):
-        return u'<b>увеличить влияние </b>&nbsp; %s <b>на </b> %.2f' % (give_power.object, give_power.power)
+        has_profession_marker = [marker for marker in self.kb.filter(facts.ProfessionMarker) if marker.person == give_power.object]
+        color = TEXT_COLORS.PROFESSION if has_profession_marker else TEXT_COLORS.NORMAL
+        return u'<b>увеличить влияние </b>&nbsp; <font color="%s">%s</font> <b>на </b> %.2f' % (color, give_power.object, give_power.power)
 
     def create_action_label_for_give_reward(self, give_reward):
         return u'<b>выдать награду </b>&nbsp; %s <b>типа </b> %s <b>в размере</b> %.2f' % (give_reward.object, give_reward.type, give_reward.scale)
