@@ -79,7 +79,7 @@ class Selector(object):
         locations = list(self._locations(objects=objects, restrict_places=False, restrict_objects=False))
 
         if not locations:
-            raise exceptions.NoFactSelectedError(method='place', arguments={'objects': objects})
+            raise exceptions.NoFactSelectedError(method='place', arguments={'objects': objects}, reserved=self._reserved)
 
         place = self._kb[random.choice(locations).place]
 
@@ -123,31 +123,31 @@ class Selector(object):
         try:
             return self._kb.filter(facts.PreferenceMob).next()
         except StopIteration:
-            raise exceptions.NoFactSelectedError(method='preferences_mob', arguments={})
+            raise exceptions.NoFactSelectedError(method='preferences_mob', arguments={}, reserved=self._reserved)
 
     def preferences_hometown(self):
         try:
             return self._kb.filter(facts.PreferenceHometown).next()
         except StopIteration:
-            raise exceptions.NoFactSelectedError(method='preferences_hometown', arguments={})
+            raise exceptions.NoFactSelectedError(method='preferences_hometown', arguments={}, reserved=self._reserved)
 
     def preferences_enemy(self):
         try:
             return self._kb.filter(facts.PreferenceEnemy).next()
         except StopIteration:
-            raise exceptions.NoFactSelectedError(method='preferences_enemy', arguments={})
+            raise exceptions.NoFactSelectedError(method='preferences_enemy', arguments={}, reserved=self._reserved)
 
     def preferences_friend(self):
         try:
             return self._kb.filter(facts.PreferenceFriend).next()
         except StopIteration:
-            raise exceptions.NoFactSelectedError(method='preferences_friend', arguments={})
+            raise exceptions.NoFactSelectedError(method='preferences_friend', arguments={}, reserved=self._reserved)
 
     def upgrade_equipment_cost(self):
         try:
             return self._kb.filter(facts.UpgradeEquipmentCost).next()
         except StopIteration:
-            raise exceptions.NoFactSelectedError(method='upgrade_equipment_cost', arguments={})
+            raise exceptions.NoFactSelectedError(method='upgrade_equipment_cost', arguments={}, reserved=self._reserved)
 
     def create_quest_from_place(self, nesting, initiator_position, **kwargs):
         excluded = set(kwargs.get('excluded', []))
