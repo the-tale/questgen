@@ -8,6 +8,7 @@ from questgen import records
 
 
 class FactAttribute(records.RecordAttribute):
+    __slots__ = ('is_uid', 'remove_in_short', 'is_serializable', 'deserialization_classes')
 
     def __init__(self, remove_in_short=False, deserialization_classes=None, is_uid=False, **kwargs):
         super(FactAttribute, self).__init__(**kwargs)

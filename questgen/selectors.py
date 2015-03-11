@@ -7,6 +7,7 @@ from questgen import facts
 
 
 class Selector(object):
+    __slots__ = ('_kb', '_qb', '_is_first_quest', '_reserved', '_excluded_quests')
 
     def __init__(self, kb, qb):
         self._kb = kb

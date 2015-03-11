@@ -4,6 +4,7 @@ from questgen import exceptions
 
 
 class RecordAttribute(object):
+    __slots__ = ('is_reference', 'has_default', 'default')
 
     def __init__(self, is_reference=False, **kwargs):
         super(RecordAttribute, self).__init__()
