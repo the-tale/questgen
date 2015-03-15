@@ -13,6 +13,11 @@ class CollectDebt(QuestBetween2):
     TAGS = ('can_start', 'has_subquests') # can_continue can not be used, since quest has no FAILED finish
 
     @classmethod
+    def find_receiver(cls, selector, initiator):
+        return selector.new_person(restrict_social_connections=((initiator.uid, relations.SOCIAL_RELATIONS.PARTNER),),
+                                   social_connections=((initiator.uid, relations.SOCIAL_RELATIONS.CONCURRENT),))
+
+    @classmethod
     def construct(cls, nesting, selector, initiator, initiator_position, receiver, receiver_position):
 
         hero = selector.heroes()[0]

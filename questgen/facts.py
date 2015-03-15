@@ -213,6 +213,11 @@ class Answer(Jump):
 
 class Condition(Fact): pass
 
+class SocialConnection(Condition):
+    person_from = FactAttribute(is_reference=True, is_uid=True)
+    person_to = FactAttribute(is_reference=True, is_uid=True)
+    type = FactAttribute()
+
 class LocatedIn(Condition):
     object = FactAttribute(is_reference=True, is_uid=True)
     place = FactAttribute(is_reference=True, is_uid=True)

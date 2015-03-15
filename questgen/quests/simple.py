@@ -10,6 +10,11 @@ class Simple(QuestBetween2):
     TAGS = ('can_start', 'can_continue')
 
     @classmethod
+    def find_receiver(cls, selector, initiator):
+        return selector.new_person()
+
+
+    @classmethod
     def construct(cls, nesting, selector, initiator, initiator_position, receiver, receiver_position):
 
         ns = selector._kb.get_next_ns()

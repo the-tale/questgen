@@ -11,20 +11,21 @@ class InterfereEnemy(QuestBetween2):
     TAGS = ('can_start', 'has_subquests')
 
     @classmethod
-    def get_enemy(cls, selector):
-        return selector._kb[selector.preferences_enemy().person]
+    def find_receiver(cls, selector, initiator):
+        enemy = selector._kb[selector.preferences_enemy().person]
+        return selector.new_person(first_initiator=False, candidates=(enemy.uid, ))
+
 
     @classmethod
     def construct_from_place(cls, nesting, selector, start_place):
-
-        enemy = cls.get_enemy(selector)
+        receiver = cls.find_receiver(selector=selector, initiator=None)
 
         return cls.construct(nesting=nesting,
                              selector=selector,
                              initiator=None,
                              initiator_position=start_place,
-                             receiver=selector.new_person(first_initiator=False, candidates=(enemy.uid, )),
-                             receiver_position=selector.place_for(objects=(enemy.uid, )))
+                             receiver=receiver,
+                             receiver_position=selector.place_for(objects=(receiver.uid, )))
 
 
     @classmethod

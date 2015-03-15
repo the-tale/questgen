@@ -4,11 +4,17 @@ from questgen import facts
 from questgen import logic
 from questgen import requirements
 from questgen import actions
+from questgen import relations
 
 
 class Help(QuestBetween2):
     TYPE = 'help'
     TAGS = ('can_start', 'has_subquests', 'can_continue')
+
+    @classmethod
+    def find_receiver(cls, selector, initiator):
+        return selector.new_person(restrict_social_connections=((initiator.uid, relations.SOCIAL_RELATIONS.CONCURRENT),),
+                                   social_connections=((initiator.uid, relations.SOCIAL_RELATIONS.PARTNER),))
 
     @classmethod
     def construct(cls, nesting, selector, initiator, initiator_position, receiver, receiver_position):

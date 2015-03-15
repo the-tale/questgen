@@ -7,11 +7,12 @@ from questgen import facts
 
 
 class Selector(object):
-    __slots__ = ('_kb', '_qb', '_is_first_quest', '_reserved', '_excluded_quests')
+    __slots__ = ('_kb', '_qb', '_is_first_quest', '_reserved', '_excluded_quests', '_social_connection_probability')
 
-    def __init__(self, kb, qb):
+    def __init__(self, kb, qb, social_connection_probability=0):
         self._kb = kb
         self._qb = qb
+        self._social_connection_probability = social_connection_probability
         self.reset()
 
     def reset(self):
@@ -88,10 +89,36 @@ class Selector(object):
 
         return place
 
-    def new_person(self, first_initiator, candidates=None, professions=None, places=None, restrict_places=True, restrict_persons=True):
+    def check_social_connections(self, person, connected_person_uid, social_connection_type):
+        return any(fact.person_from == person.uid and fact.person_to == connected_person_uid and fact.type == social_connection_type
+                   for fact in self._kb.filter(facts.SocialConnection))
+
+    def new_person(self,
+                   first_initiator=False,
+                   candidates=None,
+                   professions=None,
+                   places=None,
+                   restrict_places=True,
+                   restrict_persons=True,
+                   restrict_social_connections=(),
+                   social_connections=()):
         locations = self._locations(places=places, restrict_places=restrict_places, restrict_objects=restrict_persons)
 
         persons = (self._kb[location.object] for location in locations if isinstance(self._kb[location.object], facts.Person))
+
+        for connected_person_uid, social_connection_type in restrict_social_connections:
+            persons = (person for person in persons
+                       if not self.check_social_connections(person, connected_person_uid, social_connection_type))
+
+        social_filter_applied = False
+
+        if social_connections:
+            probability = self._social_connection_probability * len(set(connected_person_uid for connected_person_uid, social_connection_type in social_connections))
+            if random.random() < probability:
+                social_filter_applied = True
+                persons = (person for person in persons
+                           if any(self.check_social_connections(person, connected_person_uid, social_connection_type)
+                                  for connected_person_uid, social_connection_type in social_connections))
 
         if professions is not None:
             persons = (person for person in persons if person.profession in professions)
@@ -106,14 +133,24 @@ class Selector(object):
         persons = list(persons)
 
         if not persons:
-            raise exceptions.NoFactSelectedError(method='new_person',
-                                                 arguments={'first_initiator': first_initiator,
-                                                            'candidates': candidates,
-                                                            'professions': professions,
-                                                            'places': places,
-                                                            'restrict_places': restrict_places,
-                                                            'restrict_persons': restrict_persons},
-                                                 reserved=self._reserved)
+            if social_filter_applied:
+                return self.new_person(first_initiator=first_initiator,
+                                       candidates=candidates,
+                                       professions=professions,
+                                       places=places,
+                                       restrict_places=restrict_places,
+                                       restrict_persons=restrict_persons,
+                                       restrict_social_connections=restrict_social_connections,
+                                       social_connections=()) # <- reset social connections requirements
+            else:
+                raise exceptions.NoFactSelectedError(method='new_person',
+                                                     arguments={'first_initiator': first_initiator,
+                                                                'candidates': candidates,
+                                                                'professions': professions,
+                                                                'places': places,
+                                                                'restrict_places': restrict_places,
+                                                                'restrict_persons': restrict_persons},
+                                                     reserved=self._reserved)
 
         person = random.choice(persons)
         self._reserved.add(person.uid)

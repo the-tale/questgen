@@ -13,6 +13,10 @@ class Pilgrimage(QuestBetween2):
     TAGS = ('can_start', )
 
     @classmethod
+    def find_receiver(cls, selector, initiator):
+        return None
+
+    @classmethod
     def construct_from_place(cls, nesting, selector, start_place):
 
         return cls.construct(nesting=nesting,

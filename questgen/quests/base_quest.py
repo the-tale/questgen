@@ -24,22 +24,27 @@ class BaseQuest(object):
 class QuestBetween2(BaseQuest):
 
     @classmethod
+    def find_receiver(cls, selector, initiator):
+        raise NotImplementedError()
+
+    @classmethod
     def construct_from_nothing(cls, nesting, selector):
         return cls.construct_from_place(nesting=nesting, selector=selector, start_place=selector.new_place())
 
     @classmethod
     def construct_from_place(cls, nesting, selector, start_place):
+        initiator = selector.new_person(first_initiator=(nesting==0), restrict_places=False, places=(start_place.uid, ))
         return cls.construct_between_2(nesting=nesting,
                                        selector=selector,
-                                       initiator=selector.new_person(first_initiator=(nesting==0), restrict_places=False, places=(start_place.uid, )),
-                                       receiver=selector.new_person(first_initiator=False))
+                                       initiator=initiator,
+                                       receiver=cls.find_receiver(selector=selector, initiator=initiator))
 
     @classmethod
     def construct_from_person(cls, nesting, selector, initiator):
         return cls.construct_between_2(nesting=nesting,
                                        selector=selector,
                                        initiator=initiator,
-                                       receiver=selector.new_person(first_initiator=False))
+                                       receiver=cls.find_receiver(selector=selector, initiator=initiator))
 
     @classmethod
     def construct_between_2(cls, nesting, selector, initiator, receiver):

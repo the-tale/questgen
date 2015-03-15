@@ -6,6 +6,7 @@ from questgen.knowledge_base import KnowledgeBase
 from questgen import facts
 from questgen import selectors
 from questgen import exceptions
+from questgen import relations
 
 
 class SelectordsTests(unittest.TestCase):
@@ -156,6 +157,94 @@ class SelectordsTests(unittest.TestCase):
 
         self.assertEqual(set(for_initiator), set(['person_1', 'person_3']))
         self.assertEqual(set(for_continuator), set(['person_1', 'person_2', 'person_3']))
+
+
+    def test_new_person__restrict_social_connections(self):
+        self.kb += facts.SocialConnection(person_from='person_1',
+                                          person_to='person_3',
+                                          type=relations.SOCIAL_RELATIONS.PARTNER)
+
+        for i in xrange(100):
+            persons = [self.selector.new_person(first_initiator=False, restrict_social_connections=(('person_3', relations.SOCIAL_RELATIONS.PARTNER),)).uid,
+                       self.selector.new_person(first_initiator=False, restrict_social_connections=(('person_3', relations.SOCIAL_RELATIONS.PARTNER),)).uid ]
+            self.assertRaises(exceptions.NoFactSelectedError,
+                              self.selector.new_person,
+                              first_initiator=False,
+                              restrict_social_connections=(('person_3', relations.SOCIAL_RELATIONS.PARTNER),))
+            self.assertEqual(set(persons), set(['person_2', 'person_3']))
+            self.selector.reset()
+
+        for i in xrange(100):
+            persons = [self.selector.new_person(first_initiator=False, restrict_social_connections=(('person_3', relations.SOCIAL_RELATIONS.CONCURRENT),)).uid,
+                       self.selector.new_person(first_initiator=False, restrict_social_connections=(('person_3', relations.SOCIAL_RELATIONS.CONCURRENT),)).uid,
+                       self.selector.new_person(first_initiator=False, restrict_social_connections=(('person_3', relations.SOCIAL_RELATIONS.CONCURRENT),)).uid ]
+            self.assertEqual(set(persons), set(['person_1', 'person_2', 'person_3']))
+            self.selector.reset()
+
+
+    def test_new_person__social_connections(self):
+        self.kb += facts.SocialConnection(person_from='person_1',
+                                          person_to='person_3',
+                                          type=relations.SOCIAL_RELATIONS.PARTNER)
+
+        self.kb += facts.SocialConnection(person_from='person_1',
+                                          person_to='person_2',
+                                          type=relations.SOCIAL_RELATIONS.PARTNER)
+
+        self.selector._social_connection_probability = 1.0
+
+        for i in xrange(100):
+            self.assertEqual(self.selector.new_person(first_initiator=False, social_connections=(('person_3', relations.SOCIAL_RELATIONS.PARTNER),)).uid,
+                             'person_1')
+            persons = set((self.selector.new_person(first_initiator=False, social_connections=(('person_3', relations.SOCIAL_RELATIONS.PARTNER),)).uid,
+                           self.selector.new_person(first_initiator=False, social_connections=(('person_3', relations.SOCIAL_RELATIONS.PARTNER),)).uid))
+            self.assertEqual(set(persons), set(['person_2', 'person_3']))
+            self.selector.reset()
+
+        persons = set()
+        for i in xrange(100):
+            persons.add(self.selector.new_person(first_initiator=False, social_connections=(('person_3', relations.SOCIAL_RELATIONS.CONCURRENT),)).uid)
+            self.selector.reset()
+        self.assertEqual(set(persons), set(['person_1', 'person_2', 'person_3']))
+
+    def test_new_person__social_connections__double_connections(self):
+        self.kb += facts.SocialConnection(person_from='person_3',
+                                          person_to='person_1',
+                                          type=relations.SOCIAL_RELATIONS.PARTNER)
+
+        self.kb += facts.SocialConnection(person_from='person_2',
+                                          person_to='person_1',
+                                          type=relations.SOCIAL_RELATIONS.CONCURRENT)
+
+        self.selector._social_connection_probability = 1.0
+
+        for i in xrange(100):
+            persons = set((self.selector.new_person(social_connections=(('person_1', relations.SOCIAL_RELATIONS.PARTNER),
+                                                                        ('person_1', relations.SOCIAL_RELATIONS.CONCURRENT))).uid,
+                           self.selector.new_person(social_connections=(('person_1', relations.SOCIAL_RELATIONS.PARTNER),
+                                                                        ('person_1', relations.SOCIAL_RELATIONS.CONCURRENT))).uid))
+            self.assertEqual(persons, set(['person_2', 'person_3']))
+            self.selector.reset()
+
+
+    def test_new_person__no_social_connection_probability(self):
+        self.kb += facts.SocialConnection(person_from='person_3',
+                                          person_to='person_1',
+                                          type=relations.SOCIAL_RELATIONS.PARTNER)
+
+        self.kb += facts.SocialConnection(person_from='person_2',
+                                          person_to='person_1',
+                                          type=relations.SOCIAL_RELATIONS.CONCURRENT)
+
+        self.selector._social_connection_probability = 0
+
+        persons = set()
+        for i in xrange(100):
+            persons.add(self.selector.new_person(social_connections=(('person_1', relations.SOCIAL_RELATIONS.PARTNER),
+                                                                     ('person_1', relations.SOCIAL_RELATIONS.CONCURRENT))).uid)
+            self.selector.reset()
+
+        self.assertEqual(persons, set(['person_1', 'person_2', 'person_3']))
 
 
     def test_preferences_mob(self):

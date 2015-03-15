@@ -16,6 +16,10 @@ class Hometown(QuestBetween2):
         return selector._kb[selector.preferences_hometown().place]
 
     @classmethod
+    def find_receiver(cls, selector, initiator):
+        return None
+
+    @classmethod
     def construct_from_place(cls, nesting, selector, start_place):
 
         hometown = cls.get_hometown(selector)

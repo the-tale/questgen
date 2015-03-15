@@ -13,17 +13,20 @@ class SearchSmith(QuestBetween2):
     TAGS = ('can_start', 'has_subquests')
 
     @classmethod
+    def find_receiver(cls, selector, initiator):
+        return selector.new_person(professions=(PROFESSION.BLACKSMITH,))
+
+    @classmethod
     def construct_from_place(cls, nesting, selector, start_place):
 
-        receiver = selector.new_person(first_initiator=False, professions=(PROFESSION.BLACKSMITH,))
-        receiver_position = selector.place_for(objects=(receiver.uid,))
+        receiver = cls.find_receiver(selector=selector, initiator=None)
 
         return cls.construct(nesting=nesting,
                              selector=selector,
                              initiator=None,
                              initiator_position=start_place,
                              receiver=receiver,
-                             receiver_position=receiver_position)
+                             receiver_position=selector.place_for(objects=(receiver.uid,)))
 
 
     @classmethod

@@ -17,6 +17,10 @@ class Hunt(QuestBetween2):
         return selector._kb[selector.preferences_mob().mob]
 
     @classmethod
+    def find_receiver(cls, selector, initiator):
+        return None
+
+    @classmethod
     def construct_from_place(cls, nesting, selector, start_place):
 
         mob = cls.get_mob(selector)

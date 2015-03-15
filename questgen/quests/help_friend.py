@@ -12,20 +12,21 @@ class HelpFriend(QuestBetween2):
     TAGS = ('can_start', 'has_subquests')
 
     @classmethod
-    def get_friend(cls, selector):
-        return selector._kb[selector.preferences_friend().person]
+    def find_receiver(cls, selector, initiator):
+        friend = selector._kb[selector.preferences_friend().person]
+        return selector.new_person(first_initiator=False, candidates=(friend.uid, ))
 
     @classmethod
     def construct_from_place(cls, nesting, selector, start_place):
 
-        friend = cls.get_friend(selector)
+        receiver = cls.find_receiver(selector=selector, initiator=None)
 
         return cls.construct(nesting=nesting,
                              selector=selector,
                              initiator=None,
                              initiator_position=start_place,
-                             receiver=selector.new_person(first_initiator=False, candidates=(friend.uid, )),
-                             receiver_position=selector.place_for(objects=(friend.uid,)))
+                             receiver=receiver,
+                             receiver_position=selector.place_for(objects=(receiver.uid,)))
 
     @classmethod
     def construct(cls, nesting, selector, initiator, initiator_position, receiver, receiver_position):

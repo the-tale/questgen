@@ -14,6 +14,11 @@ class Delivery(QuestBetween2):
     TAGS = ('can_start', 'can_continue')
 
     @classmethod
+    def find_receiver(cls, selector, initiator):
+        return selector.new_person(restrict_social_connections=((initiator.uid, relations.SOCIAL_RELATIONS.CONCURRENT),),
+                                   social_connections=((initiator.uid, relations.SOCIAL_RELATIONS.PARTNER),))
+
+    @classmethod
     def construct(cls, nesting, selector, initiator, initiator_position, receiver, receiver_position):
 
         hero = selector.heroes()[0]
@@ -23,10 +28,18 @@ class Delivery(QuestBetween2):
         antagonist_marker = None
 
         try:
-            antagonist = selector.new_person(first_initiator=False, professions=[relations.PROFESSION.ROGUE])
+            antagonist = selector.new_person(first_initiator=False,
+                                             professions=[relations.PROFESSION.ROGUE],
+                                             restrict_social_connections=((initiator.uid, relations.SOCIAL_RELATIONS.PARTNER),
+                                                                          (receiver.uid, relations.SOCIAL_RELATIONS.PARTNER)),
+                                             social_connections=((initiator.uid, relations.SOCIAL_RELATIONS.CONCURRENT),
+                                                                 (receiver.uid, relations.SOCIAL_RELATIONS.CONCURRENT)))
             antagonist_marker = facts.ProfessionMarker(person=antagonist.uid, profession=antagonist.profession)
         except exceptions.NoFactSelectedError:
-            antagonist = selector.new_person(first_initiator=False)
+            antagonist = selector.new_person(restrict_social_connections=((initiator.uid, relations.SOCIAL_RELATIONS.PARTNER),
+                                                                          (receiver.uid, relations.SOCIAL_RELATIONS.PARTNER)),
+                                             social_connections=((initiator.uid, relations.SOCIAL_RELATIONS.CONCURRENT),
+                                                                 (receiver.uid, relations.SOCIAL_RELATIONS.CONCURRENT)))
 
         antagonist_position = selector.place_for(objects=(antagonist.uid,))
 
