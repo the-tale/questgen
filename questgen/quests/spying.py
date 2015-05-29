@@ -186,7 +186,7 @@ class Spying(QuestBetween2):
                   finish_spying__report_data,
                   finish_spying__blackmail,
 
-                  facts.Jump(state_from=success_spying.uid, state_to=finish_spying_choice.uid), #, start_actions=[actions.Message(type='move_to_report_data'),]),
+                  facts.Jump(state_from=success_spying.uid, state_to=finish_spying_choice.uid),
 
                   facts.Jump(state_from=witness.uid, state_to=witness_fight.uid),
 
