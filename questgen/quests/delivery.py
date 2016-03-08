@@ -66,9 +66,7 @@ class Delivery(QuestBetween2):
                                        nesting=nesting,
                                        description=u'Доставить посылку получателю',
                                        require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
-                                       actions=[actions.GiveReward(object=hero.uid, type='finish_delivery'),
-                                                actions.GivePower(object=initiator.uid, power=1),
-                                                actions.GivePower(object=receiver.uid, power=1)])
+                                       actions=[actions.GiveReward(object=hero.uid, type='finish_delivery')])
 
         finish_fake_delivery = facts.Finish(uid=ns+'finish_fake_delivery',
                                             start=start.uid,
@@ -78,9 +76,7 @@ class Delivery(QuestBetween2):
                                             nesting=nesting,
                                             description=u'Подделать письмо',
                                             require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
-                                            actions=[actions.GiveReward(object=hero.uid, type='finish_fake_delivery', scale=2.0),
-                                                     actions.GivePower(object=initiator.uid, power=-1),
-                                                     actions.GivePower(object=receiver.uid, power=-1)])
+                                            actions=[actions.GiveReward(object=hero.uid, type='finish_fake_delivery', scale=2.0)])
 
         fake_delivery_dummy_state = facts.FakeFinish(uid=ns+'dummy_state',
                                                      start=start.uid,
@@ -98,10 +94,7 @@ class Delivery(QuestBetween2):
                                     nesting=nesting,
                                     description=u'Доставить посылку скупщику',
                                     require=[requirements.LocatedIn(object=hero.uid, place=antagonist_position.uid)],
-                                    actions=[actions.GiveReward(object=hero.uid, type='finish_steal', scale=1.5),
-                                             actions.GivePower(object=initiator.uid, power=-1),
-                                             actions.GivePower(object=receiver.uid, power=-1),
-                                             actions.GivePower(object=antagonist.uid, power=1.0)])
+                                    actions=[actions.GiveReward(object=hero.uid, type='finish_steal', scale=1.5)])
 
         delivery_stealed = facts.State(uid=ns+'delivery_stealed',
                                        description=u'письмо украдено',
@@ -137,9 +130,7 @@ class Delivery(QuestBetween2):
                                                           nesting=nesting,
                                                           description=u'Доставить посылку получателю',
                                                           require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
-                                                          actions=[actions.GiveReward(object=hero.uid, type='finish_delivery'),
-                                                                   actions.GivePower(object=initiator.uid, power=1),
-                                                                   actions.GivePower(object=receiver.uid, power=1)])
+                                                          actions=[actions.GiveReward(object=hero.uid, type='finish_delivery')])
 
 
         line = [ start,

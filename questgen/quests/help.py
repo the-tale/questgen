@@ -41,9 +41,7 @@ class Help(QuestBetween2):
                                         nesting=nesting,
                                         description=u'помощь оказана',
                                         require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
-                                        actions=[actions.GiveReward(object=hero.uid, type='finish_successed'),
-                                                 actions.GivePower(object=initiator.uid, power=1),
-                                                 actions.GivePower(object=receiver.uid, power=1)])
+                                        actions=[actions.GiveReward(object=hero.uid, type='finish_successed')])
 
         finish_failed = facts.Finish(uid=ns+'finish_failed',
                                      start=start.uid,
@@ -51,9 +49,7 @@ class Help(QuestBetween2):
                                                receiver.uid: RESULTS.FAILED},
                                      nesting=nesting,
                                      description=u'не удалось помочь',
-                                     actions=[actions.GiveReward(object=hero.uid, type='finish_failed'),
-                                              actions.GivePower(object=initiator.uid, power=-1),
-                                              actions.GivePower(object=receiver.uid, power=-1)])
+                                     actions=[actions.GiveReward(object=hero.uid, type='finish_failed')])
 
         help_quest = selector.create_quest_from_person(nesting=nesting+1, initiator=receiver, tags=('can_continue',))
         help_extra = []

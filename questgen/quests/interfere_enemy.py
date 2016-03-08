@@ -54,9 +54,7 @@ class InterfereEnemy(QuestBetween2):
                                         antagonist_position.uid: RESULTS.NEUTRAL},
                               nesting=nesting,
                               description=u'навредили противнику',
-                              actions=[actions.GiveReward(object=hero.uid, type='finish'),
-                                       actions.GivePower(object=receiver.uid, power=-1),
-                                       actions.GivePower(object=antagonist_position.uid, power=0)])
+                              actions=[actions.GiveReward(object=hero.uid, type='finish')])
 
         help_quest = selector.create_quest_between_2(nesting=nesting+1, initiator=antagonist, receiver=receiver, tags=('can_continue',))
         help_extra = []

@@ -54,8 +54,7 @@ class HelpFriend(QuestBetween2):
                                       nesting=nesting,
                                       description=u'соратнику оказана помощь',
                                       require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
-                                      actions=[actions.GiveReward(object=hero.uid, type='finish_meeting'),
-                                               actions.GivePower(object=receiver.uid, power=1)])
+                                      actions=[actions.GiveReward(object=hero.uid, type='finish_meeting')])
 
         help_quest = selector.create_quest_from_person(nesting=nesting+1, initiator=receiver, tags=('can_continue',))
         help_extra = []

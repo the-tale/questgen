@@ -27,11 +27,6 @@ class Message(Action):
     type = ActionAttribute()
 
 
-class GivePower(Action):
-    object = ActionAttribute(is_reference=True)
-    power = ActionAttribute()
-
-
 class GiveReward(Action):
     object = ActionAttribute(is_reference=True)
     scale = ActionAttribute(default=1.0)

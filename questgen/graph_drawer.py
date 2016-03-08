@@ -344,8 +344,6 @@ class Drawer(object):
     def create_label_for_action(self, action):
         if isinstance(action, actions.Message):
             return self.create_action_label_for_message(action)
-        elif isinstance(action, actions.GivePower):
-            return self.create_action_label_for_give_power(action)
         elif isinstance(action, actions.GiveReward):
             return self.create_action_label_for_give_reward(action)
         elif isinstance(action, actions.MoveNear):
@@ -418,11 +416,6 @@ class Drawer(object):
 
     def create_action_label_for_message(self, message):
         return u'<b>сообщение:</b>&nbsp;%s' % message.type
-
-    def create_action_label_for_give_power(self, give_power):
-        has_profession_marker = [marker for marker in self.kb.filter(facts.ProfessionMarker) if marker.person == give_power.object]
-        color = TEXT_COLORS.PROFESSION if has_profession_marker else TEXT_COLORS.NORMAL
-        return u'<b>увеличить влияние </b>&nbsp; <font color="%s">%s</font> <b>на </b> %.2f' % (color, give_power.object, give_power.power)
 
     def create_action_label_for_give_reward(self, give_reward):
         return u'<b>выдать награду </b>&nbsp; %s <b>типа </b> %s <b>в размере</b> %.2f' % (give_reward.object, give_reward.type, give_reward.scale)

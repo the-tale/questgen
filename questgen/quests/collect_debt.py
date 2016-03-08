@@ -55,9 +55,7 @@ class CollectDebt(QuestBetween2):
                                                nesting=nesting,
                                                description=u'долг выбит',
                                                require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
-                                               actions=[actions.GiveReward(object=hero.uid, type='finish_attack_successed'),
-                                                        actions.GivePower(object=initiator.uid, power=1),
-                                                        actions.GivePower(object=receiver.uid, power=-1)])
+                                               actions=[actions.GiveReward(object=hero.uid, type='finish_attack_successed')])
 
         finish_attack_failed = facts.Finish(uid=ns+'finish_attack_failed',
                                             start=start.uid,
@@ -78,9 +76,7 @@ class CollectDebt(QuestBetween2):
                                    nesting=nesting,
                                    description=u'помощь оказана',
                                    require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
-                                   actions=[actions.GiveReward(object=hero.uid, type='finish_help'),
-                                            actions.GivePower(object=initiator.uid, power=1),
-                                            actions.GivePower(object=receiver.uid, power=1)])
+                                   actions=[actions.GiveReward(object=hero.uid, type='finish_help')])
 
         help_quest = selector.create_quest_from_person(nesting=nesting+1, initiator=receiver, tags=('can_continue',))
         help_extra = []

@@ -81,8 +81,7 @@ class Hunt(QuestBetween2):
                            nesting=nesting,
                            description=u'Продать добычу',
                            require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
-                           actions=[actions.GiveReward(object=hero.uid, type='sell_prey'),
-                                    actions.GivePower(object=receiver_position.uid, power=1)])
+                           actions=[actions.GiveReward(object=hero.uid, type='sell_prey')])
 
         line = [ start,
                   start_hunting,

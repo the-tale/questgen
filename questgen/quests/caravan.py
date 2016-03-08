@@ -78,9 +78,7 @@ class Caravan(QuestBetween2):
                                       nesting=nesting,
                                       description=u'Караван приходит в точку назначения',
                                       require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
-                                      actions=[actions.GiveReward(object=hero.uid, type='finish_defence'),
-                                               actions.GivePower(object=initiator.uid, power=1),
-                                               actions.GivePower(object=receiver.uid, power=1)])
+                                      actions=[actions.GiveReward(object=hero.uid, type='finish_defence')])
 
         move_to_attack = facts.State(uid=ns+'move_to_attack',
                                      description=u'ведём караван в засаду',
@@ -116,10 +114,7 @@ class Caravan(QuestBetween2):
                                      nesting=nesting,
                                      description=u'Продать товар на чёрном рынке',
                                      require=[requirements.LocatedIn(object=hero.uid, place=black_market.uid)],
-                                     actions=[actions.GiveReward(object=hero.uid, type='finish_attack', scale=1.5),
-                                              actions.GivePower(object=initiator.uid, power=-1),
-                                              actions.GivePower(object=receiver.uid, power=-1),
-                                              actions.GivePower(object=black_market.uid, power=1)])
+                                     actions=[actions.GiveReward(object=hero.uid, type='finish_attack', scale=1.5)])
 
         finish_defence_failed = facts.Finish(uid=ns+'finish_defence_failed',
                                              start=start.uid,
@@ -128,9 +123,7 @@ class Caravan(QuestBetween2):
                                                        black_market.uid: RESULTS.NEUTRAL },
                                              nesting=nesting,
                                              description=u'Герой не смог защитить караван',
-                                             actions=[actions.Message(type='finish_defence_failed'),
-                                                      actions.GivePower(object=initiator.uid, power=-1),
-                                                      actions.GivePower(object=receiver.uid, power=-1)])
+                                             actions=[actions.Message(type='finish_defence_failed')])
 
         finish_attack_failed = facts.Finish(uid=ns+'finish_attack_failed',
                                             start=start.uid,
@@ -139,9 +132,7 @@ class Caravan(QuestBetween2):
                                                       black_market.uid: RESULTS.NEUTRAL },
                                             nesting=nesting,
                                             description=u'Герой не смог ограбить караван',
-                                            actions=[actions.Message(type='finish_attack_failed'),
-                                                     actions.GivePower(object=initiator.uid, power=1),
-                                                     actions.GivePower(object=receiver.uid, power=1)])
+                                            actions=[actions.Message(type='finish_attack_failed')])
 
         caravan_choice__first_defence = facts.Option(state_from=caravan_choice.uid, state_to=first_defence.uid, type='jump_defence',
                                                      markers=[relations.OPTION_MARKERS.HONORABLE], start_actions=[actions.Message(type='choose_defence'),])

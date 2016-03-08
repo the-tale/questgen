@@ -67,7 +67,7 @@ class SearchSmith(QuestBetween2):
                                         results={ receiver.uid: RESULTS.SUCCESSED},
                                         nesting=nesting,
                                         description=u'завершить задание',
-                                        actions=[actions.GivePower(object=receiver.uid, power=1)])
+                                        actions=[])
 
         finish_quest_failed = facts.Finish(uid=ns+'finish_quest_failed',
                                            start=start.uid,

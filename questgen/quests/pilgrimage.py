@@ -59,8 +59,7 @@ class Pilgrimage(QuestBetween2):
                               results={ receiver_position.uid: RESULTS.SUCCESSED},
                               nesting=nesting,
                               description=u'завершить посещение города',
-                              actions=[actions.GiveReward(object=hero.uid, type='finish'),
-                                       actions.GivePower(object=receiver_position.uid, power=1)])
+                              actions=[actions.GiveReward(object=hero.uid, type='finish')])
 
         line = [ start,
 

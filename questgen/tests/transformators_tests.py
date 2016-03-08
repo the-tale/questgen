@@ -844,7 +844,7 @@ class RemoveUnusedActorsTests(TransformatorsTestsBase):
         self.kb += facts.Actor(uid='removed_actor')
 
         self.kb += facts.State(uid='state',
-                               actions=[actions.GivePower(object='action_actor', power=1)],
+                               actions=[actions.GiveReward(object='action_actor', scale=1, type='x')],
                                require=[requirements.LocatedIn(object='requirement_actor', place='requirement_actor')])
         self.kb += facts.Question(uid='question', condition=[requirements.LocatedIn(object='condition_actor', place='condition_actor')])
 

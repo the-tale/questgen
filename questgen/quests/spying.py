@@ -79,9 +79,7 @@ class Spying(QuestBetween2):
                                    nesting=nesting,
                                    description=u'Сообщить сообранную информацию',
                                    require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
-                                   actions=[actions.GiveReward(object=hero.uid, type='report_data'),
-                                            actions.GivePower(object=initiator.uid, power=1),
-                                            actions.GivePower(object=receiver.uid, power=-1)])
+                                   actions=[actions.GiveReward(object=hero.uid, type='report_data')])
 
         finish_spying_choice = facts.Choice(uid=ns+'finish_spying_choice',
                                             description=u'Варианты выбора завершения шпионажа')
@@ -93,8 +91,7 @@ class Spying(QuestBetween2):
                                         nesting=nesting,
                                         description=u'Шантажировать самостоятельно',
                                         require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
-                                        actions=[actions.GiveReward(object=hero.uid, type='blackmail_finish', scale=1.25),
-                                                 actions.GivePower(object=receiver.uid, power=-1)])
+                                        actions=[actions.GiveReward(object=hero.uid, type='blackmail_finish', scale=1.25)])
 
         witness_failed = facts.Finish(uid=ns+'witness_failed',
                                       start=start.uid,
@@ -111,9 +108,7 @@ class Spying(QuestBetween2):
                                       nesting=nesting,
                                       description=u'Завершить задание и остатсья в городе цели',
                                       require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
-                                      actions=[actions.GiveReward(object=hero.uid, type='open_up_finish'),
-                                               actions.GivePower(object=initiator.uid, power=-1),
-                                               actions.GivePower(object=receiver.uid, power=1)])
+                                      actions=[actions.GiveReward(object=hero.uid, type='open_up_finish')])
 
         open_up_lying = facts.Finish(uid=ns+'open_up_lying',
                                      start=start.uid,
@@ -122,9 +117,7 @@ class Spying(QuestBetween2):
                                      nesting=nesting,
                                      description=u'Вернуться к заказчику и сообщить ложную информацию',
                                      require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
-                                     actions=[actions.GiveReward(object=hero.uid, type='open_up_lying', scale=1.5),
-                                              actions.GivePower(object=initiator.uid, power=-1.5),
-                                              actions.GivePower(object=receiver.uid, power=1.5)])
+                                     actions=[actions.GiveReward(object=hero.uid, type='open_up_lying', scale=1.5)])
 
         start_spying__spying_middle = facts.Option(state_from=start_spying.uid, state_to=spying_middle.uid, type='spy',
                                                    markers=[relations.OPTION_MARKERS.HONORABLE], start_actions=[actions.Message(type='start_spying'),])
