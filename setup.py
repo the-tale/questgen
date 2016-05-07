@@ -3,7 +3,7 @@ import setuptools
 
 setuptools.setup(
     name='Questgen',
-    version='0.2.0',
+    version='0.3.0',
     description='generator of nonlenear quests with events and flow validating',
     long_description = open('README.rst').read(),
     url='https://github.com/Tiendil/questgen',
