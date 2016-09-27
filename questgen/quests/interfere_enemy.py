@@ -41,7 +41,7 @@ class InterfereEnemy(QuestBetween2):
         start = facts.Start(uid=ns+'start',
                             type=cls.TYPE,
                             nesting=nesting,
-                            description=u'Начало: навредить противнику',
+                            description='Начало: навредить противнику',
                             require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
                             actions=[actions.Message(type='intro')])
 
@@ -53,7 +53,7 @@ class InterfereEnemy(QuestBetween2):
                               results={ receiver.uid: RESULTS.FAILED,
                                         antagonist_position.uid: RESULTS.NEUTRAL},
                               nesting=nesting,
-                              description=u'навредили противнику',
+                              description='навредили противнику',
                               actions=[actions.GiveReward(object=hero.uid, type='finish')])
 
         help_quest = selector.create_quest_between_2(nesting=nesting+1, initiator=antagonist, receiver=receiver, tags=('can_continue',))

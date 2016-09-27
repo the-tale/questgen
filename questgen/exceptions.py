@@ -14,13 +14,13 @@ class QuestgenError(Exception):
 class KnowledgeBaseError(QuestgenError): pass
 
 class DuplicatedFactError(KnowledgeBaseError):
-    MSG = u'can not add fact %(fact)r to knowlege base - it already in base'
+    MSG = 'can not add fact %(fact)r to knowlege base - it already in base'
 
 class WrongFactTypeError(KnowledgeBaseError):
-    MSG = u'can not add fact %(fact)r to knowlege base - wrong type'
+    MSG = 'can not add fact %(fact)r to knowlege base - wrong type'
 
 class NoFactError(KnowledgeBaseError):
-    MSG = u'%(fact)s not in knowledge base'
+    MSG = '%(fact)s not in knowledge base'
 
 ####################################################################
 # facts
@@ -28,10 +28,10 @@ class NoFactError(KnowledgeBaseError):
 class FactsError(QuestgenError): pass
 
 class WrongChangeAttributeError(KnowledgeBaseError):
-    MSG = u'can not change fact %(fact)r - unknown attribute "%(attribute)s"'
+    MSG = 'can not change fact %(fact)r - unknown attribute "%(attribute)s"'
 
 class UIDDidNotSetupped(FactsError):
-    MSG = u'uid for "%(fact)r did not setupped'
+    MSG = 'uid for "%(fact)r did not setupped'
 
 ####################################################################
 # records
@@ -39,10 +39,10 @@ class UIDDidNotSetupped(FactsError):
 class RecordsError(QuestgenError): pass
 
 class RequiredRecordAttributeError(KnowledgeBaseError):
-    MSG = u'can not create record %(record)r - attribute "%(attribute)s" not specified'
+    MSG = 'can not create record %(record)r - attribute "%(attribute)s" not specified'
 
 class WrongRecordAttributeError(KnowledgeBaseError):
-    MSG = u'can not create record %(record)r - wrong attribute "%(attribute)s"'
+    MSG = 'can not create record %(record)r - wrong attribute "%(attribute)s"'
 
 ####################################################################
 # machine
@@ -50,13 +50,13 @@ class WrongRecordAttributeError(KnowledgeBaseError):
 class MachineError(QuestgenError): pass
 
 class NoJumpsAvailableError(MachineError):
-    MSG = u'no jumps available for state %(state)r'
+    MSG = 'no jumps available for state %(state)r'
 
 class NoJumpsFromLastStateError(MachineError):
-    MSG = u'no jumps available for last state %(state)r'
+    MSG = 'no jumps available for last state %(state)r'
 
 class MoreThenOneJumpsAvailableError(MachineError):
-    MSG = u'more then oneo jumps available for state %(state)r'
+    MSG = 'more then oneo jumps available for state %(state)r'
 
 
 ####################################################################
@@ -65,13 +65,13 @@ class MoreThenOneJumpsAvailableError(MachineError):
 class TransformatorsError(QuestgenError): pass
 
 class NoEventMembersError(TransformatorsError):
-    MSG = u'no tagged event members for event "%(event)r"'
+    MSG = 'no tagged event members for event "%(event)r"'
 
 class OptionWithTwoLinksError(TransformatorsError):
-    MSG = u'option "%(option)r" has more then one link'
+    MSG = 'option "%(option)r" has more then one link'
 
 class LinkedOptionWithProcessedChoiceError(TransformatorsError):
-    MSG = u'choice of option "%(option)r" has already had default option. Probably you have mess with linked options'
+    MSG = 'choice of option "%(option)r" has already had default option. Probably you have mess with linked options'
 
 
 ####################################################################
@@ -81,10 +81,10 @@ class LinkedOptionWithProcessedChoiceError(TransformatorsError):
 class QuestsBaseError(QuestgenError): pass
 
 class DuplicatedQuestError(QuestsBaseError):
-    MSG = u'can not add quest %(quest)r to quests base - it already in base'
+    MSG = 'can not add quest %(quest)r to quests base - it already in base'
 
 class WrongQuestTypeError(QuestsBaseError):
-    MSG = u'can not add quest %(quest)r to quests base - wrong type'
+    MSG = 'can not add quest %(quest)r to quests base - wrong type'
 
 
 ####################################################################
@@ -92,10 +92,10 @@ class WrongQuestTypeError(QuestsBaseError):
 ####################################################################
 
 class RollBackError(QuestgenError):
-    MSG = u'something is wrong (%(message)), do rollback'
+    MSG = 'something is wrong (%(message)), do rollback'
 
 class NoQuestChoicesRollBackError(RollBackError):
-    MSG = u'no quests choices for next quest'
+    MSG = 'no quests choices for next quest'
 
 
 ####################################################################
@@ -105,7 +105,7 @@ class NoQuestChoicesRollBackError(RollBackError):
 class SelectorsBaseError(RollBackError): pass
 
 class NoFactSelectedError(SelectorsBaseError):
-    MSG = u'can not found fact with method "%(method)s" and arguments: %(arguments)s — with reserve: %(reserved)s'
+    MSG = 'can not found fact with method "%(method)s" and arguments: %(arguments)s — with reserve: %(reserved)s'
 
 
 ####################################################################
@@ -116,12 +116,12 @@ class GraphDrawerError(QuestgenError): pass
 
 
 class CanNotCreateLabelForFactError(GraphDrawerError):
-    MSG = u'can not create label for fact: %(fact)s'
+    MSG = 'can not create label for fact: %(fact)s'
 
 
 class CanNotCreateLabelForRequirementError(GraphDrawerError):
-    MSG = u'can not create label for requirement: %(requirement)s'
+    MSG = 'can not create label for requirement: %(requirement)s'
 
 
 class CanNotCreateLabelForActionError(GraphDrawerError):
-    MSG = u'can not create label for action: %(action)s'
+    MSG = 'can not create label for action: %(action)s'

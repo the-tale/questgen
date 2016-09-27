@@ -1,3 +1,4 @@
+import collections
 # coding: utf-8
 
 
@@ -8,7 +9,7 @@ class FakeInterpreter(object):
 
 
     def __getattr__(self, name):
-        if callable(self.results[name]):
+        if isinstance(self.results[name], collections.Callable):
             return self.results[name]
         return lambda *argv, **kwargs: self.results[name]
 

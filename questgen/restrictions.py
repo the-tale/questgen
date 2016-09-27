@@ -21,7 +21,7 @@ class AlwaysSuccess(Restriction):
 class AlwaysError(Restriction):
 
     class Error(exceptions.RollBackError):
-        MSG = u'Always error'
+        MSG = 'Always error'
 
     def validate(self, knowledge_base):
         raise self.Error()
@@ -30,7 +30,7 @@ class AlwaysError(Restriction):
 class SingleStartStateWithNoEnters(Restriction):
 
     class Error(exceptions.RollBackError):
-        MSG = u'MUST be only one Start statement without entering jumps'
+        MSG = 'MUST be only one Start statement without entering jumps'
 
     def validate(self, knowledge_base):
         enter_uids = set(jump.state_to for jump in knowledge_base.filter(facts.Jump))
@@ -43,7 +43,7 @@ class SingleStartStateWithNoEnters(Restriction):
 class FinishStateExists(Restriction):
 
     class Error(exceptions.RollBackError):
-        MSG = u'at least one Finish state MUST exists'
+        MSG = 'at least one Finish state MUST exists'
 
     def validate(self, knowledge_base):
         if len(list(knowledge_base.filter(facts.Finish))) == 0:
@@ -53,7 +53,7 @@ class FinishStateExists(Restriction):
 class AllStatesHasJumps(Restriction):
 
     class Error(exceptions.RollBackError):
-        MSG = u'no jumps from state "%(state)s"'
+        MSG = 'no jumps from state "%(state)s"'
 
     def validate(self, knowledge_base):
         from_uids = set(jump.state_from for jump in knowledge_base.filter(facts.Jump))
@@ -64,7 +64,7 @@ class AllStatesHasJumps(Restriction):
 
 class SingleLocationForObject(Restriction):
     class Error(exceptions.RollBackError):
-        MSG = u'every person MUST be located in single place. Problem in %(location_1)r and %(location_2)s'
+        MSG = 'every person MUST be located in single place. Problem in %(location_1)r and %(location_2)s'
 
     def validate(self, knowledge_base):
         objects_to_locations = {}
@@ -77,7 +77,7 @@ class SingleLocationForObject(Restriction):
 
 class ReferencesIntegrity(Restriction):
     class Error(exceptions.RollBackError):
-        MSG = u'bad reference in fact "%(fact)s" in "%(attribute)s": "%(uid)s"'
+        MSG = 'bad reference in fact "%(fact)s" in "%(attribute)s": "%(uid)s"'
 
     def validate(self, knowledge_base):
         for fact in knowledge_base.facts():
@@ -90,7 +90,7 @@ class ReferencesIntegrity(Restriction):
 
 class RequirementsConsistency(Restriction):
     class Error(exceptions.RollBackError):
-        MSG = u'wrong class of requirement "%(requirement)s" in state "%(state)s"'
+        MSG = 'wrong class of requirement "%(requirement)s" in state "%(state)s"'
 
     def validate(self, knowledge_base):
         for state in knowledge_base.filter(facts.State):
@@ -106,7 +106,7 @@ class RequirementsConsistency(Restriction):
 
 class ActionsConsistency(Restriction):
     class Error(exceptions.RollBackError):
-        MSG = u'wrong class of action "%(action)s" in fact "%(fact)s"'
+        MSG = 'wrong class of action "%(action)s" in fact "%(fact)s"'
 
     def validate(self, knowledge_base):
         for state in knowledge_base.filter(facts.State):
@@ -123,7 +123,7 @@ class ActionsConsistency(Restriction):
 
 class ConnectedStateJumpGraph(Restriction):
     class Error(exceptions.RollBackError):
-        MSG = u'States not reached from absolute Start: %(states)r'
+        MSG = 'States not reached from absolute Start: %(states)r'
 
     def validate(self, knowledge_base):
         start_uid = logic.get_absolute_start(knowledge_base).uid
@@ -150,7 +150,7 @@ class ConnectedStateJumpGraph(Restriction):
 
 class NoCirclesInStateJumpGraph(Restriction):
     class Error(exceptions.RollBackError):
-        MSG = u'Jumps in circle: %(jumps)r'
+        MSG = 'Jumps in circle: %(jumps)r'
 
     def _bruteforce(self, path, table):
         current_state = path[-1]
@@ -181,7 +181,7 @@ class NoCirclesInStateJumpGraph(Restriction):
 
 class MultipleJumpsFromNormalState(Restriction):
     class Error(exceptions.RollBackError):
-        MSG = u'States with multiple jumps: %(states)r'
+        MSG = 'States with multiple jumps: %(states)r'
 
     def validate(self, knowledge_base):
 
@@ -202,10 +202,10 @@ class MultipleJumpsFromNormalState(Restriction):
 
 class ChoicesConsistency(Restriction):
     class OptionLikeJumpError(exceptions.RollBackError):
-        MSG = u'Option not connected to choice state: %(option)r'
+        MSG = 'Option not connected to choice state: %(option)r'
 
     class JumpLikeOptionError(exceptions.RollBackError):
-        MSG = u'Jump connected to choice state: %(jump)r'
+        MSG = 'Jump connected to choice state: %(jump)r'
 
     def validate(self, knowledge_base):
 
@@ -228,16 +228,16 @@ class ChoicesConsistency(Restriction):
 
 class QuestionsConsistency(Restriction):
     class AnswerLikeJumpError(exceptions.RollBackError):
-        MSG = u'Answer not connected to question state: %(answer)r'
+        MSG = 'Answer not connected to question state: %(answer)r'
 
     class JumpLikeAnswerError(exceptions.RollBackError):
-        MSG = u'Jump connected to Question state: %(jump)r'
+        MSG = 'Jump connected to Question state: %(jump)r'
 
     class WrongAnswersNumber(exceptions.RollBackError):
-        MSG = u'%(question)r must has 2 answers: false & true'
+        MSG = '%(question)r must has 2 answers: false & true'
 
     class WrongAnswersStructure(exceptions.RollBackError):
-        MSG = u'%(question)r must has 2 answers: false & true'
+        MSG = '%(question)r must has 2 answers: false & true'
 
     def validate(self, knowledge_base):
 
@@ -272,10 +272,10 @@ class QuestionsConsistency(Restriction):
 
 class FinishResultsConsistency(Restriction):
     class ParticipantNotInResults(exceptions.RollBackError):
-        MSG = u'no result for participant "%(participant)r"'
+        MSG = 'no result for participant "%(participant)r"'
 
     class ParticipantNotExists(exceptions.RollBackError):
-        MSG = u'no participant for object "%(object)r"'
+        MSG = 'no participant for object "%(object)r"'
 
     def validate(self, knowledge_base):
 

@@ -45,26 +45,26 @@ class Hunt(QuestBetween2):
         start = facts.Start(uid=ns+'start',
                       type=cls.TYPE,
                       nesting=nesting,
-                      description=u'Начало: задание на охоту',
+                      description='Начало: задание на охоту',
                       require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
                       actions=[actions.Message(type='intro')])
 
         participants = [facts.QuestParticipant(start=start.uid, participant=receiver_position.uid, role=ROLES.RECEIVER_POSITION) ]
 
         start_hunting = facts.State(uid=ns+'start_hunting',
-                              description=u'Прибытие в город охоты',
+                              description='Прибытие в город охоты',
                               require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)])
 
         hunt_loop = []
 
-        for i in xrange(random.randint(*cls.HUNT_LOOPS)):
+        for i in range(random.randint(*cls.HUNT_LOOPS)):
 
             hunt = facts.State(uid=ns+'hunt_%d' % i,
-                         description=u'Охота',
+                         description='Охота',
                          actions=[actions.MoveNear(object=hero.uid, place=receiver_position.uid, terrains=mob.terrains)])
 
             fight = facts.State(uid=ns+'fight_%d' % i,
-                                description=u'Сражение с жертвой',
+                                description='Сражение с жертвой',
                                 actions=[actions.Message(type='fight'),
                                          actions.Fight(mob=mob.uid)])
 
@@ -79,7 +79,7 @@ class Hunt(QuestBetween2):
                            start=start.uid,
                            results={receiver_position.uid: RESULTS.SUCCESSED},
                            nesting=nesting,
-                           description=u'Продать добычу',
+                           description='Продать добычу',
                            require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
                            actions=[actions.GiveReward(object=hero.uid, type='sell_prey')])
 

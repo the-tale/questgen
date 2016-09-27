@@ -17,7 +17,7 @@ class FactsTests(unittest.TestCase):
 
     def test_short_serialization(self):
         fact = facts.State(uid='state-uid',
-                           description=u'some description',
+                           description='some description',
                            # externals settuped to default
                            require=[requirements.IsAlive(object='hero')],
                            actions=[actions.Message(type='message-type')])
@@ -26,7 +26,7 @@ class FactsTests(unittest.TestCase):
 
     def test_full_serialization(self):
         fact = facts.State(uid='state-uid',
-                           description=u'some description',
+                           description='some description',
                            # externals settuped to default
                            require=[requirements.IsAlive(object='hero')],
                            actions=[actions.Message(type='message-type')])

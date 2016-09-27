@@ -133,7 +133,7 @@ def remove_broken_states(knowledge_base):
             if isinstance(state, facts.Start) and state.is_external:
                 pass
 
-            elif not filter(lambda jump: jump.state_to == state.uid, knowledge_base.filter(facts.Jump)):
+            elif not [jump for jump in knowledge_base.filter(facts.Jump) if jump.state_to == state.uid]:
                 states_to_remove.add(state)
 
             elif isinstance(state, facts.Finish) and state.is_external:
@@ -149,7 +149,7 @@ def remove_broken_states(knowledge_base):
 
                 states_to_remove.add(state)
 
-            elif not filter(lambda jump: jump.state_from == state.uid, knowledge_base.filter(facts.Jump)):
+            elif not [jump for jump in knowledge_base.filter(facts.Jump) if jump.state_from == state.uid]:
                 states_to_remove.add(state)
 
         # print 'remove states', [s.uid for s in states_to_remove]
@@ -208,7 +208,7 @@ def remove_restricted_states(knowledge_base):
 def _get_actors(record):
     used_actors = set()
 
-    for attribute_name, attribute in record._attributes.iteritems():
+    for attribute_name, attribute in record._attributes.items():
         if attribute.is_reference:
             used_actors.add(getattr(record, attribute_name))
 

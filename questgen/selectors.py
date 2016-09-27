@@ -159,31 +159,31 @@ class Selector(object):
 
     def preferences_mob(self):
         try:
-            return self._kb.filter(facts.PreferenceMob).next()
+            return next(self._kb.filter(facts.PreferenceMob))
         except StopIteration:
             raise exceptions.NoFactSelectedError(method='preferences_mob', arguments={}, reserved=self._reserved)
 
     def preferences_hometown(self):
         try:
-            return self._kb.filter(facts.PreferenceHometown).next()
+            return next(self._kb.filter(facts.PreferenceHometown))
         except StopIteration:
             raise exceptions.NoFactSelectedError(method='preferences_hometown', arguments={}, reserved=self._reserved)
 
     def preferences_enemy(self):
         try:
-            return self._kb.filter(facts.PreferenceEnemy).next()
+            return next(self._kb.filter(facts.PreferenceEnemy))
         except StopIteration:
             raise exceptions.NoFactSelectedError(method='preferences_enemy', arguments={}, reserved=self._reserved)
 
     def preferences_friend(self):
         try:
-            return self._kb.filter(facts.PreferenceFriend).next()
+            return next(self._kb.filter(facts.PreferenceFriend))
         except StopIteration:
             raise exceptions.NoFactSelectedError(method='preferences_friend', arguments={}, reserved=self._reserved)
 
     def upgrade_equipment_cost(self):
         try:
-            return self._kb.filter(facts.UpgradeEquipmentCost).next()
+            return next(self._kb.filter(facts.UpgradeEquipmentCost))
         except StopIteration:
             raise exceptions.NoFactSelectedError(method='upgrade_equipment_cost', arguments={}, reserved=self._reserved)
 

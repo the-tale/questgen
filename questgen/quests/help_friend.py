@@ -38,21 +38,21 @@ class HelpFriend(QuestBetween2):
         start = facts.Start(uid=ns+'start',
                             type=cls.TYPE,
                             nesting=nesting,
-                            description=u'Начало: навестить соратника',
+                            description='Начало: навестить соратника',
                             require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
                             actions=[actions.Message(type='intro')])
 
         participants = [facts.QuestParticipant(start=start.uid, participant=receiver.uid, role=ROLES.RECEIVER) ]
 
         meeting = facts.State(uid=ns+'meeting',
-                              description=u'встреча с соратником',
+                              description='встреча с соратником',
                               require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)])
 
         finish_meeting = facts.Finish(uid=ns+'finish_meeting',
                                       start=start.uid,
                                       results={receiver.uid: RESULTS.SUCCESSED},
                                       nesting=nesting,
-                                      description=u'соратнику оказана помощь',
+                                      description='соратнику оказана помощь',
                                       require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
                                       actions=[actions.GiveReward(object=hero.uid, type='finish_meeting')])
 

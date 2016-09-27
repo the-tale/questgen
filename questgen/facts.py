@@ -44,9 +44,7 @@ class FactMetaclass(records.RecordMetaclass):
 
 
 
-class Fact(records.Record):
-    __metaclass__ = FactMetaclass
-
+class Fact(records.Record, metaclass=FactMetaclass):
     uid = FactAttribute(default=None)
     description = FactAttribute(remove_in_short=True, default=None)
     externals = FactAttribute(default=None)
@@ -58,13 +56,13 @@ class Fact(records.Record):
     def serialize(self, short=False):
         return dict(type=self.type_name(),
                     attributes={name: self._attributes[name].serialize(getattr(self, name))
-                                for name in self._attributes.iterkeys()
+                                for name in self._attributes.keys()
                                 if self._attributes[name].need_serialization(getattr(self, name), short=short)})
 
     @classmethod
     def deserialize(cls, data):
         attributes = {attribute_name: cls._attributes[attribute_name].deserialize(attribute_value)
-                      for attribute_name, attribute_value in data['attributes'].iteritems()
+                      for attribute_name, attribute_value in data['attributes'].items()
                       if attribute_name in cls._attributes}
 
         return cls(**attributes)
@@ -72,7 +70,7 @@ class Fact(records.Record):
 
     def change(self, **kwargs):
         attributes = {attribute_name: getattr(self, attribute_name)
-                      for attribute_name in self._attributes.iterkeys()}
+                      for attribute_name in self._attributes.keys()}
 
         for key in kwargs:
             if key not in attributes:
@@ -329,5 +327,5 @@ class ProfessionMarker(Marker):
 
 
 FACTS = {fact_class.type_name(): fact_class
-         for fact_class in globals().values()
+         for fact_class in list(globals().values())
          if isinstance(fact_class, type) and issubclass(fact_class, Fact)}

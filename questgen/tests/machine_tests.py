@@ -50,7 +50,7 @@ class MachineTests(unittest.TestCase):
         path = facts.ChoicePath(choice=choice.uid, option=option_2.uid, default=True)
         self.kb += (choice, option_1, option_2, path)
 
-        for i in xrange(100):
+        for i in range(100):
             self.assertEqual(self.machine.get_available_jumps(choice), [option_2])
 
     def test_get_available_jumps__for_question_state(self):
@@ -62,11 +62,11 @@ class MachineTests(unittest.TestCase):
         self.kb += (question, answer_1, answer_2)
 
         with mock.patch('questgen.machine.Machine.interpreter', FakeInterpreter(check_located_in=False)):
-            for i in xrange(100):
+            for i in range(100):
                 self.assertEqual(self.machine.get_available_jumps(question), [answer_2])
 
         with mock.patch('questgen.machine.Machine.interpreter', FakeInterpreter(check_located_in=True)):
-            for i in xrange(100):
+            for i in range(100):
                 self.assertEqual(self.machine.get_available_jumps(question), [answer_1])
 
     def test_get_next_jump__no_jumps(self):
@@ -80,7 +80,7 @@ class MachineTests(unittest.TestCase):
 
         jumps = set()
 
-        for i in xrange(100):
+        for i in range(100):
             jumps.add(self.machine.get_next_jump(self.start, single=False).uid)
 
         self.assertEqual(jumps, set([jump_1.uid, jump_2.uid]))

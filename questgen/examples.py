@@ -8,19 +8,19 @@ kb = KnowledgeBase()
 
 kb += [
     Hero(uid='hero'),
-    Place(uid='place_from', label=u'место отправления'),
-    Person(uid='person_from', label=u'отправитель'),
-    Place(uid='place_to', label=u'место назначения'),
-    Place(uid='place_steal', label=u'место схрона'),
-    Person(uid='person_to', label=u'получатель'),
+    Place(uid='place_from', label='место отправления'),
+    Person(uid='person_from', label='отправитель'),
+    Place(uid='place_to', label='место назначения'),
+    Place(uid='place_steal', label='место схрона'),
+    Person(uid='person_to', label='получатель'),
 
     Start(uid='st_start', require=(LocatedIn('person_from', 'place_from'),
                                    LocatedIn('person_to', 'place_to'),
                                    LocatedIn('hero', 'place_from'))),
 
     Choice(uid='st_steal'),
-    Option(uid='st_steal.steal', choice='st_steal', label=u'украсть'),
-    Option(uid='st_steal.deliver', choice='st_steal', label=u'доставить'),
+    Option(uid='st_steal.steal', choice='st_steal', label='украсть'),
+    Option(uid='st_steal.deliver', choice='st_steal', label='доставить'),
 
     Finish(uid='st_finish_delivered', require=(LocatedIn('hero', 'place_to'),)),
     Finish(uid='st_finish_stealed', require=(LocatedIn('hero', 'place_steal'),)),

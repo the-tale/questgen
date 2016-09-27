@@ -37,19 +37,19 @@ class Pilgrimage(QuestBetween2):
         start = facts.Start(uid=ns+'start',
                             type=cls.TYPE,
                             nesting=nesting,
-                            description=u'Начало: посетить святой город',
+                            description='Начало: посетить святой город',
                             require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
                             actions=[actions.Message(type='intro')])
 
         participants = [facts.QuestParticipant(start=start.uid, participant=receiver_position.uid, role=ROLES.RECEIVER_POSITION) ]
 
         arriving = facts.State(uid=ns+'arriving',
-                               description=u'Прибытие в город',
+                               description='Прибытие в город',
                                require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)])
 
-        action_choices = [facts.State(uid=ns+'speak_with_guru', description=u'поговорить с гуру', actions=[actions.Message(type='speak_with_guru'),
+        action_choices = [facts.State(uid=ns+'speak_with_guru', description='поговорить с гуру', actions=[actions.Message(type='speak_with_guru'),
                                                                                                            actions.DoNothing(type='speak_with_guru')]),
-                          facts.State(uid=ns+'stagger_holy_streets', description=u'пошататься по улицам', actions=[actions.Message(type='stagger_holy_streets'),
+                          facts.State(uid=ns+'stagger_holy_streets', description='пошататься по улицам', actions=[actions.Message(type='stagger_holy_streets'),
                                                                                                                    actions.DoNothing(type='stagger_holy_streets')])]
 
         holy_actions = random.sample(action_choices, 1)
@@ -58,7 +58,7 @@ class Pilgrimage(QuestBetween2):
                               start=start.uid,
                               results={ receiver_position.uid: RESULTS.SUCCESSED},
                               nesting=nesting,
-                              description=u'завершить посещение города',
+                              description='завершить посещение города',
                               actions=[actions.GiveReward(object=hero.uid, type='finish')])
 
         line = [ start,

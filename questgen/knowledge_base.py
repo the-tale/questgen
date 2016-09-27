@@ -38,7 +38,8 @@ class KnowledgeBase(object):
 
     def __iadd__(self, fact, expected_fact=False):
         if isinstance(fact, Iterable) and not expected_fact:
-            map(lambda element: self.__iadd__(element, expected_fact=True), fact)
+            for element in fact:
+                self.__iadd__(element, expected_fact=True)
         elif isinstance(fact, Fact):
             if fact.uid in self:
                 raise exceptions.DuplicatedFactError(fact=fact)
@@ -50,7 +51,8 @@ class KnowledgeBase(object):
 
     def __isub__(self, fact, expected_fact=False):
         if isinstance(fact, Iterable) and not expected_fact:
-            map(lambda element: self.__isub__(element, expected_fact=True), fact)
+            for element in fact:
+                self.__isub__(element, expected_fact=True)
         elif isinstance(fact, Fact):
             del self[fact.uid]
         else:

@@ -142,7 +142,7 @@ class Interpreter(object):
     # делаем квест
     def process(self):
         while self.machine.do_step():
-            print '---- next step ----'
+            print('---- next step ----')
 
     ###########################
     # CALLBACKS
@@ -150,58 +150,58 @@ class Interpreter(object):
 
     # когда входим в новую вершину
     def on_state__before_actions(self, state):
-        print 'on state: %s' % state.uid
+        print('on state: %s' % state.uid)
 
         self.satisfied_requirements = set()
 
         if isinstance(state, facts.Start):
-            print '    starting quest "%s"' % state.type
+            print('    starting quest "%s"' % state.type)
 
 
     def on_state__after_actions(self, state):
         if isinstance(state, facts.Finish):
-            print '    finishing quest with results "%s"' % state.results
+            print('    finishing quest with results "%s"' % state.results)
 
 
     # когда переходим на новую дугу
     def on_jump_start__before_actions(self, jump):
-        print 'on jump start: %s' % jump.uid
-        print '    find %d actions' % len(jump.start_actions)
+        print('on jump start: %s' % jump.uid)
+        print('    find %d actions' % len(jump.start_actions))
 
     def on_jump_start__after_actions(self, jump):
-        print '    actions done'
+        print('    actions done')
 
     # когда уходим из дуги
     def on_jump_end__before_actions(self, jump):
-        print 'on jump end: %s' % jump.uid
-        print '    find %d actions' % len(jump.end_actions)
+        print('on jump end: %s' % jump.uid)
+        print('    find %d actions' % len(jump.end_actions))
 
     def on_jump_end__after_actions(self, jump):
-        print '    actions done'
+        print('    actions done')
 
     # обрабокта действий
-    def do_message(self, action): print u'    действие %s' % action
+    def do_message(self, action): print('    действие %s' % action)
 
-    def do_give_power(self, action): print u'    действие %s' % action
+    def do_give_power(self, action): print('    действие %s' % action)
 
-    def do_give_reward(self, action): print u'    действие %s' % action
+    def do_give_reward(self, action): print('    действие %s' % action)
 
-    def do_fight(self, action): print u'    действие %s' % action
+    def do_fight(self, action): print('    действие %s' % action)
 
-    def do_do_nothing(self, action): print u'    действие %s' % action
+    def do_do_nothing(self, action): print('    действие %s' % action)
 
-    def do_upgrade_equipment(self, action): print u'    действие %s' % action
+    def do_upgrade_equipment(self, action): print('    действие %s' % action)
 
-    def do_move_near(self, action): print u'    действие %s' % action
+    def do_move_near(self, action): print('    действие %s' % action)
 
-    def do_move_in(self, action): print u'    действие %s' % action
+    def do_move_in(self, action): print('    действие %s' % action)
 
     def _check_requirement(self, requirement):
-        print u'    проверка %s' % requirement
+        print('    проверка %s' % requirement)
         return requirement in self.satisfied_requirements
 
     def _satisfy_requirement(self, requirement):
-        print u'    выполнить %s' % requirement
+        print('    выполнить %s' % requirement)
         self.satisfied_requirements.add(requirement)
 
     # проверка ограничений
@@ -235,8 +235,8 @@ if __name__ == '__main__':
     # проверяем, что в интерпретаторе реализованы все необходимые методы
     for method_name in logic.get_required_interpreter_methods():
         if not hasattr(interpreter, method_name):
-            error = u'интерпретатор не реализует метод: %s' % method_name
-            print error
+            error = 'интерпретатор не реализует метод: %s' % method_name
+            print(error)
             raise Exception(error)
 
     interpreter.process()

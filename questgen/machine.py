@@ -40,7 +40,7 @@ class Machine(object):
 
     def get_start_state(self):
         jump_ends = set((jump.state_to for jump in self.knowledge_base.filter(facts.Jump)))
-        return (start for start in self.knowledge_base.filter(facts.Start) if start.uid not in jump_ends).next()
+        return next((start for start in self.knowledge_base.filter(facts.Start) if start.uid not in jump_ends))
 
     @property
     def next_state(self):

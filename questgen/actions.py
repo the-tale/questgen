@@ -16,9 +16,7 @@ class ActionMetaclass(records.RecordMetaclass):
         return new_class
 
 
-class Action(records.Record):
-    __metaclass__ = ActionMetaclass
-
+class Action(records.Record, metaclass=ActionMetaclass):
     def do(self, interpreter):
         return getattr(interpreter, self._interpreter_do_method)(action=self)
 
@@ -53,5 +51,5 @@ class MoveNear(Action):
 
 
 ACTIONS = {action_class.type_name(): action_class
-           for action_class in globals().values()
+           for action_class in list(globals().values())
            if isinstance(action_class, type) and issubclass(action_class, Action) and action_class != Action}

@@ -19,9 +19,7 @@ class RequirementMetaclass(records.RecordMetaclass):
         return new_class
 
 
-class Requirement(records.Record):
-    __metaclass__ = RequirementMetaclass
-
+class Requirement(records.Record, metaclass=RequirementMetaclass):
     def check(self, requirement_checker):
         return getattr(requirement_checker, self._interpreter_check_method)(requirement=self)
 
@@ -57,5 +55,5 @@ class IsAlive(Requirement):
 
 
 REQUIREMENTS = {requirement_class.type_name(): requirement_class
-                for requirement_class in globals().values()
+                for requirement_class in list(globals().values())
                 if isinstance(requirement_class, type) and issubclass(requirement_class, Requirement) and requirement_class != Requirement}

@@ -3,7 +3,7 @@
 from questgen import facts
 
 def get_absolute_start(knowledge_base):
-    return (start for start in knowledge_base.filter(facts.Start) if start.is_external).next()
+    return next((start for start in knowledge_base.filter(facts.Start) if start.is_external))
 
 def get_subquest_members(facts_list):
     return [f.uid for f in facts_list if isinstance(f, (facts.State, facts.Jump, facts.OptionsLink))]

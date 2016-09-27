@@ -13,7 +13,7 @@ class KnowledgeBaseTests(unittest.TestCase):
         self.kb = KnowledgeBase()
 
         self.fact = Fact(uid='fact')
-        self.fact_2 = Fact(uid='fact_2', description=u'cba')
+        self.fact_2 = Fact(uid='fact_2', description='cba')
 
         self.kb += [ self.fact,
                      self.fact_2 ]

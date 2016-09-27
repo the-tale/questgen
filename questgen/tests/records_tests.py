@@ -6,9 +6,7 @@ from questgen import records
 from questgen import exceptions
 
 
-class ParentRecord(records.Record):
-    __metaclass__ = records.RecordMetaclass
-
+class ParentRecord(records.Record, metaclass=records.RecordMetaclass):
     attr_1 = records.RecordAttribute()
     attr_2 = records.RecordAttribute(is_reference=True, default=None)
 
@@ -66,4 +64,4 @@ class RecordsTests(unittest.TestCase):
         self.assertEqual(ChildRecord.type_name(), 'ChildRecord')
 
     def test_repr(self):
-        self.assertEqual(ChildRecord(attr_1=1, attr_3=666).__repr__(), u'ChildRecord(attr_2=None, attr_3=666, attr_1=1)')
+        self.assertEqual(ChildRecord(attr_1=1, attr_3=666).__repr__(), 'ChildRecord(attr_1=1, attr_2=None, attr_3=666)')

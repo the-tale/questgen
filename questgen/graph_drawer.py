@@ -172,7 +172,7 @@ class Drawer(object):
 
     def add_link(self, link):
 
-        color = link_colors.next()
+        color = next(link_colors)
 
         for option_uid in link.options:
             option = self.nodes[option_uid]
@@ -308,18 +308,18 @@ class Drawer(object):
         condition_colspan = 0
         if hasattr(state, 'condition'):
             condition_colspan = 2
-            trs.append(tr(td(u'<b>условия:</b>', bgcolor=bgcolor, colspan=condition_colspan)))
+            trs.append(tr(td('<b>условия:</b>', bgcolor=bgcolor, colspan=condition_colspan)))
             for condition in state.condition:
-                trs.append(tr(td(u'<b>если </b>'), td(self.create_label_for_requirement(condition), bgcolor=bgcolor)))
+                trs.append(tr(td('<b>если </b>'), td(self.create_label_for_requirement(condition), bgcolor=bgcolor)))
 
         results_colspan = 0
 
         if hasattr(state, 'results'):
             results_colspan = 2
-            trs.append(tr(td(u'<b>результаты:</b>', bgcolor=bgcolor, colspan=results_colspan)))
+            trs.append(tr(td('<b>результаты:</b>', bgcolor=bgcolor, colspan=results_colspan)))
             results_order = sorted(state.results.keys())
             for object_uid in results_order:
-                trs.append(tr(td(u'<b>%s</b>' % object_uid), td(state.results[object_uid])))
+                trs.append(tr(td('<b>%s</b>' % object_uid), td(state.results[object_uid])))
 
         return table(tr(*head),
                      tr(td(state.description, colspan=max(head_colspan, requirement_colspan, actions_colspan, results_colspan))),
@@ -370,13 +370,13 @@ class Drawer(object):
             trs.append(tr(td(jump.type, bgcolor=HEAD_COLORS.JUMP)))
 
         if hasattr(jump, 'condition'):
-            trs.append(tr(td(u'ИСТИНА' if jump.condition else u'ЛОЖЬ', bgcolor=HEAD_COLORS.JUMP)))
+            trs.append(tr(td('ИСТИНА' if jump.condition else 'ЛОЖЬ', bgcolor=HEAD_COLORS.JUMP)))
 
         if hasattr(jump, 'markers') and jump.markers:
-            strings = {relations.OPTION_MARKERS.HONORABLE: u'[честь]',
-                       relations.OPTION_MARKERS.DISHONORABLE: u'[бесчестие]',
-                       relations.OPTION_MARKERS.AGGRESSIVE: u'[агрессия]',
-                       relations.OPTION_MARKERS.UNAGGRESSIVE: u'[миролюбие]'}
+            strings = {relations.OPTION_MARKERS.HONORABLE: '[честь]',
+                       relations.OPTION_MARKERS.DISHONORABLE: '[бесчестие]',
+                       relations.OPTION_MARKERS.AGGRESSIVE: '[агрессия]',
+                       relations.OPTION_MARKERS.UNAGGRESSIVE: '[миролюбие]'}
 
             for marker in jump.markers:
                 trs.append(tr(td(strings[marker], bgcolor=HEAD_COLORS.JUMP_MARKER)))
@@ -390,65 +390,65 @@ class Drawer(object):
         return table(*trs, port=jump.uid, border=0)
 
     def create_label_for_located_in(self, requirement):
-        return u'%s <b>находится в</b>&nbsp;%s' % (requirement.object, requirement.place)
+        return '%s <b>находится в</b>&nbsp;%s' % (requirement.object, requirement.place)
 
     def create_label_for_located_near(self, requirement):
-        return u'%s <b>находится около</b>&nbsp;%s' % (requirement.object, requirement.place)
+        return '%s <b>находится около</b>&nbsp;%s' % (requirement.object, requirement.place)
 
     def create_label_for_located_on_road(self, requirement):
-        return (u'%s <b>прошёл</b>&nbsp;%d%%<b> дороги от</b>&nbsp;%s <b>до</b>&nbsp;%s' %
+        return ('%s <b>прошёл</b>&nbsp;%d%%<b> дороги от</b>&nbsp;%s <b>до</b>&nbsp;%s' %
                 (requirement.object, int(requirement.percents*100), requirement.place_from, requirement.place_to))
 
     def create_label_for_has_money(self, requirement):
-        return u'%s <b>имеет </b>&nbsp;%s <b>монет</b>' % (requirement.object, requirement.money)
+        return '%s <b>имеет </b>&nbsp;%s <b>монет</b>' % (requirement.object, requirement.money)
 
     def create_label_for_is_alive(self, requirement):
-        return u'%s <b>жив</b>' % (requirement.object)
+        return '%s <b>жив</b>' % (requirement.object)
 
 
     def create_action_label_for_move_near(self, requirement):
         if requirement.terrains:
-            return u'<b>отправить </b> %s<b>бродить около</b>&nbsp;%s<br/> среди ландшафтов %s' % (requirement.object, requirement.place, requirement.terrains)
+            return '<b>отправить </b> %s<b>бродить около</b>&nbsp;%s<br/> среди ландшафтов %s' % (requirement.object, requirement.place, requirement.terrains)
         elif requirement.place is None:
-            return u'<b>отправить </b> %s<b>бродить в округе</b><br/>' % requirement.object
+            return '<b>отправить </b> %s<b>бродить в округе</b><br/>' % requirement.object
         else:
-            return u'<b>отправить </b> %s<b>бродить около</b>&nbsp;%s<br/>' % (requirement.object, requirement.place)
+            return '<b>отправить </b> %s<b>бродить около</b>&nbsp;%s<br/>' % (requirement.object, requirement.place)
 
     def create_action_label_for_message(self, message):
-        return u'<b>сообщение:</b>&nbsp;%s' % message.type
+        return '<b>сообщение:</b>&nbsp;%s' % message.type
 
     def create_action_label_for_give_reward(self, give_reward):
-        return u'<b>выдать награду </b>&nbsp; %s <b>типа </b> %s <b>в размере</b> %.2f' % (give_reward.object, give_reward.type, give_reward.scale)
+        return '<b>выдать награду </b>&nbsp; %s <b>типа </b> %s <b>в размере</b> %.2f' % (give_reward.object, give_reward.type, give_reward.scale)
 
     def create_action_label_for_fight(self, fight):
         if fight.mob:
-            return u'<b>сразиться с</b>&nbsp; %s' % fight.mob
+            return '<b>сразиться с</b>&nbsp; %s' % fight.mob
 
         if fight.mercenary is not None:
             if fight.mercenary:
-                return u'<b>сразиться с наёмником</b>'
+                return '<b>сразиться с наёмником</b>'
             else:
-                return u'<b>сразиться с кем-нибудь, кроме  наёмника</b>'
+                return '<b>сразиться с кем-нибудь, кроме  наёмника</b>'
 
-        return u'<b>сразиться с кем-нибудь</b>'
+        return '<b>сразиться с кем-нибудь</b>'
 
     def create_action_label_for_donothing(self, donothing):
-        return u'<b>заняться </b>&nbsp; %s' % donothing.type
+        return '<b>заняться </b>&nbsp; %s' % donothing.type
 
     def create_action_label_for_upgrade_equipment(self, upgrade):
         if upgrade.cost is not None:
-            return u'<b>обновить экипировку за </b>&nbsp;%d <b>монет</b>' % upgrade.cost
-        return u'<b>обновить экипировку бесплатно</b>'
+            return '<b>обновить экипировку за </b>&nbsp;%d <b>монет</b>' % upgrade.cost
+        return '<b>обновить экипировку бесплатно</b>'
 
 
-def b(data): return u'<b>%s</b>' % data
-def i(data): return u'<i>%s</i>' % data
+def b(data): return '<b>%s</b>' % data
+def i(data): return '<i>%s</i>' % data
 
 def table(*trs, **kwargs):
     bgcolor = kwargs.get('bgcolor')
     port = kwargs.get('port')
     border = kwargs.get('border', 1)
-    return u'''<
+    return '''<
     <table cellpadding="1"
            cellspacing="0"
            border="%(border)d"
@@ -461,14 +461,14 @@ def table(*trs, **kwargs):
             'bgcolor': 'BGCOLOR="%s"' % bgcolor if bgcolor is not None else ''}
 
 def tr(*tds):
-    return u'<tr BGCOLOR="#00ff00">%s</tr>' % ''.join(tds)
+    return '<tr BGCOLOR="#00ff00">%s</tr>' % ''.join(tds)
 
 def td(body, port=None, **kwargs):
     bgcolor = kwargs.get('bgcolor')
     colspan = kwargs.get('colspan', 1)
     align = kwargs.get('align', 'left')
     border = kwargs.get('border', 0)
-    return u'''<td
+    return '''<td
                  %(port)s
                  COLSPAN="%(colspan)d"
                  border="%(border)d"

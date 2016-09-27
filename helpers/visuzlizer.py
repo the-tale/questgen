@@ -31,7 +31,7 @@ qb += [Simple]
 
 for Quest in QUESTS:
 
-    print 'process quest: %s' % Quest.TYPE
+    print('process quest: %s' % Quest.TYPE)
 
     kb = KnowledgeBase()
 
@@ -97,7 +97,7 @@ for Quest in QUESTS:
                                  restrictions.FinishResultsConsistency()])
         pass
     except Exception:
-        print 'quesr %s is invalid' % Quest.TYPE
+        print('quesr %s is invalid' % Quest.TYPE)
         raise
 
     drawer = Drawer(knowledge_base=kb)

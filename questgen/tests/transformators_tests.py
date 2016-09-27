@@ -471,7 +471,7 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
         self.assertEqual(len(list(self.kb.filter(facts.OptionsLink))), 0)
         self.assertEqual(len(list(self.kb.filter(facts.ChoicePath))), 1)
         self.assertEqual(len(set([path.choice for path in self.kb.filter(facts.ChoicePath)])), 1)
-        self.assertTrue(self.kb.filter(facts.ChoicePath).next().option in set([option_1.uid, option_2.uid]))
+        self.assertTrue(next(self.kb.filter(facts.ChoicePath)).option in set([option_1.uid, option_2.uid]))
 
     def test_one_choice__no_markers(self):
         start = facts.Start(uid='start', type='test', nesting=0)
@@ -491,13 +491,13 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
 
         self.kb += facts_list
 
-        for i in xrange(100):
+        for i in range(100):
             transformators.determine_default_choices(self.kb, preferred_markers=[relations.OPTION_MARKERS.HONORABLE])
             self.check_in_knowledge_base(self.kb, facts_list)
             self.assertEqual(len(list(self.kb.filter(facts.OptionsLink))), 0)
             self.assertEqual(len(list(self.kb.filter(facts.ChoicePath))), 1)
             self.assertEqual(len(set([path.choice for path in self.kb.filter(facts.ChoicePath)])), 1)
-            self.assertTrue(self.kb.filter(facts.ChoicePath).next().option in set([option_1.uid, option_2.uid]))
+            self.assertTrue(next(self.kb.filter(facts.ChoicePath)).option in set([option_1.uid, option_2.uid]))
 
             self.kb -= self.kb.filter(facts.ChoicePath)
 
@@ -516,12 +516,12 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
                   marked_option ]
         self.kb += facts_list
 
-        for i in xrange(100):
+        for i in range(100):
             transformators.determine_default_choices(self.kb, preferred_markers=[relations.OPTION_MARKERS.HONORABLE])
             self.check_in_knowledge_base(self.kb, facts_list)
             self.assertEqual(len(list(self.kb.filter(facts.OptionsLink))), 0)
             self.assertEqual(len(list(self.kb.filter(facts.ChoicePath))), 1)
-            self.assertEqual(self.kb.filter(facts.ChoicePath).next().option, marked_option.uid)
+            self.assertEqual(next(self.kb.filter(facts.ChoicePath)).option, marked_option.uid)
 
             self.kb -= self.kb.filter(facts.ChoicePath)
 
@@ -551,7 +551,7 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
 
         self.kb += facts_list
 
-        for i in xrange(100):
+        for i in range(100):
             transformators.determine_default_choices(self.kb)
             self.check_in_knowledge_base(self.kb, facts_list)
             self.assertEqual(len(list(self.kb.filter(facts.OptionsLink))), 0)
@@ -632,7 +632,7 @@ class DetermineDefaultChoicesTests(TransformatorsTestsBase):
     def test_linked_choices__linked_option_with_processed_choice(self):
         is_raised = False
 
-        for i in xrange(100):
+        for i in range(100):
             kb = KnowledgeBase()
             start = facts.Start(uid='start', type='test', nesting=0)
             choice_1 = facts.Choice(uid='choice_1')

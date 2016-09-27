@@ -27,7 +27,7 @@ class Spying(QuestBetween2):
         start = facts.Start(uid=ns+'start',
                       type=cls.TYPE,
                       nesting=nesting,
-                      description=u'Начало: задание на шпионаж',
+                      description='Начало: задание на шпионаж',
                       require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid),
                                requirements.LocatedIn(object=receiver.uid, place=receiver_position.uid)],
                       actions=[actions.Message(type='intro')])
@@ -36,38 +36,38 @@ class Spying(QuestBetween2):
                         facts.QuestParticipant(start=start.uid, participant=receiver.uid, role=ROLES.RECEIVER) ]
 
         start_spying = facts.Choice(uid=ns+'start_spying',
-                              description=u'Прибытие в город цели',
+                              description='Прибытие в город цели',
                               require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
                               actions=[actions.Message(type='arrived_to_target')])
 
 
         spying_middle = facts.Choice(uid=ns+'spying_middle',
-                               description=u'Шпионаж',
+                               description='Шпионаж',
                                actions=[actions.MoveNear(object=hero.uid, place=receiver_position.uid)])
 
         continue_spying = facts.State(uid=ns+'continue_spying',
-                                      description=u'Продолжить шпионаж')
+                                      description='Продолжить шпионаж')
 
         success_spying = facts.State(uid=ns+'success_spying',
-                                description=u'шпионим без происшествий',
+                                description='шпионим без происшествий',
                                 require=[requirements.LocatedNear(object=hero.uid, place=receiver_position.uid)],
                                 actions=[actions.Message(type='success_spying'),
                                          actions.MoveNear(object=hero.uid, place=receiver_position.uid)])
 
         witness = facts.State(uid=ns+'witness',
-                              description=u'героя заметил один из работников цели',
+                              description='героя заметил один из работников цели',
                               require=[requirements.LocatedNear(object=hero.uid, place=receiver_position.uid)],
                               actions=[actions.Message(type='witness'),
                                        actions.MoveNear(object=hero.uid, place=receiver_position.uid)  ])
 
         witness_fight = facts.Question(uid=ns+'witness_fight',
-                                       description=u'удалось ли победить свидетеля?',
+                                       description='удалось ли победить свидетеля?',
                                        condition=[requirements.IsAlive(object=hero.uid)],
                                        actions=[actions.Message(type='witness_fight'),
                                                 actions.Fight(mercenary=True)])
 
         open_up = facts.State(uid=ns+'open_up',
-                        description=u'Раскрыться',
+                        description='Раскрыться',
                         require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
                         actions=[actions.Message(type='open_up')])
 
@@ -77,19 +77,19 @@ class Spying(QuestBetween2):
                                    results={initiator.uid: RESULTS.SUCCESSED,
                                             receiver.uid: RESULTS.FAILED},
                                    nesting=nesting,
-                                   description=u'Сообщить сообранную информацию',
+                                   description='Сообщить сообранную информацию',
                                    require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
                                    actions=[actions.GiveReward(object=hero.uid, type='report_data')])
 
         finish_spying_choice = facts.Choice(uid=ns+'finish_spying_choice',
-                                            description=u'Варианты выбора завершения шпионажа')
+                                            description='Варианты выбора завершения шпионажа')
 
         blackmail_finish = facts.Finish(uid=ns+'blackmail_finish',
                                         start=start.uid,
                                         results={initiator.uid: RESULTS.NEUTRAL,
                                                  receiver.uid: RESULTS.FAILED},
                                         nesting=nesting,
-                                        description=u'Шантажировать самостоятельно',
+                                        description='Шантажировать самостоятельно',
                                         require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
                                         actions=[actions.GiveReward(object=hero.uid, type='blackmail_finish', scale=1.25)])
 
@@ -98,7 +98,7 @@ class Spying(QuestBetween2):
                                       results={initiator.uid: RESULTS.NEUTRAL,
                                                receiver.uid: RESULTS.NEUTRAL},
                                       nesting=nesting,
-                                      description=u'свидетель смог скрыться',
+                                      description='свидетель смог скрыться',
                                       actions=[actions.Message(type='witness_failed') ])
 
         open_up_finish = facts.Finish(uid=ns+'open_up_finish',
@@ -106,7 +106,7 @@ class Spying(QuestBetween2):
                                       results={initiator.uid: RESULTS.FAILED,
                                                receiver.uid: RESULTS.SUCCESSED},
                                       nesting=nesting,
-                                      description=u'Завершить задание и остатсья в городе цели',
+                                      description='Завершить задание и остатсья в городе цели',
                                       require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
                                       actions=[actions.GiveReward(object=hero.uid, type='open_up_finish')])
 
@@ -115,7 +115,7 @@ class Spying(QuestBetween2):
                                      results={initiator.uid: RESULTS.FAILED,
                                               receiver.uid: RESULTS.SUCCESSED},
                                      nesting=nesting,
-                                     description=u'Вернуться к заказчику и сообщить ложную информацию',
+                                     description='Вернуться к заказчику и сообщить ложную информацию',
                                      require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
                                      actions=[actions.GiveReward(object=hero.uid, type='open_up_lying', scale=1.5)])
 
@@ -196,8 +196,8 @@ class Spying(QuestBetween2):
                   facts.Answer(state_from=witness_fight.uid, state_to=finish_spying_choice.uid, condition=True),
                   facts.Answer(state_from=witness_fight.uid, state_to=witness_failed.uid, condition=False),
 
-                  facts.Event(uid=ns+'open_up_variants', description=u'Варианты окончания раскрытия', members=(open_up_finish.uid, open_up_lying.uid)),
-                  facts.Event(uid=ns+'spying_variants', description=u'Варианты событий при шпионаже', members=(success_spying.uid, witness.uid)),
+                  facts.Event(uid=ns+'open_up_variants', description='Варианты окончания раскрытия', members=(open_up_finish.uid, open_up_lying.uid)),
+                  facts.Event(uid=ns+'spying_variants', description='Варианты событий при шпионаже', members=(success_spying.uid, witness.uid)),
                 ]
 
         line.extend(participants)

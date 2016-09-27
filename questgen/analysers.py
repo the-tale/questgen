@@ -17,9 +17,9 @@ def percents_collector(knowledge_base):
                             states_to_longest_path=states_to_longest_path,
                             processed_states=processed_states)
 
-        longest_path = max(states_to_longest_path.itervalues())
+        longest_path = max(states_to_longest_path.values())
 
-        for state_uid, is_internal in processed_states.iteritems():
+        for state_uid, is_internal in processed_states.items():
             if not is_internal:
                 states_to_percents[state_uid] = 1.0 - float(states_to_longest_path[state_uid]) / longest_path
 

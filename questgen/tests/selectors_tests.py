@@ -38,7 +38,7 @@ class SelectordsTests(unittest.TestCase):
 
 
     def test_new_place(self):
-        for i in xrange(100):
+        for i in range(100):
             places = [self.selector.new_place().uid,
                       self.selector.new_place().uid,
                       self.selector.new_place().uid,]
@@ -85,7 +85,7 @@ class SelectordsTests(unittest.TestCase):
 
 
     def test_new_person(self):
-        for i in xrange(100):
+        for i in range(100):
             persons = [self.selector.new_person(first_initiator=False).uid,
                       self.selector.new_person(first_initiator=False).uid,
                       self.selector.new_person(first_initiator=False).uid,]
@@ -95,7 +95,7 @@ class SelectordsTests(unittest.TestCase):
             self.selector.reset()
 
     def test_new_person__profession(self):
-        for i in xrange(100):
+        for i in range(100):
             persons = [self.selector.new_person(first_initiator=False, professions=(0, 2)).uid,
                       self.selector.new_person(first_initiator=False, professions=(0, 2)).uid]
 
@@ -118,7 +118,7 @@ class SelectordsTests(unittest.TestCase):
 
         self.kb += facts.NotFirstInitiator(person='person_2')
 
-        for i in xrange(100):
+        for i in range(100):
             for_initiator.add(self.selector.new_person(first_initiator=True).uid)
             for_continuator.add(self.selector.new_person(first_initiator=False).uid)
 
@@ -150,7 +150,7 @@ class SelectordsTests(unittest.TestCase):
 
         self.kb += facts.NotFirstInitiator(person='person_2')
 
-        for i in xrange(100):
+        for i in range(100):
             for_initiator.add(self.selector.new_person(first_initiator=True, restrict_places=False, places=['place_1', 'place_2', 'place_3']).uid)
             for_continuator.add(self.selector.new_person(first_initiator=False, restrict_places=False, places=['place_1', 'place_2', 'place_3']).uid)
             self.selector.reset()
@@ -164,7 +164,7 @@ class SelectordsTests(unittest.TestCase):
                                           person_to='person_3',
                                           type=relations.SOCIAL_RELATIONS.PARTNER)
 
-        for i in xrange(100):
+        for i in range(100):
             persons = [self.selector.new_person(first_initiator=False, restrict_social_connections=(('person_3', relations.SOCIAL_RELATIONS.PARTNER),)).uid,
                        self.selector.new_person(first_initiator=False, restrict_social_connections=(('person_3', relations.SOCIAL_RELATIONS.PARTNER),)).uid ]
             self.assertRaises(exceptions.NoFactSelectedError,
@@ -174,7 +174,7 @@ class SelectordsTests(unittest.TestCase):
             self.assertEqual(set(persons), set(['person_2', 'person_3']))
             self.selector.reset()
 
-        for i in xrange(100):
+        for i in range(100):
             persons = [self.selector.new_person(first_initiator=False, restrict_social_connections=(('person_3', relations.SOCIAL_RELATIONS.CONCURRENT),)).uid,
                        self.selector.new_person(first_initiator=False, restrict_social_connections=(('person_3', relations.SOCIAL_RELATIONS.CONCURRENT),)).uid,
                        self.selector.new_person(first_initiator=False, restrict_social_connections=(('person_3', relations.SOCIAL_RELATIONS.CONCURRENT),)).uid ]
@@ -193,7 +193,7 @@ class SelectordsTests(unittest.TestCase):
 
         self.selector._social_connection_probability = 1.0
 
-        for i in xrange(100):
+        for i in range(100):
             self.assertEqual(self.selector.new_person(first_initiator=False, social_connections=(('person_3', relations.SOCIAL_RELATIONS.PARTNER),)).uid,
                              'person_1')
             persons = set((self.selector.new_person(first_initiator=False, social_connections=(('person_3', relations.SOCIAL_RELATIONS.PARTNER),)).uid,
@@ -202,7 +202,7 @@ class SelectordsTests(unittest.TestCase):
             self.selector.reset()
 
         persons = set()
-        for i in xrange(100):
+        for i in range(100):
             persons.add(self.selector.new_person(first_initiator=False, social_connections=(('person_3', relations.SOCIAL_RELATIONS.CONCURRENT),)).uid)
             self.selector.reset()
         self.assertEqual(set(persons), set(['person_1', 'person_2', 'person_3']))
@@ -218,7 +218,7 @@ class SelectordsTests(unittest.TestCase):
 
         self.selector._social_connection_probability = 1.0
 
-        for i in xrange(100):
+        for i in range(100):
             persons = set((self.selector.new_person(social_connections=(('person_1', relations.SOCIAL_RELATIONS.PARTNER),
                                                                         ('person_1', relations.SOCIAL_RELATIONS.CONCURRENT))).uid,
                            self.selector.new_person(social_connections=(('person_1', relations.SOCIAL_RELATIONS.PARTNER),
@@ -239,7 +239,7 @@ class SelectordsTests(unittest.TestCase):
         self.selector._social_connection_probability = 0
 
         persons = set()
-        for i in xrange(100):
+        for i in range(100):
             persons.add(self.selector.new_person(social_connections=(('person_1', relations.SOCIAL_RELATIONS.PARTNER),
                                                                      ('person_1', relations.SOCIAL_RELATIONS.CONCURRENT))).uid)
             self.selector.reset()
