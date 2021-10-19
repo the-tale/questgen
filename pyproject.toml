@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "questgen"
+version = "0.4.1"
+description = "Generator of nonlenear quests with events and flow validating."
+repository = "https://github.com/Tiendil/questgen"
+authors = ["Aliaksei Yaletski (Tiendil) <a.eletsky@gmail.com>"]
+license = "BSD-3"
+
+classifiers = ["Development Status :: 5 - Production/Stable",
+               "Intended Audience :: Developers",
+               "Topic :: Games/Entertainment",
+               "Topic :: Software Development :: Libraries :: Python Modules",
+               "License :: OSI Approved :: BSD License",
+               "Programming Language :: Python :: 3"]
+keywords = ["gamedev", "procedural content generation", "quests", "quests generation"]
+exclude = ["svgs"]

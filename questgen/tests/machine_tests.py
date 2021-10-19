@@ -1,7 +1,8 @@
 # coding: utf-8
-import mock
 
 import unittest
+
+from unittest import mock
 
 from questgen.knowledge_base import KnowledgeBase
 from questgen.machine import Machine
@@ -23,7 +24,7 @@ class MachineTests(unittest.TestCase):
         self.state_2 = facts.State(uid='state_2')
         self.finish_1 = facts.Finish(start='start', uid='finish_1', results={}, nesting=0)
 
-        self.kb += [ self.start, self.state_1, self.state_2, self.finish_1, self.hero]
+        self.kb += [self.start, self.state_1, self.state_2, self.finish_1, self.hero]
 
         self.machine = Machine(knowledge_base=self.kb, interpreter=FakeInterpreter())
 
