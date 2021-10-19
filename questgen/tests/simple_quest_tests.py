@@ -2,7 +2,7 @@
 
 import unittest
 
-import mock
+from unittest import mock
 
 from questgen.knowledge_base import KnowledgeBase
 from questgen.facts import Place, Person
