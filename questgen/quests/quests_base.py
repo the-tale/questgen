@@ -1,7 +1,7 @@
 # coding: utf-8
 import random
 
-from collections import Iterable
+from collections.abc import Iterable
 
 from questgen import exceptions
 from questgen.quests.base_quest import BaseQuest
