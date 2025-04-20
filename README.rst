@@ -2,98 +2,96 @@
 Questgen
 ########
 
-Библиотека для автоматической генерации заданий (квестов). Позволяет по описанию мира (в виде набора предикатов) автоматически создавать вложенные нелинейные задания с событиями и разного рода ограничениями (вроде «исход задания для этого персонажа должен быть только положительным»).
+Library for automatic quest generation. Allows creation of nested, nonlinear quests with events and various constraints (e.g., "the outcome of the quest for this character must only be positive") based on a world description given as predicates.
 
-Также позволяет визуализировать то, что получилось, пример визуализации: svg_
+It also supports visualization of the generated quests. Example visualization: svg_
 
 .. _svg: http://tiendil.org/static/trash/collect_debt.svg
 
-Конструкторы всех заданий: ``./questgen/quests/``
+Quest constructors are located in: ``./questgen/quests/``
 
-Создавалась для использования в MMOZPG игре Сказка_.
+Initially developed for use in the MMORPG game "The Tale"_.
 
-.. _Сказка: http://the-tale.org
+.. _The Tale: http://the-tale.org
 
-Визуализации всех «базовых» шаблонов заданий лежат в каталоге ``./questgen/svgs/``
+Visualizations of all "basic" quest templates are stored in ``./questgen/svgs/``.
 
-Работа библиотеки описана в статье на habrahabr_.
+Details of the library's functionality can be found in the article on habrahabr_.
 
 .. _habrahabr: http://habrahabr.ru/post/201680/
 
-************************************
-Условные обозначения в визуализаторе
-************************************
+**************************
+Legend for the Visualizer
+**************************
 
-Отображается граф квеста без модификаций (например, со всеми вариантами события, см. далее).
+The quest graph is displayed without modifications (e.g., all event variants are shown).
 
-* серые узлы — начало и окончание задания;
-* фиолетовые узлы — точки выбора;
-* зелёные узлы — обычные точки сюжета;
-* красные узлы — условные переходы;
-* бирюзовые контуры — подквесты;
-* более тёмным фоном на в узлах отмечены требования к ситуации, которые должны быть выполнены для возможности перехода в эту точку сюжета;
-* более светлым фоном выделены действия, которые должны быть выполнены сразу после перехода в точку сюжета.
-* жёлтые контуры — события;
+* gray nodes — start and end points of the quest;
+* purple nodes — decision points;
+* green nodes — regular story points;
+* red nodes — conditional transitions;
+* cyan outlines — subquests;
+* darker backgrounds in nodes indicate conditions that must be met to transition to that story point;
+* lighter backgrounds indicate actions that must be performed immediately upon entering that story point.
+* yellow outlines — events;
 
-
-*********
-Установка
-*********
+************
+Installation
+************
 
 ::
 
-   pip install git+git://github.com/Tiendil/questgen.git#egg=Questgen
+   pip install questgen
 
 **************
-Принцип работы
+How it Works
 **************
 
-Состояния мира описывается в виде предикатов вроде
+World states are described using predicates, e.g.:
 
 .. code:: python
 
    LocatedIn(object='hero', place='place_1')
 
+and stored in a knowledge base (KB).
 
-и сохраняются в базу знаний (БЗ)
+Quests are described as directed connected graphs with one initial node and several terminal nodes (also stored in the KB).
 
-Задание описывается ориентированным связанным графом с одной начальной вершиной и несколькими конечными (который тоже хранится в БЗ).
+* Each node has a list of requirements that must be satisfied before transitioning into it (e.g., the hero must be at a specific location);
+* Each node has a list of actions to perform upon entry;
+* Each edge has two lists of actions:
+  * actions performed when starting to traverse the edge;
+  * actions performed when finishing traversal (upon satisfying all requirements of the new node);
+* Several types of nodes exist:
+  * Initial — one per quest; the starting point;
+  * Terminal — multiple per quest; determines quest outcomes (for connecting with other quests);
+  * Regular — a narrative node; can have multiple incoming edges and exactly one outgoing edge;
+  * Decision — can have multiple outgoing edges, selectable until one of the following nodes is reached.
 
-* каждая вершина имеет список требований, которые должны быть удовлетворены, прежде чем можно будет перейти в неё (например, герой должен находиться в конкретном месте);
-* каждая вершина имеет список действий, которые должны быть выполнены, когда мы в неё перешли;
-* каждая дуга имеет два списка действий:
-  * которые должны быть выполнены, когда мы начинаем двигаться по дуге;
-  * когда мы заканчиваем двигаться по дуге (т.е. переходим в новую вершину после удовлетворения всех её требований);
-* существует несколько типов вершин:
-  * Начальная — одна на задание, с неё начинается «путешествие»;
-  * Конечная — несколько на задание, определяет результат выполнения (для стыковки с другими заданиями);
-  * обычная — узел истории, можешь иметь несколько входящих дуг и ровно одну исходящую;
-  * выбор — может иметь несколько исходящих дуг, между которыми можно переключаться, пока не пришли в одну из следующих вершин;
+Multiple nodes can be combined into an "event," which expands upon quest generation completion by removing all but one node. This allows for random events.
 
-Несколько вершин могут быть объединены в «событие», которое раскрывается при завершении генерации графа, удаляя все вершины кроме одной. Таким образом можно делать случайные события.
+General generation procedure:
 
-Общий порядок генерации:
+#. Create world description;
+#. Create quest;
+#. Process the quest (see example usage below);
+#. Validate correctness;
+#. Handle the quest in-game (the game should implement the code that executes while traversing the graph).
 
-#. создать описание мира;
-#. создать задание;
-#. обработать задание (см. пример использования далее);
-#. проверить на корректность;
-#. работать с квестом в коде игры (игра реализует код, который выполняется при проходе по графу).
+**Note:** Quest generation might fail occasionally (raising a ``questgen.exceptions.RollBackError``). This does not indicate a critical issue; it simply means the quest graph generated was unsuitable. Generation should be retried. A larger world description typically ensures faster and more successful quest generations by reducing collisions.
 
-**Следует помнить, что генерация задания может быть неудачной (вызывается исключение questgen.exceptions.RollBackError). Это не значит, что всё плохо, это значит, что необходимо повторить генерацию, т.к. был сформирован неудачный граф задания.** Из этого следует, что для лучшей и более быстрой генерации заданий лучше иметь мир побольше, чтобы не было много коллизий.
+*******
+Example
+*******
 
-******
-Пример
-******
+See ``./helpers/example.py``
 
-см. ``./helpers/example.py``
+*************
+Visualization
+*************
 
-************
-Визуализация
-************
+Visualizer: ``./helpers/visualizer.py`` generates quest template images in ``./questgen/svgs/``.
 
-Визуализатор: ``./helpers/visualizer.py``  создаёт изображения шаблонов заданий в ``./questgen/svgs/``
+Uses ``graphviz`` via the ``pygraph`` library.
 
-Использует ``graphviz`` через библиотеку ``pygraph``
-
-*Если создаются неверные (поехавшие) изображения, поставьте новую версию graphviz*
+*If generated images are incorrect (misaligned), install a newer version of graphviz.*
