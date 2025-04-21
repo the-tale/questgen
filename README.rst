@@ -6,7 +6,7 @@ Library for automatic quest generation. Allows creation of nested, nonlinear que
 
 It also supports visualization of the generated quests. Example visualization: svg_
 
-.. _svg: http://tiendil.org/static/trash/collect_debt.svg
+.. _svg: https://github.com/the-tale/questgen/blob/master/svgs/collect_debt.svg
 
 Quest constructors are located in: ``./questgen/quests/``
 
