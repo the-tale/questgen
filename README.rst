@@ -10,7 +10,7 @@ It also supports visualization of the generated quests. Example visualization: s
 
 Quest constructors are located in: ``./questgen/quests/``
 
-Initially developed for use in (now stopped) the MMORPG game The-Tale_, repository_
+**The generator was developed for use in (now stopped) the text MMOZPG game The-Tale_, repository_**
 
 .. _The-Tale: http://the-tale.org
 
