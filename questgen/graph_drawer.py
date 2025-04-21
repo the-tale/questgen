@@ -308,15 +308,15 @@ class Drawer(object):
         condition_colspan = 0
         if hasattr(state, 'condition'):
             condition_colspan = 2
-            trs.append(tr(td('<b>условия:</b>', bgcolor=bgcolor, colspan=condition_colspan)))
+            trs.append(tr(td('<b>conditions:</b>', bgcolor=bgcolor, colspan=condition_colspan)))
             for condition in state.condition:
-                trs.append(tr(td('<b>если </b>'), td(self.create_label_for_requirement(condition), bgcolor=bgcolor)))
+                trs.append(tr(td('<b>if </b>'), td(self.create_label_for_requirement(condition), bgcolor=bgcolor)))
 
         results_colspan = 0
 
         if hasattr(state, 'results'):
             results_colspan = 2
-            trs.append(tr(td('<b>результаты:</b>', bgcolor=bgcolor, colspan=results_colspan)))
+            trs.append(tr(td('<b>results:</b>', bgcolor=bgcolor, colspan=results_colspan)))
             results_order = sorted(state.results.keys())
             for object_uid in results_order:
                 trs.append(tr(td('<b>%s</b>' % object_uid), td(state.results[object_uid])))
@@ -370,13 +370,13 @@ class Drawer(object):
             trs.append(tr(td(jump.type, bgcolor=HEAD_COLORS.JUMP)))
 
         if hasattr(jump, 'condition'):
-            trs.append(tr(td('ИСТИНА' if jump.condition else 'ЛОЖЬ', bgcolor=HEAD_COLORS.JUMP)))
+            trs.append(tr(td('TRUE' if jump.condition else 'FALSE', bgcolor=HEAD_COLORS.JUMP)))
 
         if hasattr(jump, 'markers') and jump.markers:
-            strings = {relations.OPTION_MARKERS.HONORABLE: '[честь]',
-                       relations.OPTION_MARKERS.DISHONORABLE: '[бесчестие]',
-                       relations.OPTION_MARKERS.AGGRESSIVE: '[агрессия]',
-                       relations.OPTION_MARKERS.UNAGGRESSIVE: '[миролюбие]'}
+            strings = {relations.OPTION_MARKERS.HONORABLE: '[honor]',
+                       relations.OPTION_MARKERS.DISHONORABLE: '[dishonor]',
+                       relations.OPTION_MARKERS.AGGRESSIVE: '[aggression]',
+                       relations.OPTION_MARKERS.UNAGGRESSIVE: '[peacefulness]'}
 
             for marker in jump.markers:
                 trs.append(tr(td(strings[marker], bgcolor=HEAD_COLORS.JUMP_MARKER)))
@@ -390,55 +390,55 @@ class Drawer(object):
         return table(*trs, port=jump.uid, border=0)
 
     def create_label_for_located_in(self, requirement):
-        return '%s <b>находится в</b>&nbsp;%s' % (requirement.object, requirement.place)
+        return '%s <b>is located in</b>&nbsp;%s' % (requirement.object, requirement.place)
 
     def create_label_for_located_near(self, requirement):
-        return '%s <b>находится около</b>&nbsp;%s' % (requirement.object, requirement.place)
+        return '%s <b>is located near</b>&nbsp;%s' % (requirement.object, requirement.place)
 
     def create_label_for_located_on_road(self, requirement):
-        return ('%s <b>прошёл</b>&nbsp;%d%%<b> дороги от</b>&nbsp;%s <b>до</b>&nbsp;%s' %
+        return ('%s <b>has passed</b>&nbsp;%d%%<b> of the road from</b>&nbsp;%s <b>to</b>&nbsp;%s' %
                 (requirement.object, int(requirement.percents*100), requirement.place_from, requirement.place_to))
 
     def create_label_for_has_money(self, requirement):
-        return '%s <b>имеет </b>&nbsp;%s <b>монет</b>' % (requirement.object, requirement.money)
+        return '%s <b>has </b>&nbsp;%s <b>coins</b>' % (requirement.object, requirement.money)
 
     def create_label_for_is_alive(self, requirement):
-        return '%s <b>жив</b>' % (requirement.object)
+        return '%s <b>is alive</b>' % (requirement.object)
 
 
     def create_action_label_for_move_near(self, requirement):
         if requirement.terrains:
-            return '<b>отправить </b> %s<b>бродить около</b>&nbsp;%s<br/> среди ландшафтов %s' % (requirement.object, requirement.place, requirement.terrains)
+            return '<b>send </b> %s<b>to wander near</b>&nbsp;%s<br/> among the terrains %s' % (requirement.object, requirement.place, requirement.terrains)
         elif requirement.place is None:
-            return '<b>отправить </b> %s<b>бродить в округе</b><br/>' % requirement.object
+            return '<b>send </b> %s<b>to wander around</b><br/>' % requirement.object
         else:
-            return '<b>отправить </b> %s<b>бродить около</b>&nbsp;%s<br/>' % (requirement.object, requirement.place)
+            return '<b>send </b> %s<b>to wander near</b>&nbsp;%s<br/>' % (requirement.object, requirement.place)
 
     def create_action_label_for_message(self, message):
-        return '<b>сообщение:</b>&nbsp;%s' % message.type
+        return '<b>message:</b>&nbsp;%s' % message.type
 
     def create_action_label_for_give_reward(self, give_reward):
-        return '<b>выдать награду </b>&nbsp; %s <b>типа </b> %s <b>в размере</b> %.2f' % (give_reward.object, give_reward.type, give_reward.scale)
+        return '<b>give reward to </b>&nbsp; %s <b>of type </b> %s <b>in the amount of</b> %.2f' % (give_reward.object, give_reward.type, give_reward.scale)
 
     def create_action_label_for_fight(self, fight):
         if fight.mob:
-            return '<b>сразиться с</b>&nbsp; %s' % fight.mob
+            return '<b>fight with</b>&nbsp; %s' % fight.mob
 
         if fight.mercenary is not None:
             if fight.mercenary:
-                return '<b>сразиться с наёмником</b>'
+                return '<b>fight with a mercenary</b>'
             else:
-                return '<b>сразиться с кем-нибудь, кроме  наёмника</b>'
+                return '<b>fight with someone other than a mercenary</b>'
 
-        return '<b>сразиться с кем-нибудь</b>'
+        return '<b>fight with someone</b>'
 
     def create_action_label_for_donothing(self, donothing):
-        return '<b>заняться </b>&nbsp; %s' % donothing.type
+        return '<b>do nothing </b>&nbsp; %s' % donothing.type
 
     def create_action_label_for_upgrade_equipment(self, upgrade):
         if upgrade.cost is not None:
-            return '<b>обновить экипировку за </b>&nbsp;%d <b>монет</b>' % upgrade.cost
-        return '<b>обновить экипировку бесплатно</b>'
+            return '<b>upgrade equipment for </b>&nbsp;%d <b>coins</b>' % upgrade.cost
+        return '<b>upgrade equipment for free</b>'
 
 
 def b(data): return '<b>%s</b>' % data

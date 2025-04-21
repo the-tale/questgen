@@ -1,4 +1,3 @@
-
 from collections.abc import Iterable
 
 from questgen.facts import Fact

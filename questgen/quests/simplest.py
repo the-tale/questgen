@@ -36,25 +36,25 @@ class Simplest(QuestBetween2):
         start = facts.Start(uid=ns+'start',
                             type=cls.TYPE,
                             nesting=nesting,
-                            description='Начало: простейшее задание',
+                            description='Start: simplest quest',
                             require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
                             actions=[actions.Message(type='intro')])
 
         participants = [facts.QuestParticipant(start=start.uid, participant=receiver_position.uid, role=ROLES.RECEIVER_POSITION) ]
 
         arriving = facts.State(uid=ns+'arriving',
-                               description='Прибытие в другой город',
+                               description='Arriving in another city',
                                require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)])
 
         facts.State(uid=ns+'any_action',
-                    description='выполнить какое-то действие',
+                    description='perform some action',
                     actions=[actions.Message(type='do smth')])
 
         finish = facts.Finish(uid=ns+'finish',
                               start=start.uid,
                               results={ receiver_position.uid: RESULTS.SUCCESSED},
                               nesting=nesting,
-                              description='завершить задание',
+                              description='complete the quest',
                               actions=[actions.GiveReward(object=hero.uid, type='finish')])
 
         line = [ start,

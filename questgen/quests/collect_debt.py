@@ -27,7 +27,7 @@ class CollectDebt(QuestBetween2):
         start = facts.Start(uid=ns+'start',
                             type=cls.TYPE,
                             nesting=nesting,
-                            description='Начало: выбить долг',
+                            description='Start: collect debt',
                             require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid),
                                      requirements.LocatedIn(object=receiver.uid, place=receiver_position.uid)],
                             actions=[actions.Message(type='intro')])
@@ -36,13 +36,13 @@ class CollectDebt(QuestBetween2):
                         facts.QuestParticipant(start=start.uid, participant=receiver.uid, role=ROLES.RECEIVER) ]
 
         choose_method = facts.Choice(uid=ns+'choose_method',
-                                     description='Выбрать метод получения долга',
+                                     description='Choose a method to collect the debt',
                                      require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
                                      actions=[actions.Message(type='move_to_receiver')])
 
 
         attack = facts.Question(uid=ns+'attack',
-                                description='сражение с подручными должника',
+                                description='fight with the debtor\'s henchmen',
                                 require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
                                 actions=[actions.Message(type='attack'),
                                          actions.Fight(mercenary=True)],
@@ -53,7 +53,7 @@ class CollectDebt(QuestBetween2):
                                                results={ initiator.uid: RESULTS.SUCCESSED,
                                                          receiver.uid: RESULTS.FAILED},
                                                nesting=nesting,
-                                               description='долг выбит',
+                                               description='debt collected',
                                                require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
                                                actions=[actions.GiveReward(object=hero.uid, type='finish_attack_successed')])
 
@@ -62,11 +62,11 @@ class CollectDebt(QuestBetween2):
                                             results={ initiator.uid: RESULTS.NEUTRAL,
                                                       receiver.uid: RESULTS.NEUTRAL},
                                             nesting=nesting,
-                                            description='не удалось выбить долг',
+                                            description='failed to collect the debt',
                                             actions=[actions.Message(type='finish_attack_failed')])
 
         help = facts.State(uid=ns+'help',
-                           description='помочь должнику',
+                           description='help the debtor',
                            require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)])
 
         finish_help = facts.Finish(uid=ns+'finish_help',
@@ -74,7 +74,7 @@ class CollectDebt(QuestBetween2):
                                    results={ initiator.uid: RESULTS.SUCCESSED,
                                              receiver.uid: RESULTS.SUCCESSED},
                                    nesting=nesting,
-                                   description='помощь оказана',
+                                   description='help provided',
                                    require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
                                    actions=[actions.GiveReward(object=hero.uid, type='finish_help')])
 

@@ -22,7 +22,7 @@ class Simple(QuestBetween2):
         start = facts.Start(uid=ns+'start',
                             type=cls.TYPE,
                             nesting=nesting,
-                            description='Начало: самый простой квест')
+                            description='Start: the simplest quest')
 
         participants = [facts.QuestParticipant(start=start.uid, participant=initiator.uid, role=ROLES.INITIATOR),
                         facts.QuestParticipant(start=start.uid, participant=initiator_position.uid, role=ROLES.INITIATOR_POSITION),
@@ -36,7 +36,7 @@ class Simple(QuestBetween2):
                                                  receiver.uid: RESULTS.SUCCESSED,
                                                  receiver_position.uid: RESULTS.SUCCESSED},
                                         nesting=nesting,
-                                        description='завершить задание удачно')
+                                        description='complete the quest successfully')
 
         finish_failed = facts.Finish(uid=ns+'finish_failed',
                                      start=start.uid,
@@ -45,7 +45,7 @@ class Simple(QuestBetween2):
                                               receiver.uid: RESULTS.FAILED,
                                               receiver_position.uid: RESULTS.FAILED},
                                      nesting=nesting,
-                                     description='завершить задание плохо')
+                                     description='complete the quest poorly')
 
         event = facts.Event(uid=ns+'event', members=(finish_successed.uid, finish_failed.uid))
 
