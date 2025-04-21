@@ -18,9 +18,9 @@ The generator was developed for use in (now stopped) the text MMOZPG game The-Ta
 
 Visualizations of all "basic" quest templates are stored in ``./questgen/svgs/``.
 
-Details of the library's functionality can be found in the article on habrahabr_.
+Details of the library's functionality can be found in the article on my blog_.
 
-.. _habrahabr: http://habrahabr.ru/post/201680/
+.. _blog: https://tiendil.org/en/posts/automatic-quests-generator
 
 **************************
 Legend for the Visualizer
