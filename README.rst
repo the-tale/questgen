@@ -94,7 +94,4 @@ Visualization
 
 Visualizer: ``./helpers/visualizer.py`` generates quest template images in ``./questgen/svgs/``.
 
-Uses ``graphviz`` via the ``pygraph`` library.
-
-*If generated images are incorrect (misaligned), install a newer version of graphviz.*
-
+You should install `python3-gv` to run this script. In Ubuntu, it will be `sudo apt install python3-gv`.

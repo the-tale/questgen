@@ -92,15 +92,15 @@ class SubGraph(object):
             subgraph.draw(graph, nodes, nesting=0)
 
     def draw(self, graph, nodes, nesting):
-        subgraph = gv.graph(graph, self.uid.encode('utf-8'))
-        gv.setv(subgraph, 'label', self.uid.encode('utf-8'))
+        subgraph = gv.graph(graph, self.uid)
+        gv.setv(subgraph, 'label', self.uid)
         # gv.setv(subgraph, 'rank', 'same')
         gv.setv(subgraph, 'shape', 'box')
         gv.setv(subgraph, 'bgcolor', self.color % (150+nesting*25) if '%' in self.color else self.color)
 
         for node_uid in self.members:
             if node_uid in nodes:
-                gv.node(subgraph, node_uid.encode('utf-8'))
+                gv.node(subgraph, node_uid)
 
         for child in self.children:
             child.draw(subgraph, nodes, nesting=nesting+1)
@@ -117,9 +117,9 @@ class Drawer(object):
         self.linked_edges = set()
 
     def add_node(self, fact):
-        node = gv.node(self.graph, fact.uid.encode('utf-8'))
+        node = gv.node(self.graph, fact.uid)
         gv.setv(node, 'shape', 'plaintext')
-        gv.setv(node, 'label', self.create_label_for(fact).encode('utf-8'))
+        gv.setv(node, 'label', self.create_label_for(fact))
         gv.setv(node, 'fontsize', '10')
 
         self.nodes[fact.uid] = node
@@ -127,10 +127,10 @@ class Drawer(object):
         return node
 
     def _add_edge(self, jump):
-        node = gv.node(self.graph, jump.uid.encode('utf-8'))
+        node = gv.node(self.graph, jump.uid)
 
         gv.setv(node, 'shape', 'plaintext')
-        gv.setv(node, 'label', self.create_label_for(jump).encode('utf-8'))
+        gv.setv(node, 'label', self.create_label_for(jump))
         gv.setv(node, 'fontsize', '10')
 
         self.nodes[jump.uid] = node
@@ -139,13 +139,13 @@ class Drawer(object):
         edge_2 = gv.edge(node, self.nodes[jump.state_to])
 
         gv.setv(edge_1, 'dir', 'none')
-        gv.setv(edge_1, 'tailport', jump.state_from.encode('utf-8'))
-        gv.setv(edge_1, 'headport', jump.uid.encode('utf-8'))
+        gv.setv(edge_1, 'tailport', jump.state_from)
+        gv.setv(edge_1, 'headport', jump.uid)
         gv.setv(edge_1, 'weight', '40')
         gv.setv(edge_1, 'minlen', '1')
 
-        gv.setv(edge_2, 'tailport', jump.uid.encode('utf-8'))
-        gv.setv(edge_2, 'headport', jump.state_to.encode('utf-8'))
+        gv.setv(edge_2, 'tailport', jump.uid)
+        gv.setv(edge_2, 'headport', jump.state_to)
         gv.setv(edge_2, 'weight', '40')
         gv.setv(edge_2, 'minlen', '1')
 
@@ -158,8 +158,8 @@ class Drawer(object):
 
     def _add_empty_edge(self, jump):
         edge = gv.edge(self.nodes[jump.state_from], self.nodes[jump.state_to])
-        gv.setv(edge, 'headport', jump.state_to.encode('utf-8'))
-        gv.setv(edge, 'tailport', jump.state_from.encode('utf-8'))
+        gv.setv(edge, 'headport', jump.state_to)
+        gv.setv(edge, 'tailport', jump.state_from)
         gv.setv(edge, 'weight', '20')
         gv.setv(edge, 'minlen', '1')
 
