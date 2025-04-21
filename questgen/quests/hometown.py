@@ -42,25 +42,25 @@ class Hometown(QuestBetween2):
         start = facts.Start(uid=ns+'start',
                             type=cls.TYPE,
                             nesting=nesting,
-                            description='Начало: посетить родной города',
+                            description='Start: visit hometown',
                             require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
                             actions=[actions.Message(type='intro')])
 
         participants = [facts.QuestParticipant(start=start.uid, participant=receiver_position.uid, role=ROLES.RECEIVER_POSITION) ]
 
         arriving = facts.State(uid=ns+'arriving',
-                               description='Прибытие в город',
+                               description='Arriving in the city',
                                require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)])
 
-        action_choices = [facts.State(uid=ns+'drunk_song', description='спеть пьяную песню', actions=[actions.Message(type='drunk_song'),
+        action_choices = [facts.State(uid=ns+'drunk_song', description='sing a drunk song', actions=[actions.Message(type='drunk_song'),
                                                                                                        actions.DoNothing(type='drunk_song')]),
-                          facts.State(uid=ns+'stagger_streets', description='пошататься по улицам', actions=[actions.Message(type='stagger_streets'),
+                          facts.State(uid=ns+'stagger_streets', description='stagger through the streets', actions=[actions.Message(type='stagger_streets'),
                                                                                                               actions.DoNothing(type='stagger_streets')]),
-                          facts.State(uid=ns+'chatting', description='пообщаться с друзьями', actions=[actions.Message(type='chatting'),
+                          facts.State(uid=ns+'chatting', description='chat with friends', actions=[actions.Message(type='chatting'),
                                                                                                         actions.DoNothing(type='chatting')]),
-                          facts.State(uid=ns+'search_old_friends', description='искать старого друга', actions=[actions.Message(type='search_old_friends'),
+                          facts.State(uid=ns+'search_old_friends', description='search for an old friend', actions=[actions.Message(type='search_old_friends'),
                                                                                                                  actions.DoNothing(type='search_old_friends')]),
-                          facts.State(uid=ns+'remember_names', description='вспоминать имена друзей', actions=[actions.Message(type='remember_names'),
+                          facts.State(uid=ns+'remember_names', description='remember friends names', actions=[actions.Message(type='remember_names'),
                                                                                                                 actions.DoNothing(type='remember_names')])]
 
         home_actions = random.sample(action_choices, 3)
@@ -69,7 +69,7 @@ class Hometown(QuestBetween2):
                               start=start.uid,
                               results={ receiver_position.uid: RESULTS.SUCCESSED},
                               nesting=nesting,
-                              description='завершить посещение города',
+                              description='finish visiting the city',
                               actions=[actions.GiveReward(object=hero.uid, type='finish')])
 
         line = [ start,

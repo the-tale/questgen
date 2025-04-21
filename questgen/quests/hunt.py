@@ -45,14 +45,14 @@ class Hunt(QuestBetween2):
         start = facts.Start(uid=ns+'start',
                       type=cls.TYPE,
                       nesting=nesting,
-                      description='Начало: задание на охоту',
+                      description='Start: hunting quest',
                       require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
                       actions=[actions.Message(type='intro')])
 
         participants = [facts.QuestParticipant(start=start.uid, participant=receiver_position.uid, role=ROLES.RECEIVER_POSITION) ]
 
         start_hunting = facts.State(uid=ns+'start_hunting',
-                              description='Прибытие в город охоты',
+                              description='Arrival at the hunting town',
                               require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)])
 
         hunt_loop = []
@@ -60,11 +60,11 @@ class Hunt(QuestBetween2):
         for i in range(random.randint(*cls.HUNT_LOOPS)):
 
             hunt = facts.State(uid=ns+'hunt_%d' % i,
-                         description='Охота',
+                         description='Hunting',
                          actions=[actions.MoveNear(object=hero.uid, place=receiver_position.uid, terrains=mob.terrains)])
 
             fight = facts.State(uid=ns+'fight_%d' % i,
-                                description='Сражение с жертвой',
+                                description='Fight with the prey',
                                 actions=[actions.Message(type='fight'),
                                          actions.Fight(mob=mob.uid)])
 
@@ -79,7 +79,7 @@ class Hunt(QuestBetween2):
                            start=start.uid,
                            results={receiver_position.uid: RESULTS.SUCCESSED},
                            nesting=nesting,
-                           description='Продать добычу',
+                           description='Sell the prey',
                            require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
                            actions=[actions.GiveReward(object=hero.uid, type='sell_prey')])
 

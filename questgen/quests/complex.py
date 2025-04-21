@@ -35,18 +35,18 @@ class Complex(QuestBetween2):
         start = facts.Start(uid=ns+'start',
                             type=cls.TYPE,
                             nesting=nesting,
-                            description='Начало: «сложное» задание',
+                            description='Start: "complex" task',
                             require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
                             actions=[actions.Message(type='intro')])
 
         participants = [facts.QuestParticipant(start=start.uid, participant=receiver_position.uid, role=ROLES.RECEIVER_POSITION) ]
 
         arriving = facts.Choice(uid=ns+'arriving',
-                                description='Заплатить пошлину при прибытии в город или махнуть через стену',
+                                description='Pay the fee upon arrival in the city or wave over the wall',
                                 require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)])
 
         tax = facts.Question(uid=ns+'tax',
-                             description='Хватит ли у героя денег на пошлину',
+                             description='Will the hero have enough money for the fee',
                              condition=[requirements.HasMoney(object=hero.uid, money=100500)],
                              actions=[actions.Message(type='tax_officer_conversation')])
 
@@ -54,14 +54,14 @@ class Complex(QuestBetween2):
                                        start=start.uid,
                                        results={ receiver_position.uid: RESULTS.FAILED},
                                        nesting=nesting,
-                                       description='завершить задание',
+                                       description='complete the task',
                                        actions=[actions.GiveReward(object=hero.uid, type='finish')])
 
         finish_paid = facts.Finish(uid=ns+'finish_paid',
                                    start=start.uid,
                                    results={ receiver_position.uid: RESULTS.SUCCESSED},
                                    nesting=nesting,
-                                   description='завершить задание',
+                                   description='complete the task',
                                    actions=[actions.GiveReward(object=hero.uid, type='finish')])
 
         line = [ start,

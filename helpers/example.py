@@ -1,14 +1,14 @@
 # coding: utf-8
 
-from questgen.knowledge_base import KnowledgeBase # «база знаний» о мире и задании
-from questgen import facts # все факты
-from questgen.selectors import Selector # вспомогательный класс для поиска нужных фактов
-from questgen import restrictions # ограничения, которые обязательно должны выплнятся в валидном задании
-from questgen import transformators # трансформации, которые можно делать над базой знаний
-from questgen import machine # механизм для итерации по заданию
+from questgen.knowledge_base import KnowledgeBase # "knowledge base" about the world and the quest
+from questgen import facts # all facts
+from questgen.selectors import Selector # helper class for finding the necessary facts
+from questgen import restrictions # restrictions that must be met in a valid quest
+from questgen import transformators # transformations that can be made to the knowledge base
+from questgen import machine # mechanism for iterating through the quest
 from questgen import logic
 
-# импортируем квесты
+# import quests
 from questgen.quests.quests_base import QuestsBase
 from questgen.quests.spying import Spying
 from questgen.quests.hunt import Hunt
@@ -23,38 +23,38 @@ from questgen.quests.help import Help
 
 from questgen.relations import PROFESSION
 
-# список ограничений для фактов о мире
+# list of restrictions for world facts
 WORLD_RESTRICTIONS = [restrictions.SingleLocationForObject(),
                       restrictions.ReferencesIntegrity()]
 
-# список ограничений для графа задания
-QUEST_RESTRICTIONS =  [restrictions.SingleStartStateWithNoEnters(), # только одна начальная вершина для задания
-                       restrictions.FinishStateExists(), # существуют завершающие вершины
-                       restrictions.AllStatesHasJumps(), # существуют переходы из всех состояний
-                       restrictions.ConnectedStateJumpGraph(), # граф связаный
-                       restrictions.NoCirclesInStateJumpGraph(), # граф без циклов
-                       restrictions.MultipleJumpsFromNormalState(), # каждая обычная вершина имеет только одну исходящую дугу
-                       restrictions.ChoicesConsistency(), # проверяем целостность развилок
-                       restrictions.QuestionsConsistency(), # проверяем целостность условных узлов
-                       restrictions.FinishResultsConsistency() # проверяем, что для каждого окончания квеста указаны результаты для каждого его участника
+# list of restrictions for the quest graph
+QUEST_RESTRICTIONS =  [restrictions.SingleStartStateWithNoEnters(), # only one starting vertex for the quest
+                       restrictions.FinishStateExists(), # there are finishing vertices
+                       restrictions.AllStatesHasJumps(), # there are transitions from all states
+                       restrictions.ConnectedStateJumpGraph(), # the graph is connected
+                       restrictions.NoCirclesInStateJumpGraph(), # the graph has no cycles
+                       restrictions.MultipleJumpsFromNormalState(), # each normal vertex has only one outgoing edge
+                       restrictions.ChoicesConsistency(), # check the integrity of the choices
+                       restrictions.QuestionsConsistency(), # check the integrity of the conditional nodes
+                       restrictions.FinishResultsConsistency() # check that results are specified for each participant for each quest ending
                        ]
 
 
-# создаём задание
-# эта функция может вызвать исключение questgen.exceptions.RollBackError и это её нормальное поведение
-# исключение означает, что создать задание не получилось и надо повторить попытку
+# create a quest
+# this function can throw a questgen.exceptions.RollBackError exception and this is its normal behavior
+# the exception means that the quest could not be created and the attempt should be repeated
 def create_quest():
 
-    # формируем список заданий для генерации
+    # form a list of quests for generation
     qb = QuestsBase()
     qb += [Spying, Hunt, Hometown, SearchSmith, Delivery, Caravan, CollectDebt, HelpFriend, InterfereEnemy, Help]
 
     kb = KnowledgeBase()
 
-    # описываем мир
-    kb += [ facts.Hero(uid='hero'), # наш герой
+    # describe the world
+    kb += [ facts.Hero(uid='hero'), # our hero
 
-            facts.Place(uid='place_1', terrains=(1,)), # есть место с идентификатором place_1 и типами ландшафта 1,
+            facts.Place(uid='place_1', terrains=(1,)), # there is a place with identifier place_1 and landscape types 1,
             facts.Place(uid='place_2', terrains=(0,)),
             facts.Place(uid='place_3', terrains=(0,)),
             facts.Place(uid='place_4', terrains=(1,)),
@@ -65,7 +65,7 @@ def create_quest():
             facts.Place(uid='place_9', terrains=(1,)),
             facts.Place(uid='place_10', terrains=(2,)),
 
-            facts.Person(uid='person_1', profession=PROFESSION.NONE), # есть персонаж с идентификатором perons_1 и без профессии
+            facts.Person(uid='person_1', profession=PROFESSION.NONE), # there is a character with identifier person_1 and no profession
             facts.Person(uid='person_2', profession=PROFESSION.BLACKSMITH),
             facts.Person(uid='person_3', profession=PROFESSION.ROGUE),
             facts.Person(uid='person_4', profession=PROFESSION.NONE),
@@ -76,7 +76,7 @@ def create_quest():
             facts.Person(uid='person_9', profession=PROFESSION.NONE),
             facts.Person(uid='person_10', profession=PROFESSION.NONE),
 
-            facts.LocatedIn(object='person_1', place='place_1'), # персонаж person_1 находится в place_1
+            facts.LocatedIn(object='person_1', place='place_1'), # character person_1 is located in place_1
             facts.LocatedIn(object='person_2', place='place_2'),
             facts.LocatedIn(object='person_3', place='place_3'),
             facts.LocatedIn(object='person_4', place='place_4'),
@@ -87,59 +87,59 @@ def create_quest():
             facts.LocatedIn(object='person_9', place='place_9'),
             facts.LocatedIn(object='person_10', place='place_10'),
 
-            facts.LocatedIn(object='hero', place='place_1'), # герой находится в place_1
+            facts.LocatedIn(object='hero', place='place_1'), # the hero is located in place_1
 
-            facts.Mob(uid='mob_1', terrains=(0,)), # есть монстр, обитающий на территориях с идентификатором 0 (для задания на охоту)
-            facts.PreferenceMob(object='hero', mob='mob_1'), # герой любит охотиться на монстра mob_1
-            facts.PreferenceHometown(object='hero', place='place_2'), # герой считате родным место place_2
-            facts.PreferenceFriend(object='hero', person='person_4'), # герой дружит с person_4
-            facts.PreferenceEnemy(object='hero', person='person_5'), # герой враждует с person_5
+            facts.Mob(uid='mob_1', terrains=(0,)), # there is a monster inhabiting territories with identifier 0 (for the hunting quest)
+            facts.PreferenceMob(object='hero', mob='mob_1'), # the hero likes to hunt the monster mob_1
+            facts.PreferenceHometown(object='hero', place='place_2'), # the hero considers place_2 to be his hometown
+            facts.PreferenceFriend(object='hero', person='person_4'), # the hero is friends with person_4
+            facts.PreferenceEnemy(object='hero', person='person_5'), # the hero is enemies with person_5
 
-            # указываем, что обновление экипировки стоит 777 монет (для задания SearchSmith)
-            # facts.HasMoney(object='hero', money=888), # если этот факт раскоментировать то в этом задании герой купит экипировку, а не пойдёт делать задание кузнеца
+            # specify that upgrading equipment costs 777 coins (for the SearchSmith quest)
+            # facts.HasMoney(object='hero', money=888), # if this fact is uncommented, the hero will buy equipment in this quest instead of doing the blacksmith's quest
             facts.UpgradeEquipmentCost(money=777),
 
-            facts.OnlyGoodBranches(object='place_2'), # не вредить месту place_2
-            facts.OnlyGoodBranches(object='person_4'), # не вредить персонажу person_4
-            facts.OnlyBadBranches(object='person_5') ] # не помогать персонажу person_5
+            facts.OnlyGoodBranches(object='place_2'), # do not harm place_2
+            facts.OnlyGoodBranches(object='person_4'), # do not harm person_4
+            facts.OnlyBadBranches(object='person_5') ] # do not help person_5
 
 
-    kb.validate_consistency(WORLD_RESTRICTIONS) # проверяем ограничения на мир,
+    kb.validate_consistency(WORLD_RESTRICTIONS) # check world restrictions
 
     selector = Selector(kb, qb)
 
-    # создаём квест (получаем список фактов)
+    # create the quest (get a list of facts)
     quests_facts = selector.create_quest_from_place(nesting=0,
                                                     initiator_position=kb['place_1'],
                                                     tags=('can_start', ))
 
     kb += quests_facts
 
-    transformators.activate_events(kb) # активируем события (из нескольких вершин графа оставляем одну, остальные удаляем)
-    transformators.remove_restricted_states(kb) # удаляем состояния, в которые нельзя переходить (например, которые вредят тому, кому вредить нельщя)
-    transformators.remove_broken_states(kb) # чистим граф задания от разрушений, вызванных предыдущими действиями
-    transformators.determine_default_choices(kb) # определяем выборы по умолчанию на развилках
+    transformators.activate_events(kb) # activate events (leave one of several graph vertices, delete the rest)
+    transformators.remove_restricted_states(kb) # remove states that cannot be transitioned to (e.g., those that harm those who should not be harmed)
+    transformators.remove_broken_states(kb) # clean up the quest graph from damage caused by previous actions
+    transformators.determine_default_choices(kb) # determine default choices at forks
 
-    kb.validate_consistency(WORLD_RESTRICTIONS) # ещё раз проверяем мир
-    kb.validate_consistency(QUEST_RESTRICTIONS) # проверяем граф задания (вдруг полностью разрушен)
+    kb.validate_consistency(WORLD_RESTRICTIONS) # check the world again
+    kb.validate_consistency(QUEST_RESTRICTIONS) # check the quest graph (in case it is completely destroyed)
 
     return kb
 
 
-# интерпретатор задания
+# quest interpreter
 class Interpreter(object):
 
     def __init__(self, kb):
         self.kb = kb
-        # создаём механизм для итерации по графу и передаём в него коллбэки
+        # create a mechanism for iterating through the graph and pass callbacks to it
         self.machine = machine.Machine(knowledge_base=kb, interpreter=self)
 
-        # для эмуляции изменения состояний мира
-        # при необходимости удовлетворить какое-то ограничение, просто помещаемего в это множество
-        # чистим его после каждого успешного продвижения по сюжету
+        # to emulate changes in the state of the world
+        # when it is necessary to satisfy some requirement, simply place it in this set
+        # clear it after each successful progression through the plot
         self.satisfied_requirements = set()
 
-    # делаем квест
+    # do the quest
     def process(self):
         while self.machine.do_step():
             print('---- next step ----')
@@ -148,7 +148,7 @@ class Interpreter(object):
     # CALLBACKS
     ###########################
 
-    # когда входим в новую вершину
+    # when entering a new vertex
     def on_state__before_actions(self, state):
         print('on state: %s' % state.uid)
 
@@ -163,7 +163,7 @@ class Interpreter(object):
             print('    finishing quest with results "%s"' % state.results)
 
 
-    # когда переходим на новую дугу
+    # when transitioning to a new edge
     def on_jump_start__before_actions(self, jump):
         print('on jump start: %s' % jump.uid)
         print('    find %d actions' % len(jump.start_actions))
@@ -171,7 +171,7 @@ class Interpreter(object):
     def on_jump_start__after_actions(self, jump):
         print('    actions done')
 
-    # когда уходим из дуги
+    # when leaving an edge
     def on_jump_end__before_actions(self, jump):
         print('on jump end: %s' % jump.uid)
         print('    find %d actions' % len(jump.end_actions))
@@ -179,32 +179,32 @@ class Interpreter(object):
     def on_jump_end__after_actions(self, jump):
         print('    actions done')
 
-    # обрабокта действий
-    def do_message(self, action): print('    действие %s' % action)
+    # action processing
+    def do_message(self, action): print('    action %s' % action)
 
-    def do_give_power(self, action): print('    действие %s' % action)
+    def do_give_power(self, action): print('    action %s' % action)
 
-    def do_give_reward(self, action): print('    действие %s' % action)
+    def do_give_reward(self, action): print('    action %s' % action)
 
-    def do_fight(self, action): print('    действие %s' % action)
+    def do_fight(self, action): print('    action %s' % action)
 
-    def do_do_nothing(self, action): print('    действие %s' % action)
+    def do_do_nothing(self, action): print('    action %s' % action)
 
-    def do_upgrade_equipment(self, action): print('    действие %s' % action)
+    def do_upgrade_equipment(self, action): print('    action %s' % action)
 
-    def do_move_near(self, action): print('    действие %s' % action)
+    def do_move_near(self, action): print('    action %s' % action)
 
-    def do_move_in(self, action): print('    действие %s' % action)
+    def do_move_in(self, action): print('    action %s' % action)
 
     def _check_requirement(self, requirement):
-        print('    проверка %s' % requirement)
+        print('    checking %s' % requirement)
         return requirement in self.satisfied_requirements
 
     def _satisfy_requirement(self, requirement):
-        print('    выполнить %s' % requirement)
+        print('    satisfy %s' % requirement)
         self.satisfied_requirements.add(requirement)
 
-    # проверка ограничений
+    # check requirements
     def check_located_in(self, requirement): return self._check_requirement(requirement)
 
     def check_located_near(self, requirement): return self._check_requirement(requirement)
@@ -216,7 +216,7 @@ class Interpreter(object):
     def check_is_alive(self, requirement): return self._check_requirement(requirement)
 
 
-    # удовлетворение ограничений
+    # satisfy requirements
     def satisfy_located_in(self, requirement): self._satisfy_requirement(requirement)
 
     def satisfy_located_near(self, requirement): self._satisfy_requirement(requirement)
@@ -232,10 +232,10 @@ if __name__ == '__main__':
     kb = create_quest()
     interpreter = Interpreter(kb=kb)
 
-    # проверяем, что в интерпретаторе реализованы все необходимые методы
+    # check that all necessary methods are implemented in the interpreter
     for method_name in logic.get_required_interpreter_methods():
         if not hasattr(interpreter, method_name):
-            error = 'интерпретатор не реализует метод: %s' % method_name
+            error = 'the interpreter does not implement the method: %s' % method_name
             print(error)
             raise Exception(error)
 

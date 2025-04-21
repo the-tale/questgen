@@ -46,7 +46,7 @@ class Delivery(QuestBetween2):
         start = facts.Start(uid=ns+'start',
                             type=cls.TYPE,
                             nesting=nesting,
-                            description='Начало: доставка',
+                            description='Start: delivery',
                             require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
                             actions=[actions.Message(type='intro')])
 
@@ -55,7 +55,7 @@ class Delivery(QuestBetween2):
                         facts.QuestParticipant(start=start.uid, participant=antagonist.uid, role=ROLES.ANTAGONIST) ]
 
         delivery_choice = facts.Choice(uid=ns+'delivery_choice',
-                                 description='Решение: доставить или украсть')
+                                 description='Decision: deliver or steal')
 
 
         finish_delivery = facts.Finish(uid=ns+'finish_delivery',
@@ -64,7 +64,7 @@ class Delivery(QuestBetween2):
                                                  receiver.uid: RESULTS.SUCCESSED,
                                                  antagonist.uid: RESULTS.NEUTRAL},
                                        nesting=nesting,
-                                       description='Доставить посылку получателю',
+                                       description='Deliver the package to the recipient',
                                        require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
                                        actions=[actions.GiveReward(object=hero.uid, type='finish_delivery')])
 
@@ -74,7 +74,7 @@ class Delivery(QuestBetween2):
                                                       receiver.uid: RESULTS.FAILED,
                                                       antagonist.uid: RESULTS.NEUTRAL},
                                             nesting=nesting,
-                                            description='Подделать письмо',
+                                            description='Forge the letter',
                                             require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
                                             actions=[actions.GiveReward(object=hero.uid, type='finish_fake_delivery', scale=2.0)])
 
@@ -84,7 +84,7 @@ class Delivery(QuestBetween2):
                                                                receiver.uid: RESULTS.NEUTRAL,
                                                                antagonist.uid: RESULTS.NEUTRAL},
                                                      nesting=nesting,
-                                                     description='заглушка, чтобы можно было управлять появлением подделки письма')
+                                                     description='dummy, so you can control the appearance of the letter forgery')
 
         finish_steal = facts.Finish(uid=ns+'finish_steal',
                                     start=start.uid,
@@ -92,12 +92,12 @@ class Delivery(QuestBetween2):
                                               receiver.uid: RESULTS.FAILED,
                                               antagonist.uid: RESULTS.SUCCESSED},
                                     nesting=nesting,
-                                    description='Доставить посылку скупщику',
+                                    description='Deliver the package to the fence',
                                     require=[requirements.LocatedIn(object=hero.uid, place=antagonist_position.uid)],
                                     actions=[actions.GiveReward(object=hero.uid, type='finish_steal', scale=1.5)])
 
         delivery_stealed = facts.State(uid=ns+'delivery_stealed',
-                                       description='письмо украдено',
+                                       description='letter stolen',
                                        require=[requirements.LocatedOnRoad(object=hero.uid,
                                                                            place_from=initiator_position.uid,
                                                                            place_to=receiver_position.uid,
@@ -106,7 +106,7 @@ class Delivery(QuestBetween2):
                                                 actions.MoveNear(object=hero.uid)])
 
         fight_for_stealed = facts.Question(uid=ns+'fight_for_stealed',
-                                           description='Сразиться с вором',
+                                           description='Fight the thief',
                                            actions=[actions.Message(type='fight_thief'),
                                                     actions.Fight(mercenary=True)],
                                            condition=[requirements.IsAlive(object=hero.uid)])
@@ -118,7 +118,7 @@ class Delivery(QuestBetween2):
                                                                     receiver.uid: RESULTS.NEUTRAL,
                                                                     antagonist.uid: RESULTS.NEUTRAL},
                                                                     nesting=nesting,
-                                                          description='Герой не смог вернуть украденное письмо',
+                                                          description='The hero failed to retrieve the stolen letter',
                                                           actions=[actions.Message(type='finish_fight_for_stealed__hero_died')])
 
 
@@ -128,7 +128,7 @@ class Delivery(QuestBetween2):
                                                                     receiver.uid: RESULTS.SUCCESSED,
                                                                     antagonist.uid: RESULTS.NEUTRAL},
                                                           nesting=nesting,
-                                                          description='Доставить посылку получателю',
+                                                          description='Deliver the package to the recipient',
                                                           require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)],
                                                           actions=[actions.GiveReward(object=hero.uid, type='finish_delivery')])
 
@@ -163,8 +163,8 @@ class Delivery(QuestBetween2):
                               condition=True, start_actions=[actions.Message(type='delivery_returned')]),
                  facts.Answer(state_from=fight_for_stealed.uid, state_to=finish_fight_for_stealed__hero_died.uid, condition=False),
 
-                 facts.Event(uid=ns+'delivery_variants', description='Варианты доставки', members=(delivery_stealed.uid, finish_delivery.uid)),
-                 facts.Event(uid=ns+'lie_variants', description='Варианты обмана', members=(fake_delivery_dummy_state.uid, finish_fake_delivery.uid))
+                 facts.Event(uid=ns+'delivery_variants', description='Delivery options', members=(delivery_stealed.uid, finish_delivery.uid)),
+                 facts.Event(uid=ns+'lie_variants', description='Deception options', members=(fake_delivery_dummy_state.uid, finish_fake_delivery.uid))
                 ]
 
         line.extend(participants)

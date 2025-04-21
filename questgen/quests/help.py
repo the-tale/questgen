@@ -26,7 +26,7 @@ class Help(QuestBetween2):
         start = facts.Start(uid=ns+'start',
                             type=cls.TYPE,
                             nesting=nesting,
-                            description='Начало: помочь знакомому',
+                            description='Start: help a friend',
                             require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid),
                                      requirements.LocatedIn(object=receiver.uid, place=receiver_position.uid)],
                             actions=[actions.Message(type='intro')])
@@ -39,7 +39,7 @@ class Help(QuestBetween2):
                                         results={ initiator.uid: RESULTS.SUCCESSED,
                                                   receiver.uid: RESULTS.SUCCESSED},
                                         nesting=nesting,
-                                        description='помощь оказана',
+                                        description='help provided',
                                         require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
                                         actions=[actions.GiveReward(object=hero.uid, type='finish_successed')])
 
@@ -48,7 +48,7 @@ class Help(QuestBetween2):
                                      results={ initiator.uid: RESULTS.FAILED,
                                                receiver.uid: RESULTS.FAILED},
                                      nesting=nesting,
-                                     description='не удалось помочь',
+                                     description='failed to help',
                                      actions=[actions.GiveReward(object=hero.uid, type='finish_failed')])
 
         help_quest = selector.create_quest_from_person(nesting=nesting+1, initiator=receiver, tags=('can_continue',))

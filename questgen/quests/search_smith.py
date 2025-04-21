@@ -41,24 +41,24 @@ class SearchSmith(QuestBetween2):
         start = facts.Start(uid=ns+'start_search_smith',
                             type=cls.TYPE,
                             nesting=nesting,
-                            description='Начало: посещение кузнеца',
+                            description='Start: visit the blacksmith',
                             require=[requirements.LocatedIn(object=hero.uid, place=initiator_position.uid)],
                             actions=[actions.Message(type='intro')])
 
         participants = [facts.QuestParticipant(start=start.uid, participant=receiver.uid, role=ROLES.RECEIVER) ]
 
         arriving = facts.Question(uid=ns+'arriving',
-                                  description='Прибытие в город',
+                                  description='Arriving in the city',
                                   condition=[requirements.HasMoney(object=hero.uid, money=upgrade_equipment_cost)],
                                   require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)])
 
         upgrade_for_money = facts.State(uid=ns+'upgrade_for_money',
-                                        description='Обновление экипировки за деньги',
+                                        description='Upgrade equipment for money',
                                         actions=[actions.UpgradeEquipment(cost=upgrade_equipment_cost)],
                                         require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)])
 
         upgrade_for_quest = facts.State(uid=ns+'upgrade_for_quest',
-                                        description='Обновление экипировки за задание',
+                                        description='Upgrade equipment for a quest',
                                         actions=[actions.UpgradeEquipment(cost=None)],
                                         require=[requirements.LocatedIn(object=hero.uid, place=receiver_position.uid)])
 
@@ -66,14 +66,14 @@ class SearchSmith(QuestBetween2):
                                         start=start.uid,
                                         results={ receiver.uid: RESULTS.SUCCESSED},
                                         nesting=nesting,
-                                        description='завершить задание',
+                                        description='complete the task',
                                         actions=[])
 
         finish_quest_failed = facts.Finish(uid=ns+'finish_quest_failed',
                                            start=start.uid,
                                            results={ receiver.uid: RESULTS.NEUTRAL},
                                            nesting=nesting,
-                                           description='завершить задание')
+                                           description='complete the task')
 
 
         help_quest = selector.create_quest_from_person(nesting=nesting+1, initiator=receiver, tags=('can_continue',))
