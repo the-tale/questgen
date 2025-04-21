@@ -10,9 +10,11 @@ It also supports visualization of the generated quests. Example visualization: s
 
 Quest constructors are located in: ``./questgen/quests/``
 
-Initially developed for use in the MMORPG game "The Tale"_.
+Initially developed for use in (now stopped) the MMORPG game The-Tale_, repository_
 
-.. _The Tale: http://the-tale.org
+.. _The-Tale: http://the-tale.org
+
+.. _repository: https://github.com/the-tale
 
 Visualizations of all "basic" quest templates are stored in ``./questgen/svgs/``.
 
@@ -95,3 +97,4 @@ Visualizer: ``./helpers/visualizer.py`` generates quest template images in ``./q
 Uses ``graphviz`` via the ``pygraph`` library.
 
 *If generated images are incorrect (misaligned), install a newer version of graphviz.*
+
